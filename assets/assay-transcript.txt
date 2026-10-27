@@ -1,0 +1,26 @@
+Choose the next assay wells
+ZenithSync asks a concrete research question. After measuring a vehicle control and the lowest and highest drug doses, which additional wells should an assay researcher purchase? Our tool chooses from an existing single-agent organoid design. It counts both treatment and control wells, reports uncertainty, and has been evaluated against a separate technical plate. This is a local research candidate, not a clinical system.
+
+A shared control creates shared error
+A measured control is not a perfect denominator. Subtracting the same control log signal from several treatment log signals creates correlated errors. Our Gaussian process retains that dependence. This explains why another control can be informative even though it has no drug effect. The mathematics is established; we claim an audited application and empirical evidence, not a newly invented Gaussian process.
+
+An exact small-pool reference
+For a requested budget, exact selection minimizes average latent response variance across the designed doses. Verified symmetries among equivalent controls reduce enumeration without dropping subset classes. Across the confirmation geometries, thirteen thousand four hundred eight representatives cover more than two million subsets. Exactness is limited to this fixed Gaussian, equal-cost problem. The selected batch depends on geometry, not response values, and is not an adaptive stopping rule.
+
+Freeze first. Evaluate second.
+We selected parameters on the public Farin study, where comparative results were inconclusive. We preserved that negative evidence. Before evaluating outcomes from the distinct Kryeziu study, we froze the model, admission rules, comparison and patient-level analysis. The final confirmation contains six thousand four hundred ninety-six contexts from one hundred forty-eight samples and one hundred source patient identifiers. Deidentified data cannot prove patient non-overlap between the studies.
+
+Report both comparators
+Exact selection reduced mean squared log-response error by thirty-two point eight two percent compared with random selection under the same Gaussian process. The patient-bootstrap interval was thirty-one point three four to thirty-four point two one percent. But the stronger greedy variance-reduction baseline nearly matched exact selection. The incremental reduction was only zero point six six percent. The large random-policy gain must not be presented as a gain over the strongest method.
+
+Fewer purchased wells, bounded claim
+A separate prespecified comparison used twenty to twenty-five percent fewer purchased wells than its random reference. The aggregate error ratio was zero point eight nine two, and its upper confidence bound stayed below the registered noninferiority limit. This passed the retrospective well-count test. Controls were charged separately for each drug context. Instrument overhead, audit measurements and historical training costs were not counted as saved. Prospective laboratory savings remain untested.
+
+A working local demonstration
+This is the actual local demonstration output, shown as a captured screen. The public Farin example reveals three initial measurements. At an additional budget of three, it selects a control and treatment wells at zero point one and one point one micromolar. The example source lacks a verified plate identifier, so this is explicitly a within-curve demonstration. The interface returns current predictions and expected variance, not invented future measurements.
+
+Uncertainty is visible
+Nominal ninety percent intervals covered ninety-eight point zero five percent of audit responses. They were conservative, not exactly calibrated or distribution-free. Three of fifty-six drug point estimates were slightly unfavorable, and the source dose-count discrepancy remains documented. Results describe raw log-signal contrasts, not clinical drug efficacy. Transfer to perfused or neural chips, response-adaptive stopping, and prospective assay savings all require new evidence.
+
+Evidence you can inspect
+The repository contains source hashes, the frozen protocol, exclusions, complete results, and the original evaluator failure with its serialization-only repair. A fresh environment downloaded the pinned public sources into an empty raw-data cache, passed all one hundred twenty-seven tests, and reproduced twenty-seven confirmation and demonstration artifacts byte for byte. The local tool and technical report are ready for review. External scientific review remains pending. This evidence cannot guarantee a competition rank.

@@ -1,0 +1,387 @@
+[
+  {
+    "slug": "releaf",
+    "title": "Releaf",
+    "subtitle": "Small actions. A lighter footprint.",
+    "category": "Product",
+    "year": "2024–present",
+    "role": "Cofounder & software engineer",
+    "organization": "Rematter Cooperation",
+    "summary": "An iOS app that brings reuse ideas, carbon tracking, and a sustainability community into everyday life.",
+    "intro": "Sustainability becomes more approachable when the next step is concrete. I helped build Releaf around the things people already have, the habits they want to change, and a community to share those experiments with.",
+    "tools": [
+      "SwiftUI",
+      "Django",
+      "Image analysis",
+      "Information retrieval"
+    ],
+    "facts": [
+      [
+        "5,000+",
+        "app downloads"
+      ],
+      [
+        "$2,000",
+        "project funding raised"
+      ],
+      [
+        "Top two",
+        "2025 social innovation competition"
+      ]
+    ],
+    "sections": [
+      [
+        "From information to a daily habit",
+        "Releaf brings together ways to reuse everyday materials, estimates of carbon emissions, and a dedicated online community. The aim is to give environmental information a useful place in a person’s routine: an idea to try, an action to record, or something to share."
+      ],
+      [
+        "The system behind the experience",
+        "My work included Django backend features for user accounts, Waterdrop rewards, achievements, and notifications. I also developed supporting AI services for image analysis and retrieving sustainability information. These pieces connect the visible app experience to the accounts, content, and feedback that keep it working."
+      ],
+      [
+        "Building with a team",
+        "As a cofounder of Rematter Cooperation, I worked across software and the broader project. We raised $2,000 in funding and earned a top-two team placement in the 2025 China High School Social Innovation Competition and Incubation Camp. Releaf reached more than 5,000 downloads."
+      ]
+    ],
+    "note": "Download and funding figures are reported in my résumé. Carbon estimates are informational; they are not direct measurements of environmental impact.",
+    "links": [
+      [
+        "Rematter",
+        "https://remattercooperation.org/"
+      ],
+      [
+        "Supporting AI repository",
+        "https://github.com/Shengboj0324/Sustainability-AI-Model"
+      ]
+    ]
+  },
+  {
+    "slug": "phoenix",
+    "title": "Beyond the heat map",
+    "subtitle": "The hottest neighborhood is only part of the story.",
+    "category": "Research",
+    "year": "2026",
+    "role": "Student researcher",
+    "organization": "Pioneer Academics · June–September 2026",
+    "summary": "Remote sensing and interpretable machine learning to study urban heat vulnerability across Phoenix.",
+    "intro": "A surface-temperature map tells us where a city is hot. It does not, by itself, tell us which neighborhoods are most vulnerable. My research brought environmental and demographic information together to examine that difference.",
+    "tools": [
+      "Landsat imagery",
+      "Census data",
+      "Clustering",
+      "Interpretable ML"
+    ],
+    "facts": [
+      [
+        "369",
+        "Phoenix census tracts"
+      ],
+      [
+        "17 / 37",
+        "top-priority tracts shared by both rankings"
+      ],
+      [
+        "3",
+        "vulnerability profiles"
+      ]
+    ],
+    "sections": [
+      [
+        "A different way to ask the question",
+        "I studied 369 Phoenix census tracts using Landsat imagery, land-cover indicators, and census demographics. Rather than treating temperature as the whole problem, I compared temperature-only priorities with a multidimensional view of neighborhood vulnerability."
+      ],
+      [
+        "When the rankings diverge",
+        "Only 17 of the 37 highest-priority tracts appeared in both rankings. That difference matters: a decision based only on surface heat can identify a substantially different set of neighborhoods from a decision that also considers their wider vulnerability."
+      ],
+      [
+        "Making the patterns interpretable",
+        "Clustering identified three vulnerability profiles, providing a way to discuss why neighborhoods differ and how cooling interventions might respond. The work connects remote sensing with the practical question of where—and on what basis—a city should focus its attention."
+      ]
+    ],
+    "note": "Paper: “Remote Sensing and Interpretable Machine Learning for Neighborhood-Level Urban Heat Vulnerability in Phoenix, Arizona.” Submitted and accepted by my supervising professor; unpublished. The graphic above illustrates the reported ranking overlap, not geographic boundaries.",
+    "links": []
+  },
+  {
+    "slug": "assay-planner",
+    "title": "ZenithSync Assay Planner",
+    "subtitle": "What should an experiment measure next?",
+    "category": "Research",
+    "year": "2026",
+    "role": "Developer & researcher",
+    "organization": "AI4S Open Innovation: AI for Life Science",
+    "summary": "A Gaussian-process tool for choosing informative treatment and control measurements in organoid experiments.",
+    "intro": "Every measurement uses part of an experiment’s budget. I built a planner that considers what is already known, where uncertainty remains, and how a shared control affects several treatment measurements at once.",
+    "tools": [
+      "Python",
+      "Gaussian processes",
+      "Experimental design",
+      "Local browser UI"
+    ],
+    "facts": [
+      [
+        "6,496",
+        "paired assay contexts"
+      ],
+      [
+        "100",
+        "source patient IDs"
+      ],
+      [
+        "32.82%",
+        "lower MSE vs. random selection"
+      ]
+    ],
+    "sections": [
+      [
+        "The shared-control problem",
+        "A treatment response often depends on a measured control. When several responses share that reference, their errors are related. The planner retains this dependence instead of treating the control as perfectly known, and considers purchasing additional control measurements alongside treatment wells."
+      ],
+      [
+        "Choosing a batch",
+        "A Gaussian process models response contrasts and their uncertainty. A finite-pool optimizer then selects a batch of wells to reduce average model uncertainty across the planned doses. I connected this method to a local browser interface, a command-line workflow, and traceable processing of public data."
+      ],
+      [
+        "Testing the claim",
+        "The frozen retrospective confirmation covered 6,496 paired assay contexts representing 100 patient IDs. Exact selection reduced mean squared prediction error by 32.82% versus random selection under the same model. Against the stronger greedy baseline, the improvement was 0.66%—an important limit on the size of the advantage."
+      ]
+    ],
+    "note": "These are retrospective research results. Prospective laboratory savings, clinical benefit, and transfer to perfused organ-on-a-chip experiments have not been demonstrated.",
+    "video": "ANvcAZ7oyuE",
+    "links": [
+      [
+        "Kaggle writeup",
+        "https://www.kaggle.com/competitions/ai-4-s-open-innovation-artificial-intelligence-for-life-scien/writeups/zenithsync-assay-planner"
+      ],
+      [
+        "Kaggle model",
+        "https://www.kaggle.com/models/michealjiang/assay-planner"
+      ],
+      [
+        "Source & research records",
+        "https://github.com/Shengboj0324/ZenithSync-AI4S-Open-Innovation"
+      ]
+    ]
+  },
+  {
+    "slug": "college-advisor",
+    "title": "CollegeAdvisor",
+    "subtitle": "An answer should come with a source.",
+    "category": "Product",
+    "year": "2025–2026",
+    "role": "Software developer intern",
+    "organization": "Athena AI Labs · September 2025–March 2026",
+    "summary": "A college-advising application built around retrieval, citations, and knowing when information is insufficient.",
+    "intro": "Admissions, financial aid, and transfer pathways all depend on specific information. At Athena AI Labs, I worked on an application that retrieves supporting material before constructing an answer, with checks for questions the available sources cannot support.",
+    "tools": [
+      "SwiftUI",
+      "Python API",
+      "ChromaDB",
+      "Hybrid retrieval"
+    ],
+    "facts": [
+      [
+        "5",
+        "knowledge collections"
+      ],
+      [
+        "RAG",
+        "retrieval-augmented generation"
+      ],
+      [
+        "Open",
+        "model documentation"
+      ]
+    ],
+    "sections": [
+      [
+        "Connecting the whole application",
+        "I developed a SwiftUI interface, a Python API, and retrieval-augmented generation workflows for college-advising questions. Student-profile integration supported personalized recommendations, while document ingestion organized the information the system could consult."
+      ],
+      [
+        "Retrieval before generation",
+        "The published architecture combines keyword and vector retrieval, source-authority weighting, specialized question handling, and a cite-or-abstain check. Its language model formats the response; retrieved evidence supplies the factual basis. The distinction helps make the answer’s support inspectable."
+      ],
+      [
+        "Making the work inspectable",
+        "I published CollegeAdvisor-RAG on Hugging Face with architecture notes and usage instructions. A model listing is also available on Kaggle. The portfolio focuses on the implemented retrieval and citation design; benchmark claims in a model card should not be read as a guarantee for every admissions question."
+      ]
+    ],
+    "note": "The diagram is a simplified presentation of the published architecture. The Hugging Face release is a documented model artifact, not a hosted advisory service.",
+    "links": [
+      [
+        "Hugging Face model card",
+        "https://huggingface.co/Micheal324/CollegeAdvisor-RAG"
+      ],
+      [
+        "Kaggle model",
+        "https://www.kaggle.com/models/michealjiang/college-advisor-rag"
+      ]
+    ]
+  },
+  {
+    "slug": "sign-translator",
+    "title": "Language in motion",
+    "subtitle": "Studying the distance between words and signing.",
+    "category": "Research",
+    "year": "2025–present",
+    "role": "Independent researcher & developer",
+    "organization": "Sign-Translator",
+    "summary": "Experimental models connecting language and motion through graph learning, contrastive alignment, and diffusion.",
+    "intro": "Making science education more accessible led me to a difficult research question: how can language connect to coordinated movement? Sign-Translator explores that question while keeping generated motion distinct from linguistically validated American Sign Language.",
+    "tools": [
+      "Graph neural networks",
+      "Contrastive learning",
+      "Conditional diffusion",
+      "Python"
+    ],
+    "facts": [],
+    "sections": [
+      [
+        "More than a sequence of hand poses",
+        "Signing involves timing, body movement, facial expression, and linguistic structure. A model that produces plausible coordinates has not necessarily produced understandable language. That distinction shapes both the software interfaces and the claims I make about the work."
+      ],
+      [
+        "The experimental core",
+        "I built a synthetic-data baseline linking language and motion with graph neural networks, contrastive alignment, and conditional diffusion. Data-validation tools and reproducibility checks help test the behavior of the components without treating a passing software check as evidence of ASL fluency."
+      ],
+      [
+        "A research direction, with clear limits",
+        "The runnable baseline produces experimental motion representations. It is not a validated translator, and the project has not established ASL intelligibility through an independent qualified evaluation. The repository documents the gaps between the current experiment and the larger translation pipeline."
+      ]
+    ],
+    "note": "Research prototype. Architecture and synthetic motion experiments do not establish authentic ASL translation or readiness for educational deployment.",
+    "links": [
+      [
+        "Research repository",
+        "https://github.com/Shengboj0324/Sign-Translator"
+      ]
+    ]
+  },
+  {
+    "slug": "igem",
+    "title": "Science, clearly told",
+    "subtitle": "From a biological idea to a story people can follow.",
+    "category": "Teams",
+    "year": "2024",
+    "role": "Wiki & entrepreneurship team lead",
+    "organization": "LCG-China · iGEM 2024",
+    "summary": "Website development and entrepreneurship work for an iGEM Gold Medal synthetic biology team.",
+    "intro": "A scientific project needs a clear explanation of what it does, how it works, and where it might be useful. For LCG-China, I led the wiki and entrepreneurship work that connected our team’s research with that wider story.",
+    "tools": [
+      "Web development",
+      "Scientific communication",
+      "Business planning",
+      "Team leadership"
+    ],
+    "facts": [
+      [
+        "Gold",
+        "iGEM 2024 team medal"
+      ],
+      [
+        "ExploreAid",
+        "proposed bandage business plan"
+      ]
+    ],
+    "sections": [
+      [
+        "Giving the research a structure",
+        "I directed the team’s website presentation, organizing scientific and business material into accessible explanations of the project, methods, and findings. The wiki gave different parts of the work a shared structure so readers could follow the reasoning as well as the results."
+      ],
+      [
+        "Thinking beyond the laboratory",
+        "I led development of the ExploreAid business plan for a proposed bacterial-cellulose bandage. The work considered customer needs, competing products, market positioning, production costs, and commercialization risks."
+      ],
+      [
+        "A team achievement",
+        "LCG-China earned an iGEM Gold Medal in 2024. My contribution focused on wiki development, entrepreneurship, and communicating the team’s scientific work to a wider audience."
+      ]
+    ],
+    "note": "ExploreAid was a proposed product and business plan; the team medal does not imply clinical validation or commercial release.",
+    "links": [
+      [
+        "Team wiki",
+        "https://2024.igem.wiki/lcg-china/"
+      ]
+    ]
+  },
+  {
+    "slug": "sailbot",
+    "title": "Finding a heading",
+    "subtitle": "Software that has to answer to the wind.",
+    "category": "Teams",
+    "year": "2025–2026",
+    "role": "Software contributor",
+    "organization": "Kehillah Sailbot",
+    "summary": "Control and simulation improvements for an autonomous sailboat navigating changing conditions.",
+    "intro": "An autonomous boat has to turn imperfect information into a physical decision. My contributions to Kehillah Sailbot focused on navigation, steering, wind filtering, state estimation, and the simulator used to study the boat’s behavior.",
+    "tools": [
+      "Control systems",
+      "Physics simulation",
+      "State estimation",
+      "Model-predictive steering"
+    ],
+    "facts": [],
+    "sections": [
+      [
+        "Closing the loop",
+        "A navigation decision is only useful if the boat can follow it. I contributed to the software that connects estimated conditions with steering behavior, including filtering wind information and improving the state estimates used by the controller."
+      ],
+      [
+        "Respecting physical constraints",
+        "My work included model-predictive steering with constraints on rudder movement. Explicit movement limits let the controller reason about actions the mechanism can perform, rather than assuming it can instantly reach any desired position."
+      ],
+      [
+        "Learning in simulation",
+        "I also contributed to the physics simulator and control improvements for evaluating boat behavior. Simulation provides a way to examine how changes in navigation and steering affect the system before drawing conclusions about performance on the water."
+      ]
+    ],
+    "note": "The illustration is conceptual. This page describes software contributions and does not report unverified competition or on-water performance.",
+    "links": [
+      [
+        "GitHub profile",
+        "https://github.com/Shengboj0324"
+      ]
+    ]
+  },
+  {
+    "slug": "developer-agent",
+    "title": "A better test for an agent",
+    "subtitle": "Making software experiments easier to trust.",
+    "category": "Research",
+    "year": "2026",
+    "role": "Developer",
+    "organization": "ZenithSync Developer Agent",
+    "summary": "Repository-task evaluation and training-data tools for studying a coding agent’s behavior.",
+    "intro": "Before asking whether a coding agent improved, it helps to know exactly what it was tested on. This project focuses on the infrastructure behind that question: task provenance, evaluation isolation, deterministic training schedules, and recoverable runs.",
+    "tools": [
+      "Python",
+      "Evaluation tooling",
+      "Training-data validation",
+      "Reproducibility"
+    ],
+    "facts": [],
+    "sections": [
+      [
+        "Knowing where each task came from",
+        "I developed source tracking and training-data preparation tools for repository tasks, alongside checks for overlap between development and evaluation data. These checks help prevent an apparent improvement from coming from exposure to the evaluation material."
+      ],
+      [
+        "Making runs comparable",
+        "Deterministic schedules, token accounting, and recovery checks make the conditions of a run explicit. Test-result validation adds another boundary: the evaluation needs to check the intended behavior and preserve enough information to inspect failures."
+      ],
+      [
+        "Separating infrastructure from performance",
+        "The project was developed around the Gemma developer-agent competition. The public repository documents implementation and readiness limits. Evaluation tooling and successful software tests do not, by themselves, demonstrate learned gains on unseen repository tasks."
+      ]
+    ],
+    "note": "Research tooling in development. The project does not yet establish learned performance gains on unseen repository tasks.",
+    "links": [
+      [
+        "Source & implementation records",
+        "https://github.com/Shengboj0324/Gemma-4-Agentic-Platform"
+      ]
+    ]
+  }
+]

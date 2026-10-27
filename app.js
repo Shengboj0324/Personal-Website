@@ -1,237 +1,109 @@
-/* Shengbo Jiang — Portfolio interactions
-   Vanilla JS: nav state, mobile menu, reveal, counters, hero canvas, CTA canvas.
-   ========================================================================= */
+'use strict';
 
-(() => {
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const $  = (q, el = document) => el.querySelector(q);
-  const $$ = (q, el = document) => Array.from(el.querySelectorAll(q));
+// Core content and navigation remain usable without JavaScript.
+document.documentElement.classList.add('js');
 
-  /* ---------- Footer year ---------- */
-  const yearEl = $('#year');
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+const menuButton = document.querySelector('.menu-toggle');
+const navigation = document.querySelector('#primary-nav');
+const mobileViewport = window.matchMedia('(max-width: 700px)');
 
-  /* ---------- Navigation: scroll state + section-aware theme ---------- */
-  const nav = $('#nav');
-  const darkSections = ['top', 'sign', 'astrobio', 'contact'];
-  const onScroll = () => {
-    if (!nav) return;
-    const y = window.scrollY;
-    nav.classList.toggle('is-scrolled', y > 24);
+function setMenu(open, restoreFocus = false) {
+  if (!menuButton || !navigation) return;
+  menuButton.setAttribute('aria-expanded', String(open));
+  menuButton.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+  navigation.classList.toggle('is-open', open);
+  document.body.classList.toggle('menu-open', open);
+  const symbol = menuButton.querySelector('span');
+  if (symbol) symbol.textContent = open ? '−' : '+';
+  if (restoreFocus) menuButton.focus();
+}
 
-    // Decide light/dark based on which section the nav overlaps.
-    let theme = 'dark';
-    const navBottom = 72;
-    for (const id of ['top','metrics','work','about','releaf','sustai','sign','athena','igem','astrobio','experience','awards','skills','faq','contact']) {
-      const el = document.getElementById(id);
-      if (!el) continue;
-      const r = el.getBoundingClientRect();
-      if (r.top <= navBottom && r.bottom > navBottom) {
-        theme = darkSections.includes(id) ? 'dark' : 'light';
-        break;
-      }
+menuButton?.addEventListener('click', () => {
+  setMenu(menuButton.getAttribute('aria-expanded') !== 'true');
+});
+
+navigation?.addEventListener('click', (event) => {
+  if (event.target instanceof Element && event.target.closest('a')) setMenu(false);
+});
+
+// Keep keyboard focus inside the mobile menu while its overlay is open.
+document.addEventListener('keydown', (event) => {
+  if (menuButton?.getAttribute('aria-expanded') !== 'true') return;
+  if (event.key === 'Escape') {
+    setMenu(false, true);
+  } else if (event.key === 'Tab' && navigation) {
+    const links = [...navigation.querySelectorAll('a[href]')];
+    const last = links.at(-1);
+    if (event.shiftKey && document.activeElement === menuButton && last) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      menuButton.focus();
     }
-    nav.classList.toggle('is-light', theme === 'light');
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  }
+});
+mobileViewport.addEventListener('change', () => setMenu(false));
 
-  /* ---------- Mobile menu ---------- */
-  const burger = $('.nav__burger');
-  const mobile = $('#mobileMenu');
-  if (burger && mobile) {
-    const close = () => {
-      burger.setAttribute('aria-expanded', 'false');
-      mobile.classList.remove('is-open');
-      mobile.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    };
-    const open = () => {
-      burger.setAttribute('aria-expanded', 'true');
-      mobile.classList.add('is-open');
-      mobile.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-    };
-    burger.addEventListener('click', () => {
-      burger.getAttribute('aria-expanded') === 'true' ? close() : open();
-    });
-    $$('.mobile-menu a').forEach(a => a.addEventListener('click', close));
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+const filterBar = document.querySelector('.filter-bar');
+if (filterBar) {
+  const filterButtons = [...filterBar.querySelectorAll('[data-filter]')];
+  const cards = [...document.querySelectorAll('.project-card[data-category]')];
+  const count = document.querySelector('#filter-count');
+  const allowedFilters = filterButtons.map((button) => button.dataset.filter);
+
+  function applyFilter(value, updateURL = false) {
+    const filter = allowedFilters.includes(value) ? value : 'All';
+    let visibleCount = 0;
+    for (const card of cards) {
+      card.hidden = filter !== 'All' && card.dataset.category !== filter;
+      if (!card.hidden) visibleCount += 1;
+    }
+    for (const button of filterButtons) {
+      button.setAttribute('aria-pressed', String(button.dataset.filter === filter));
+    }
+    if (count) count.textContent = `${visibleCount} ${visibleCount === 1 ? 'project' : 'projects'}`;
+    if (updateURL) {
+      const url = new URL(window.location.href);
+      if (filter === 'All') url.searchParams.delete('category');
+      else url.searchParams.set('category', filter);
+      window.history.replaceState(null, '', url);
+    }
   }
 
-  /* ---------- Reveal on scroll ---------- */
-  const revealEls = $$('section, .project, .metric, .award, .skill-col, .dual__card, .timeline__item, .faq__item, .cta__card, .workflow__step, .pipeline__row, .challenges > div, .engine-grid > div, .roadmap__step, .arch__node, .about__pillars article');
-  revealEls.forEach(el => el.classList.add('reveal'));
-  if ('IntersectionObserver' in window && !prefersReduced) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('is-in');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-    revealEls.forEach(el => io.observe(el));
-  } else {
-    revealEls.forEach(el => el.classList.add('is-in'));
+  filterBar.hidden = false;
+  applyFilter(new URLSearchParams(window.location.search).get('category'));
+  for (const button of filterButtons) {
+    button.addEventListener('click', () => applyFilter(button.dataset.filter, true));
   }
+  window.addEventListener('popstate', () => {
+    applyFilter(new URLSearchParams(window.location.search).get('category'));
+  });
+}
 
-  /* ---------- Count-up metrics ---------- */
-  const counters = $$('[data-count-to]');
-  const runCount = (el) => {
-    const target = parseFloat(el.dataset.countTo);
-    const prefix = el.dataset.prefix || '';
-    const suffix = el.dataset.suffix || '';
-    const duration = 1600;
-    const start = performance.now();
-    const format = (n) => {
-      const rounded = target >= 100 ? Math.round(n) : Math.round(n * 10) / 10;
-      return prefix + rounded.toLocaleString('en-US') + suffix;
-    };
-    const tick = (now) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      el.textContent = format(target * eased);
-      if (t < 1) requestAnimationFrame(tick);
-      else el.textContent = format(target);
-    };
-    requestAnimationFrame(tick);
+const copyButton = document.querySelector('[data-copy]');
+if (copyButton && navigator.clipboard?.writeText) {
+  copyButton.hidden = false;
+  copyButton.addEventListener('click', async () => {
+    const status = document.querySelector('.copy-status');
+    try {
+      await navigator.clipboard.writeText(copyButton.dataset.copy);
+      if (status) status.textContent = 'Email address copied.';
+    } catch {
+      if (status) status.textContent = 'Copy unavailable. Select the email address above, or click it to write.';
+    }
+  });
+}
+
+// Preserve useful inbound anchors from the former single-page portfolio.
+if (window.location.pathname === '/') {
+  const legacyRoutes = {
+    '#work': '/work/', '#about': '/about/', '#experience': '/about/',
+    '#awards': '/about/', '#skills': '/about/', '#contact': '/contact/',
+    '#resume': '/assets/shengbo-jiang-resume.pdf', '#releaf': '/work/releaf/',
+    '#sign': '/work/sign-translator/', '#athena': '/work/college-advisor/',
+    '#igem': '/work/igem/', '#sustai': '/work/releaf/',
   };
-  if ('IntersectionObserver' in window && !prefersReduced) {
-    const cio = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { runCount(e.target); cio.unobserve(e.target); }
-      });
-    }, { threshold: 0.4 });
-    counters.forEach(c => cio.observe(c));
-  } else {
-    counters.forEach(c => {
-      const target = parseFloat(c.dataset.countTo);
-      c.textContent = (c.dataset.prefix || '') + target.toLocaleString('en-US') + (c.dataset.suffix || '');
-    });
-  }
-
-  /* ---------- Smooth anchor scroll with nav offset ---------- */
-  $$('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', (e) => {
-      const id = a.getAttribute('href');
-      if (!id || id === '#' || id.length < 2) return;
-      const target = document.querySelector(id);
-      if (!target) return;
-      e.preventDefault();
-      const y = target.getBoundingClientRect().top + window.scrollY - 70;
-      window.scrollTo({ top: y, behavior: prefersReduced ? 'auto' : 'smooth' });
-    });
-  });
-
-  /* ---------- Canvas: particle constellation ---------- */
-  const makeConstellation = (canvas, opts = {}) => {
-    if (!canvas || prefersReduced) return;
-    const ctx = canvas.getContext('2d', { alpha: true });
-    const {
-      density = 0.00012,
-      maxLink = 140,
-      color = 'rgba(167, 139, 250, 0.75)',
-      linkColor = 'rgba(167, 139, 250, 0.22)',
-      speed = 0.35,
-    } = opts;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
-    let w = 0, h = 0, points = [], mouse = { x: -9999, y: -9999 };
-    let raf = 0;
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      w = rect.width;
-      h = rect.height;
-      canvas.width = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.max(30, Math.floor(w * h * density));
-      points = new Array(count).fill(0).map(() => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * speed,
-        vy: (Math.random() - 0.5) * speed,
-        r: Math.random() * 1.4 + 0.4,
-      }));
-    };
-
-    const loop = () => {
-      ctx.clearRect(0, 0, w, h);
-      for (let i = 0; i < points.length; i++) {
-        const p = points[i];
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > w) p.vx *= -1;
-        if (p.y < 0 || p.y > h) p.vy *= -1;
-
-        const dx = p.x - mouse.x, dy = p.y - mouse.y;
-        const d2 = dx * dx + dy * dy;
-        if (d2 < 140 * 140) {
-          const f = (1 - d2 / (140 * 140)) * 0.6;
-          p.x += dx * 0.003 * f;
-          p.y += dy * 0.003 * f;
-        }
-
-        ctx.beginPath();
-        ctx.fillStyle = color;
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      for (let i = 0; i < points.length; i++) {
-        for (let j = i + 1; j < points.length; j++) {
-          const a = points[i], b = points[j];
-          const dx = a.x - b.x, dy = a.y - b.y;
-          const d2 = dx * dx + dy * dy;
-          if (d2 < maxLink * maxLink) {
-            const alpha = 1 - Math.sqrt(d2) / maxLink;
-            ctx.strokeStyle = linkColor.replace(/[\d.]+\)$/, (alpha * 0.55).toFixed(3) + ')');
-            ctx.lineWidth = 0.6;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-      raf = requestAnimationFrame(loop);
-    };
-
-    const onMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const pt = e.touches ? e.touches[0] : e;
-      mouse.x = pt.clientX - rect.left;
-      mouse.y = pt.clientY - rect.top;
-    };
-    const onLeave = () => { mouse.x = -9999; mouse.y = -9999; };
-
-    resize();
-    loop();
-    window.addEventListener('resize', resize);
-    const host = canvas.parentElement || canvas;
-    host.addEventListener('mousemove', onMove);
-    host.addEventListener('mouseleave', onLeave);
-    host.addEventListener('touchmove', onMove, { passive: true });
-
-    // Pause when offscreen
-    const vio = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { if (!raf) loop(); }
-      else { cancelAnimationFrame(raf); raf = 0; }
-    }, { threshold: 0.01 });
-    vio.observe(canvas);
-  };
-
-  makeConstellation($('#heroCanvas'), {
-    density: 0.00014,
-    maxLink: 150,
-    color: 'rgba(186, 160, 255, 0.75)',
-    linkColor: 'rgba(125, 211, 252, 0.30)',
-    speed: 0.32,
-  });
-  makeConstellation($('#ctaCanvas'), {
-    density: 0.00009,
-    maxLink: 130,
-    color: 'rgba(125, 211, 252, 0.65)',
-    linkColor: 'rgba(139, 92, 246, 0.28)',
-    speed: 0.28,
-  });
-})();
+  const route = legacyRoutes[window.location.hash];
+  if (route) window.location.replace(route);
+}
