@@ -3,6 +3,7 @@
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
+from asset_pipeline import browser_bundles
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -45,6 +46,18 @@ def main():
         if page.headings != 1: page.errors.append(f'Expected 1 h1, found {page.headings}')
         if not page.title or not page.description: page.errors.append('Missing page metadata')
         errors.extend(f'{path.relative_to(ROOT)}: {e}' for e in page.errors)
+    bundles = browser_bundles(ROOT)
+    for name, expected in bundles.items():
+        bundle = ROOT / name
+        if not bundle.is_file() or bundle.read_bytes() != expected:
+            errors.append(f'{name}: missing or stale browser bundle; rerun scripts/build.py')
+    for path, page in pages.items():
+        for name in bundles:
+            if '/' + name not in page.refs:
+                errors.append(f'{path.relative_to(ROOT)}: does not reference current bundle {name}')
+        for ref in page.refs:
+            if urlsplit(ref).path in ('/styles.css', '/app.js'):
+                errors.append(f'{path.relative_to(ROOT)}: unversioned deployment asset {ref}')
     references = 0
     for path, page in pages.items():
         for ref in page.refs:

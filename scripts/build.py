@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Render the portfolio as portable, progressively enhanced static HTML."""
 import json
-import math
 from html import escape
 from pathlib import Path
+from asset_pipeline import browser_bundles
 
 ROOT = Path(__file__).resolve().parent.parent
+BUNDLES = browser_bundles(ROOT)
+CSS_URL = '/' + next(name for name in BUNDLES if name.endswith('.css'))
+JS_URL = '/' + next(name for name in BUNDLES if name.endswith('.js'))
 PROJECTS = json.loads((ROOT / 'content/projects.json').read_text())
 EMAIL = 'shengbojmicheal8866@gmail.com'
 SOCIAL = [('GitHub', 'https://github.com/Shengboj0324'), ('Hugging Face', 'https://huggingface.co/Micheal324'), ('Kaggle', 'https://www.kaggle.com/michealjiang'), ('LinkedIn', 'https://www.linkedin.com/in/shengbo-jiang-16a03b334')]
@@ -67,7 +70,7 @@ def document(title, description, body, active='', page_class=''):
 <meta name="theme-color" content="#f4f2eb"><meta name="color-scheme" content="light">
 <meta property="og:title" content="{E(title, quote=True)} — Shengbo Jiang"><meta property="og:description" content="{E(description, quote=True)}"><meta property="og:type" content="website"><meta property="og:image" content="/assets/social-cover.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script>
+<link rel="stylesheet" href="{CSS_URL}"><script src="{JS_URL}" defer></script>
 </head><body class="{page_class}">{header(active)}<main id="main">{body}</main>{footer()}</body></html>'''
 
 
@@ -122,6 +125,8 @@ def contact():
 
 
 def main():
+    for name, data in BUNDLES.items():
+        (ROOT / name).write_bytes(data)
     slugs=[p['slug'] for p in PROJECTS]
     if len(slugs)!=len(set(slugs)):
         raise ValueError('Project slugs must be unique')

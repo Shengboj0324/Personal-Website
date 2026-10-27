@@ -17,6 +17,7 @@ Open http://127.0.0.1:4173/. Use an HTTP server rather than opening HTML files d
 - `content/projects.json`: project copy, facts, links, and ordering.
 - `scripts/build.py`: shared HTML components and Home, Work, About, Contact, and project-page layouts.
 - `styles.css`: design tokens, page layouts, responsive styles, and reduced-motion support.
+- `scripts/asset_pipeline.py`: bundles fonts with the stylesheet and gives CSS/JS content-hashed filenames. Every generated page references the exact matching bundle, avoiding stale CDN/browser caches.
 - `app.js`: mobile navigation, work filtering, email copying, and compatibility redirects for former homepage anchors.
 - `assets/`: self-hosted fonts, optimized images, résumé, original project video, and transcript.
 - `SOURCES.md`: source provenance and editorial decisions.
@@ -53,3 +54,7 @@ Pages, links, résumé download, and the native video player work without JavaSc
 - Source links and content checked against the supplied résumé, public Hugging Face model card, Kaggle profile/writeup/models, and relevant public repositories.
 
 The older design/specification files and original `images/` remain as historical material; they are excluded from `dist/`. They are not the current content baseline.
+
+## Production cache regression
+
+The original host cached `/styles.css` and `/app.js` for one year with `immutable`. Reusing those URLs allowed old assets to survive a new HTML deployment. Generated pages now use `/assets/portfolio.<content-hash>.css` and `.js`; the CSS includes the local font declarations directly. `scripts/check.py` rejects unversioned references, incorrect bundle bytes, and page/bundle mismatches. Keep previously generated hashed bundles available for browsers with older HTML.
