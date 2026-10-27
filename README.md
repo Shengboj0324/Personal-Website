@@ -35,7 +35,7 @@ Build and check scripts use only the Python standard library. Generated HTML is 
 
 ## Pages and behavior
 
-- Home: introduction, an interactive eight-project turntable, and four selected projects. Drag the rim, select a numbered stop, use previous/next, or focus the dial and use arrow keys (Home/End select the first/last project). The center link opens the selected case study.
+- Home: introduction, an interactive eight-project turntable, and four selected projects. Drag the disc (including its center or dots), select a numbered stop, use previous/next, or focus the dial and use arrow keys (Home/End select the first/last project). A stationary tap on the center opens the selected case study.
 - Work: eight projects; Product, Research, and Teams filters. Filter state is reflected in the URL.
 - Eight dedicated case studies with roles, project context, original media, and further-reading links. Seven technical projects include an engineering section; Sign-Translator also includes original rig imagery, four repository diagrams, and native expandable research notes.
 - About: biography, experience, tools, and recognition.
@@ -44,7 +44,7 @@ Build and check scripts use only the Python standard library. Generated HTML is 
 
 Pages, links, résumé download, and the native video player work without JavaScript. Filtering and the compact mobile menu progressively enhance the HTML. Keyboard focus, Escape-to-close, reduced motion, local fonts, and alternative image text are included. The original project video has on-screen narration text; a separate text transcript is linked beside it. The video uses `preload="none"` and is fetched only when played.
 
-The turntable has no animation loop, external library, sound, or wheel-scroll interception. Pointer capture keeps dragging coherent outside the rim; cancelled gestures restore the starting selection. Touch gestures permit vertical page scrolling. The static center link works before JavaScript, while interactive controls are revealed only after initialization. See `SOURCES.md` for the interaction research and attribution.
+The turntable runs a bounded animation only after interaction: angular velocity decays with frame-rate-independent friction, then the disc settles onto the nearest project. Touch gestures on the disc are reserved for unrestricted rotation; the surrounding page scrolls normally. Pointer capture keeps dragging coherent beyond the disc, and cancelled gestures restore the starting angle. A center or dot drag suppresses its trailing click to prevent accidental navigation. The center dead zone avoids angular jumps near the spindle. Angular proximity magnifies nearby dots with a smooth falloff; mouse hover and keyboard focus also magnify them. Reduced-motion preferences skip coasting and animated settling. There is no idle animation, external library, sound, or wheel-scroll interception. The static center link works before JavaScript. See `SOURCES.md` for interaction references.
 
 ## Validation completed
 

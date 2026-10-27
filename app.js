@@ -108,22 +108,40 @@ if (turntable) {
   const counter = turntable.querySelector('.record-count');
   const status = turntable.querySelector('.record-status');
   const step = 360 / stops.length;
-  let index = 0;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let index = -1;
   let rotation = 0;
   let drag = null;
+  let animation = 0;
+  let suppressClick = false;
 
   const wrap = (value) => ((value % stops.length) + stops.length) % stops.length;
+  const angleDelta = (value) => ((value % 360 + 540) % 360) - 180;
 
-  function render(angle, announce = true) {
-    const next = wrap(Math.round(angle / step));
-    const changed = next !== index;
-    index = next;
+  function amplify(angle) {
+    for (const [i, stop] of stops.entries()) {
+      const distance = Math.abs(angleDelta(i * step - angle));
+      const proximity = Math.max(0, 1 - distance / (step * 1.35));
+      const weight = (1 - Math.cos(proximity * Math.PI)) / 2;
+      stop.style.setProperty('--record-scale', (1 + weight * 0.48).toFixed(3));
+      stop.style.setProperty('--record-layer', String(1 + Math.round(weight * 10)));
+    }
+  }
+
+  function announce() {
+    status.textContent = surface.getAttribute('aria-valuetext');
+  }
+
+  function render(angle) {
     rotation = angle;
     deck.style.setProperty('--record-angle', `${angle}deg`);
+    amplify(angle);
+    const next = wrap(Math.round(angle / step));
+    if (next === index) return;
+    index = next;
     const project = stops[index].dataset;
-    const position = `${index + 1} of ${stops.length}: ${project.title}`;
     surface.setAttribute('aria-valuenow', String(index + 1));
-    surface.setAttribute('aria-valuetext', position);
+    surface.setAttribute('aria-valuetext', `${index + 1} of ${stops.length}: ${project.title}`);
     for (const [i, stop] of stops.entries()) {
       stop.setAttribute('aria-pressed', String(i === index));
     }
@@ -133,28 +151,71 @@ if (turntable) {
     label.setAttribute('href', project.url);
     label.setAttribute('aria-label', `Open ${project.title} case study`);
     counter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(stops.length).padStart(2, '0')}`;
-    // The slider announces its own value. Other controls use a polite status.
-    if (announce && changed && document.activeElement !== surface) {
-      status.textContent = position;
+  }
+
+  function stopAnimation() {
+    cancelAnimationFrame(animation);
+    animation = 0;
+  }
+
+  function settle(target = Math.round(rotation / step) * step) {
+    stopAnimation();
+    const start = rotation;
+    const started = performance.now();
+    if (reducedMotion.matches || Math.abs(target - start) < 0.1) {
+      render(target);
+      announce();
+      return;
     }
+    function tick(now) {
+      const progress = Math.min(1, (now - started) / 220);
+      render(start + (target - start) * (1 - (1 - progress) ** 3));
+      if (progress < 1) animation = requestAnimationFrame(tick);
+      else {
+        animation = 0;
+        announce();
+      }
+    }
+    animation = requestAnimationFrame(tick);
+  }
+
+  function coast(velocity) {
+    stopAnimation();
+    if (reducedMotion.matches || Math.abs(velocity) < 0.02) {
+      settle();
+      return;
+    }
+    let last = performance.now();
+    function tick(now) {
+      const elapsed = Math.min(32, now - last);
+      last = now;
+      // Frame-rate-independent friction; the loop ends when the disc settles.
+      const decay = Math.exp(-elapsed / 150);
+      render(rotation + velocity * 150 * (1 - decay));
+      velocity *= decay;
+      if (Math.abs(velocity) > 0.015) animation = requestAnimationFrame(tick);
+      else settle();
+    }
+    animation = requestAnimationFrame(tick);
   }
 
   function select(next) {
-    const target = wrap(next) * step;
-    // Take the shortest path, including across the last/first project boundary.
-    const delta = ((target - rotation) % 360 + 540) % 360 - 180;
-    render(rotation + delta);
+    settle(rotation + angleDelta(wrap(next) * step - rotation));
   }
 
-  function angleAt(event) {
+  function pointerAngle(event) {
     const bounds = surface.getBoundingClientRect();
-    return Math.atan2(event.clientX - bounds.left - bounds.width / 2,
-      -(event.clientY - bounds.top - bounds.height / 2)) * 180 / Math.PI;
+    const x = event.clientX - bounds.left - bounds.width / 2;
+    const y = event.clientY - bounds.top - bounds.height / 2;
+    // At the spindle, tiny finger movements cannot define a reliable angle.
+    if (Math.hypot(x, y) < bounds.width * 0.12) return null;
+    return Math.atan2(x, -y) * 180 / Math.PI;
   }
 
-  for (const stop of stops) {
+  for (const [i, stop] of stops.entries()) {
     stop.hidden = false;
-    stop.addEventListener('click', () => select(Number(stop.dataset.recordIndex)));
+    stop.addEventListener('click', () => select(i));
+    stop.addEventListener('focus', () => { if (!drag && !animation) amplify(i * step); });
   }
   for (const button of turntable.querySelectorAll('[data-record-step]')) {
     button.addEventListener('click', () => select(index + Number(button.dataset.recordStep)));
@@ -162,7 +223,7 @@ if (turntable) {
   surface.hidden = false;
   turntable.querySelector('.record-controls').hidden = false;
   turntable.querySelector('.record-prompt').textContent = 'SPIN THROUGH THE WORK';
-  render(0, false);
+  render(0);
 
   surface.addEventListener('keydown', (event) => {
     const destinations = {
@@ -172,44 +233,81 @@ if (turntable) {
     };
     if (!Object.hasOwn(destinations, event.key)) return;
     event.preventDefault();
-    select(destinations[event.key]);
+    // Keyboard selection is immediate; reduced motion also skips all coasting.
+    stopAnimation();
+    render(rotation + angleDelta(wrap(destinations[event.key]) * step - rotation));
   });
 
-  surface.addEventListener('pointerdown', (event) => {
-    if (!event.isPrimary || event.button !== 0 || drag) return;
-    drag = {id: event.pointerId, startX: event.clientX, startY: event.clientY,
-      startRotation: rotation, lastAngle: angleAt(event), travel: 0, moved: false};
-    surface.setPointerCapture(event.pointerId);
+  deck.addEventListener('pointerdown', (event) => {
+    const target = event.target instanceof Element
+      ? event.target.closest('.record-surface, .record-label, .record-stop') : null;
+    if (!target || !event.isPrimary || event.button !== 0 || drag) return;
+    stopAnimation();
+    suppressClick = false;
+    drag = {id: event.pointerId, target, startX: event.clientX, startY: event.clientY,
+      startRotation: rotation, lastAngle: pointerAngle(event), lastTime: performance.now(),
+      velocity: 0, moved: false};
+    target.setPointerCapture(event.pointerId);
   });
-  surface.addEventListener('pointermove', (event) => {
-    if (!drag || event.pointerId !== drag.id) return;
-    const angle = angleAt(event);
-    const delta = ((angle - drag.lastAngle + 540) % 360) - 180;
-    drag.travel += delta;
+  deck.addEventListener('pointermove', (event) => {
+    const angle = pointerAngle(event);
+    if (!drag) {
+      if (!animation && event.pointerType === 'mouse') amplify(angle ?? rotation);
+      return;
+    }
+    if (event.pointerId !== drag.id) return;
+    const now = performance.now();
+    const delta = angle === null || drag.lastAngle === null ? 0 : angleDelta(angle - drag.lastAngle);
+    const elapsed = Math.max(1, now - drag.lastTime);
+    drag.velocity = drag.velocity * 0.35 + Math.max(-1.2, Math.min(1.2, delta / elapsed)) * 0.65;
     drag.lastAngle = angle;
+    drag.lastTime = now;
     if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 6) {
       drag.moved = true;
       deck.classList.add('is-dragging');
     }
-    if (drag.moved) render(drag.startRotation + drag.travel, false);
+    if (drag.moved) render(rotation + delta);
   });
+  deck.addEventListener('pointerleave', () => {
+    if (!drag && !animation) amplify(rotation);
+  });
+  deck.addEventListener('dragstart', (event) => event.preventDefault());
+  deck.addEventListener('click', (event) => {
+    if (!suppressClick || event.detail === 0) return;
+    // A drag starting on the center link or a dot must never become a click.
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    suppressClick = false;
+  }, true);
 
   function finishDrag(event, cancelled = false) {
     if (!drag || event.pointerId !== drag.id) return;
     const gesture = drag;
     drag = null;
     deck.classList.remove('is-dragging');
-    if (surface.hasPointerCapture(event.pointerId)) surface.releasePointerCapture(event.pointerId);
-    if (cancelled) render(gesture.startRotation, false);
-    else {
-      if (gesture.moved) render(Math.round(rotation / step) * step, false);
-      else select(Math.round(angleAt(event) / step));
-      status.textContent = surface.getAttribute('aria-valuetext');
+    suppressClick = gesture.moved || cancelled;
+    if (gesture.target.hasPointerCapture(event.pointerId)) gesture.target.releasePointerCapture(event.pointerId);
+    if (cancelled) render(gesture.startRotation);
+    else if (gesture.moved) {
+      coast(performance.now() - gesture.lastTime < 100 ? gesture.velocity : 0);
+    } else if (gesture.target === surface) {
+      const angle = pointerAngle(event);
+      if (angle !== null) select(Math.round(angle / step));
     }
+    // A stationary tap on a link or button retains its normal native action.
   }
-  surface.addEventListener('pointerup', (event) => finishDrag(event));
-  surface.addEventListener('pointercancel', (event) => finishDrag(event, true));
-  surface.addEventListener('lostpointercapture', (event) => finishDrag(event, true));
+  deck.addEventListener('pointerup', (event) => finishDrag(event));
+  deck.addEventListener('pointercancel', (event) => finishDrag(event, true));
+  deck.addEventListener('lostpointercapture', (event) => finishDrag(event, true));
+  reducedMotion.addEventListener('change', () => {
+    if (reducedMotion.matches && animation) settle();
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) return;
+    stopAnimation();
+    if (drag) finishDrag({pointerId: drag.id}, true);
+    render(Math.round(rotation / step) * step);
+  });
 }
 
 // Preserve useful inbound anchors from the former single-page portfolio.

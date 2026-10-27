@@ -101,7 +101,7 @@ def project_turntable():
 {''.join(stops)}
 </div>
 <div class="record-caption"><span class="record-count" aria-hidden="true">01 / {len(PROJECTS):02d}</span><p class="record-description">{E(first['summary'])}</p></div>
-<div class="record-controls" hidden><button type="button" data-record-step="-1" aria-label="Previous project">←</button><p id="record-help">Drag the rim or choose a number.<span>Arrow keys work, too.</span></p><button type="button" data-record-step="1" aria-label="Next project">→</button></div>
+<div class="record-controls" hidden><button type="button" data-record-step="-1" aria-label="Previous project">←</button><p id="record-help">Touch, turn, and let it glide.<span>Tap a dot · Arrow keys work, too.</span></p><button type="button" data-record-step="1" aria-label="Next project">→</button></div>
 <p class="sr-only record-status" role="status" aria-live="polite" aria-atomic="true"></p>
 </section>'''
 

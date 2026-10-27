@@ -65,19 +65,19 @@ p { font-size: 16px; line-height: 1.75; }
 .project-turntable { width: 100%; max-width: 430px; justify-self: end; padding: 12px 0 24px; min-width: 0; }
 .record-heading { display: flex; justify-content: space-between; font-size: 8px; letter-spacing: .13em; color: var(--muted); padding-inline: 6px; }
 .record-deck { position: relative; aspect-ratio: 1; margin-top: 14px; isolation: isolate; user-select: none; -webkit-user-select: none; }
-.record-rotor { position: absolute; inset: 8%; border-radius: 50%; background: repeating-radial-gradient(circle, #254b3d 0 5px, #54715e 5.5px 6px, #254b3d 6.5px 10px); border: 8px solid var(--green); transform: rotate(var(--record-angle, 0deg)); transition: transform .35s cubic-bezier(.2,.7,.25,1); box-shadow: 0 8px 0 #dedfd3; }
-.record-needle { position: absolute; top: 3%; left: calc(50% - 2px); width: 4px; height: 20%; border-radius: 3px; background: #d99470; }
-.record-needle::before { content: ''; position: absolute; left: -3px; top: -3px; width: 10px; height: 10px; border-radius: 50%; background: #d99470; }
-.record-surface { position: absolute; inset: 8%; border-radius: 50%; cursor: grab; touch-action: pan-y; }
+.record-rotor { position: absolute; inset: 8%; border-radius: 50%; background: repeating-radial-gradient(circle, #809d83 0 5px, #b3c9ac 5.5px 6px, #809d83 6.5px 10px); border: 8px solid #77967b; transform: rotate(var(--record-angle, 0deg)); box-shadow: 0 8px 0 #dce1cf; }
+.record-needle { position: absolute; top: 3%; left: calc(50% - 2px); width: 4px; height: 20%; border-radius: 3px; background: #b45735; }
+.record-needle::before { content: ''; position: absolute; left: -3px; top: -3px; width: 10px; height: 10px; border-radius: 50%; background: #b45735; }
+.record-surface { position: absolute; inset: 8%; border-radius: 50%; cursor: grab; touch-action: none; }
 .record-surface:focus-visible { outline-offset: 6px; }
-.record-deck.is-dragging .record-surface { cursor: grabbing; }
-.record-deck.is-dragging .record-rotor { transition: none; }
-.record-label { position: absolute; inset: 28%; border-radius: 50%; background: #e2e5d2; color: var(--green); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15px; border: 1px solid #abb69b; box-shadow: 0 0 0 7px #254b3d; }
+.record-deck.is-dragging, .record-deck.is-dragging * { cursor: grabbing; }
+.record-label { position: absolute; inset: 28%; border-radius: 50%; background: #f0f0dc; color: var(--green); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15px; border: 1px solid #b4c2a4; box-shadow: 0 0 0 7px #77967b; touch-action: none; -webkit-user-drag: none; }
 .record-category { font-size: 8px; text-transform: uppercase; letter-spacing: .15em; margin-bottom: 10px; }
 .record-title { font-family: var(--serif); font-size: clamp(21px, 2.5vw, 37px); font-weight: 400; line-height: 1; max-width: 100%; }
 .record-open { font-size: 9px; display: flex; align-items: center; gap: 9px; margin-top: 14px; border-bottom: 1px solid #a2ae94; padding-bottom: 3px; }
 .record-label:hover .record-open { border-color: var(--green); }
-.record-stop { position: absolute; transform: translate(-50%,-50%); width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--green); font-size: 10px; transition: background .2s, color .2s; }
+.record-stop { position: absolute; transform: translate(-50%,-50%) scale(var(--record-scale, 1)); z-index: var(--record-layer, 1); width: 44px; height: 44px; border: 1px solid #c8d2bb; border-radius: 50%; background: #faf9ee; color: var(--green); font-size: 10px; box-shadow: 0 3px 8px #254b3d0d; transition: transform .12s ease-out, background .2s, color .2s; touch-action: none; }
+.record-deck.is-dragging .record-stop { transition: background .15s, color .15s; }
 .record-stop:hover { border-color: var(--green); }
 .record-stop[aria-pressed="true"] { color: var(--paper); background: var(--green); border-color: var(--green); }
 .record-caption { display: grid; grid-template-columns: 45px 1fr; gap: 16px; margin: 18px 6px 0; min-height: 64px; }
