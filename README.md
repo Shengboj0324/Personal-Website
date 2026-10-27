@@ -18,7 +18,7 @@ Open http://127.0.0.1:4173/. Use an HTTP server rather than opening HTML files d
 - `scripts/build.py`: shared HTML components and Home, Work, About, Contact, and project-page layouts.
 - `styles.css`: design tokens, page layouts, responsive styles, and reduced-motion support.
 - `scripts/asset_pipeline.py`: bundles fonts with the stylesheet and gives CSS/JS content-hashed filenames. Every generated page references the exact matching bundle, avoiding stale CDN/browser caches.
-- `app.js`: mobile navigation, work filtering, email copying, and compatibility redirects for former homepage anchors.
+- `app.js`: the project turntable, mobile navigation, work filtering, email copying, and compatibility redirects for former homepage anchors.
 - `assets/`: self-hosted fonts, optimized images, résumé, original project video, and transcript.
 - `SOURCES.md`: source provenance and editorial decisions.
 
@@ -35,7 +35,7 @@ Build and check scripts use only the Python standard library. Generated HTML is 
 
 ## Pages and behavior
 
-- Home: introduction and four selected projects.
+- Home: introduction, an interactive eight-project turntable, and four selected projects. Drag the rim, select a numbered stop, use previous/next, or focus the dial and use arrow keys (Home/End select the first/last project). The center link opens the selected case study.
 - Work: eight projects; Product, Research, and Teams filters. Filter state is reflected in the URL.
 - Eight dedicated case studies with roles, project context, original media, and further-reading links. Seven technical projects include an engineering section; Sign-Translator also includes original rig imagery, four repository diagrams, and native expandable research notes.
 - About: biography, experience, tools, and recognition.
@@ -43,6 +43,8 @@ Build and check scripts use only the Python standard library. Generated HTML is 
 - A custom 404 page.
 
 Pages, links, résumé download, and the native video player work without JavaScript. Filtering and the compact mobile menu progressively enhance the HTML. Keyboard focus, Escape-to-close, reduced motion, local fonts, and alternative image text are included. The original project video has on-screen narration text; a separate text transcript is linked beside it. The video uses `preload="none"` and is fetched only when played.
+
+The turntable has no animation loop, external library, sound, or wheel-scroll interception. Pointer capture keeps dragging coherent outside the rim; cancelled gestures restore the starting selection. Touch gestures permit vertical page scrolling. The static center link works before JavaScript, while interactive controls are revealed only after initialization. See `SOURCES.md` for the interaction research and attribution.
 
 ## Validation completed
 

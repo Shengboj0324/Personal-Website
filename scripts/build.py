@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Render the portfolio as portable, progressively enhanced static HTML."""
 import json
+import math
 from html import escape
 from pathlib import Path
 from asset_pipeline import browser_bundles
@@ -17,14 +18,6 @@ E = escape
 
 def external(label, url, class_name='text-link'):
     return f'<a class="{class_name}" href="{E(url, quote=True)}" target="_blank" rel="noopener noreferrer">{E(label)} <span aria-hidden="true">↗</span></a>'
-
-
-def art_svg():
-    lines = []
-    for i in range(48):
-        angle = i * 180 / 48
-        lines.append(f'<ellipse cx="280" cy="280" rx="205" ry="85" transform="rotate({angle} 280 280)"/>')
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 560" fill="none"><g stroke="#315344" stroke-width=".85">' + ''.join(lines) + '</g><circle cx="280" cy="280" r="24" fill="#c96540"/><circle cx="280" cy="280" r="8" fill="#edece3"/></svg>'
 
 
 def visual(p, detail=False):
@@ -80,13 +73,46 @@ def write(path, html):
     target.write_text(html)
 
 
+def project_turntable():
+    titles = {
+        'releaf': 'Releaf', 'phoenix': 'Urban heat',
+        'assay-planner': 'Assay Planner', 'college-advisor': 'College Advisor',
+        'sign-translator': 'Language in motion', 'igem': 'Science, clearly told',
+        'sailbot': 'Sailbot', 'developer-agent': 'Developer Agent',
+    }
+    stops = []
+    for index, p in enumerate(PROJECTS):
+        angle = index * math.tau / len(PROJECTS)
+        x, y = 50 + 43 * math.sin(angle), 50 - 43 * math.cos(angle)
+        stops.append(
+            f'<button type="button" class="record-stop" style="left:{x:.3f}%;top:{y:.3f}%" '
+            f'data-record-index="{index}" data-title="{E(titles[p["slug"]], quote=True)}" '
+            f'data-category="{E(p["category"], quote=True)}" data-summary="{E(p["summary"], quote=True)}" '
+            f'data-url="/work/{p["slug"]}/" aria-label="Select project {index + 1}: {E(p["title"], quote=True)}" '
+            f'aria-pressed="{str(index == 0).lower()}" hidden>{index + 1:02d}</button>'
+        )
+    first = PROJECTS[0]
+    return f'''<section class="project-turntable" aria-label="Explore the project collection">
+<div class="record-heading"><span class="record-prompt">A RECORD OF THE WORK</span><span>01—{len(PROJECTS):02d}</span></div>
+<div class="record-deck">
+<div class="record-rotor" aria-hidden="true"><span class="record-needle"></span></div>
+<div class="record-surface" role="slider" tabindex="0" aria-label="Choose a project" aria-valuemin="1" aria-valuemax="{len(PROJECTS)}" aria-valuenow="1" aria-valuetext="1 of {len(PROJECTS)}: {E(titles[first['slug']], quote=True)}" aria-describedby="record-help" hidden></div>
+<a class="record-label" href="/work/{first['slug']}/"><span class="record-category">{E(first['category'])}</span><strong class="record-title">{E(titles[first['slug']])}</strong><span class="record-open">Open project <span aria-hidden="true">↗</span></span></a>
+{''.join(stops)}
+</div>
+<div class="record-caption"><span class="record-count" aria-hidden="true">01 / {len(PROJECTS):02d}</span><p class="record-description">{E(first['summary'])}</p></div>
+<div class="record-controls" hidden><button type="button" data-record-step="-1" aria-label="Previous project">←</button><p id="record-help">Drag the rim or choose a number.<span>Arrow keys work, too.</span></p><button type="button" data-record-step="1" aria-label="Next project">→</button></div>
+<p class="sr-only record-status" role="status" aria-live="polite" aria-atomic="true"></p>
+</section>'''
+
+
 def home():
     chosen = [PROJECTS[i] for i in [0,2,1,3]]
     cards=''.join(card(p, i+1) for i,p in enumerate(chosen))
     return document('Curiosity, put to work', 'I’m Shengbo Jiang, a student, developer, and researcher in Palo Alto. Explore my work in sustainability, scientific computing, and accessible technology.', f'''
 <section class="home-hero shell">
 <div class="hero-eyebrow"><span class="status-dot"></span> STUDENT, DEVELOPER & RESEARCHER <span class="hero-location">PALO ALTO, CALIFORNIA</span></div>
-<div class="hero-composition"><div class="hero-copy"><h1>Good questions.<br><em>Useful things.</em></h1><p>I’m Shengbo. I build software and study how it can help us understand the world—and do a little more for it.</p><a class="round-link" href="/work/">Explore my work <span aria-hidden="true">↗</span></a></div><figure class="hero-art"><img src="/assets/curiosity.svg" width="560" height="560" alt=""><figcaption>IDEAS TAKE SHAPE.</figcaption><span class="art-coordinate" aria-hidden="true">FIG. 01 / CURIOSITY</span></figure></div>
+<div class="hero-composition"><div class="hero-copy"><h1>Good questions.<br><em>Useful things.</em></h1><p>I’m Shengbo. I build software and study how it can help us understand the world—and do a little more for it.</p><a class="round-link" href="/work/">Explore my work <span aria-hidden="true">↗</span></a></div>{project_turntable()}</div>
 <div class="hero-foot"><span>From everyday sustainability to scientific questions.</span><a href="#selected-work">A few things I’ve been working on <span aria-hidden="true">↓</span></a></div></section>
 <section class="selected-section shell" id="selected-work"><div class="section-heading"><div><span class="eyebrow">01 / SELECTED WORK</span><h2>Different questions.<br>A shared <em>curiosity.</em></h2></div><a class="text-link" href="/work/">All projects <span aria-hidden="true">↗</span></a></div><div class="project-grid home-grid">{cards}</div></section>
 <section class="home-about shell"><span class="eyebrow">02 / THE PERSON BEHIND THE PROJECTS</span><div><h2>I like the space between<br><em>“what if”</em> and <em>“it works.”</em></h2><p>I’m a student at Kehillah in Palo Alto. My projects move between environmental questions, machine learning, and the practical work of making something people can use.</p><a class="text-link" href="/about/">A little more about me <span aria-hidden="true">↗</span></a></div></section>
@@ -168,7 +194,6 @@ def main():
     slugs=[p['slug'] for p in PROJECTS]
     if len(slugs)!=len(set(slugs)):
         raise ValueError('Project slugs must be unique')
-    (ROOT/'assets/curiosity.svg').write_text(art_svg())
     (ROOT/'assets/favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#254b3d"/><text x="13" y="43" font-family="Georgia,serif" font-size="38" fill="#f4f2eb">sj.</text></svg>')
     write(Path('index.html'),home())
     write(Path('work/index.html'),work())

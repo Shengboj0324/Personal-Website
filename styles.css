@@ -61,10 +61,33 @@ p { font-size: 16px; line-height: 1.75; }
 .hero-copy h1 { font-size: clamp(70px, 7.7vw, 124px); white-space: nowrap; }
 .hero-copy h1 em { color: var(--green); font-size: 1.12em; line-height: 1.05; }
 .hero-copy p { max-width: 390px; font-size: 15px; line-height: 1.75; margin: 29px 0 24px; color: var(--muted); }
-.hero-art { position: relative; width: 100%; max-width: 500px; justify-self: end; }
-.hero-art img { width: 100%; animation: orbit-in 1.6s cubic-bezier(.16, 1, .3, 1) both; }
-.hero-art figcaption { text-align: center; font-size: 9px; letter-spacing: .2em; margin-top: -24px; color: var(--green); }
-.art-coordinate { position: absolute; right: -20px; top: 50%; writing-mode: vertical-rl; font-size: 8px; letter-spacing: .13em; color: var(--muted); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.project-turntable { width: 100%; max-width: 430px; justify-self: end; padding: 12px 0 24px; min-width: 0; }
+.record-heading { display: flex; justify-content: space-between; font-size: 8px; letter-spacing: .13em; color: var(--muted); padding-inline: 6px; }
+.record-deck { position: relative; aspect-ratio: 1; margin-top: 14px; isolation: isolate; user-select: none; -webkit-user-select: none; }
+.record-rotor { position: absolute; inset: 8%; border-radius: 50%; background: repeating-radial-gradient(circle, #254b3d 0 5px, #54715e 5.5px 6px, #254b3d 6.5px 10px); border: 8px solid var(--green); transform: rotate(var(--record-angle, 0deg)); transition: transform .35s cubic-bezier(.2,.7,.25,1); box-shadow: 0 8px 0 #dedfd3; }
+.record-needle { position: absolute; top: 3%; left: calc(50% - 2px); width: 4px; height: 20%; border-radius: 3px; background: #d99470; }
+.record-needle::before { content: ''; position: absolute; left: -3px; top: -3px; width: 10px; height: 10px; border-radius: 50%; background: #d99470; }
+.record-surface { position: absolute; inset: 8%; border-radius: 50%; cursor: grab; touch-action: pan-y; }
+.record-surface:focus-visible { outline-offset: 6px; }
+.record-deck.is-dragging .record-surface { cursor: grabbing; }
+.record-deck.is-dragging .record-rotor { transition: none; }
+.record-label { position: absolute; inset: 28%; border-radius: 50%; background: #e2e5d2; color: var(--green); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15px; border: 1px solid #abb69b; box-shadow: 0 0 0 7px #254b3d; }
+.record-category { font-size: 8px; text-transform: uppercase; letter-spacing: .15em; margin-bottom: 10px; }
+.record-title { font-family: var(--serif); font-size: clamp(21px, 2.5vw, 37px); font-weight: 400; line-height: 1; max-width: 100%; }
+.record-open { font-size: 9px; display: flex; align-items: center; gap: 9px; margin-top: 14px; border-bottom: 1px solid #a2ae94; padding-bottom: 3px; }
+.record-label:hover .record-open { border-color: var(--green); }
+.record-stop { position: absolute; transform: translate(-50%,-50%); width: 44px; height: 44px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--green); font-size: 10px; transition: background .2s, color .2s; }
+.record-stop:hover { border-color: var(--green); }
+.record-stop[aria-pressed="true"] { color: var(--paper); background: var(--green); border-color: var(--green); }
+.record-caption { display: grid; grid-template-columns: 45px 1fr; gap: 16px; margin: 18px 6px 0; min-height: 64px; }
+.record-count { font-size: 9px; color: var(--green); padding-top: 3px; }
+.record-description { font-size: 12px; line-height: 1.6; color: var(--muted); }
+.record-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 12px; margin: 10px 6px 0; }
+.record-controls > button { display: grid; place-items: center; width: 44px; height: 44px; background: transparent; border: 1px solid var(--line); border-radius: 50%; font-size: 18px; flex-shrink: 0; }
+.record-controls > button:hover { background: var(--green); color: var(--paper); }
+#record-help { font-size: 10px; line-height: 1.5; text-align: center; color: var(--muted); }
+#record-help span { display: block; font-size: 9px; }
 .hero-foot { display: flex; justify-content: space-between; gap: 22px; font-size: 10px; color: var(--muted); padding-block: 20px 24px; border-bottom: 1px solid var(--line); }
 .hero-foot a { display: flex; gap: 28px; color: var(--ink); }
 .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 32px; margin-bottom: 44px; }
@@ -284,7 +307,6 @@ p { font-size: 16px; line-height: 1.75; }
 .contact-profile > span:first-child { font-size: 9px; color: var(--muted); }
 .contact-profile strong { font-size: 22px; font-weight: 500; letter-spacing: -.04em; }
 .contact-profile:hover strong { color: #648166; }
-@keyframes orbit-in { from { transform: rotate(-18deg) scale(.92); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
 @media (min-width: 1600px) { .hero-composition { min-height: 620px; } }
 @media (max-width: 1000px) {
   .technical-section { padding: 32px; }
@@ -297,9 +319,11 @@ p { font-size: 16px; line-height: 1.75; }
   .hero-composition { min-height: 450px; grid-template-columns: 1.5fr 1fr; }
   .hero-copy h1 { font-size: clamp(58px, 7.5vw, 82px); }
   .hero-copy p { max-width: 330px; }
-  .hero-art { width: 115%; }
-  .art-coordinate { display: none; }
-  .hero-art figcaption { margin-top: 0; }
+  .project-turntable { max-width: 350px; }
+  .record-title { font-size: clamp(18px, 2.6vw, 25px); }
+  .record-label { padding: 10px; }
+  .record-category { font-size: 7px; margin-bottom: 8px; }
+  .record-open { margin-top: 9px; font-size: 8px; }
   .project-grid { gap: 50px 24px; }
   .project-art { height: 340px; }
   .art-releaf .art-annotation { top: 150px; }
@@ -335,8 +359,11 @@ p { font-size: 16px; line-height: 1.75; }
   .hero-copy { padding-block: 8px 0; }
   .hero-copy h1 { font-size: clamp(38px, 12.3vw, 74px); letter-spacing: -.07em; }
   .hero-copy p { font-size: 14px; max-width: 320px; margin-top: 27px; }
-  .hero-art { width: 62%; max-width: 300px; margin: 22px auto 28px; }
-  .hero-art figcaption { font-size: 7px; margin-top: -6px; }
+  .project-turntable { max-width: 400px; margin: 35px auto 12px; padding-bottom: 16px; }
+  .record-deck { margin-top: 18px; }
+  .record-title { font-size: clamp(20px, 6vw, 30px); }
+  .record-caption { min-height: 65px; margin-top: 22px; }
+  .record-stop { width: 44px; height: 44px; }
   .hero-foot { font-size: 9px; align-items: center; line-height: 1.6; }
   .hero-foot > span { max-width: 135px; }
   .hero-foot a { max-width: 160px; gap: 15px; }

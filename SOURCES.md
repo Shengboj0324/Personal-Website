@@ -51,3 +51,10 @@ Reviewed on October 27, 2026. The supplied résumé is the primary biographical 
 - Removed unsupported claims and the older Astrobio-gen feature; it is absent from the supplied current résumé.
 
 No private services or Google Drive files were accessed for this source review. Website updates are published through the existing main-branch hosting integration, under the user's authorization.
+
+## Homepage interaction references — October 27, 2026
+
+- [Radio Garden](https://radio.garden/) uses rotation to select something worth exploring. Its [official app description](https://play.google.com/store/apps/details?id=com.jonathanpuckey.radiogarden) explicitly describes discovering stations by rotating the globe. Applied principle: turning the homepage dial selects a real project and changes its destination.
+- [Bruno Simon's portfolio](https://bruno-simon.com/) invites visitors to drive around to discover the work, with documented keyboard and touch controls. Applied principle: the playful element is also navigation, with alternative controls that make the work accessible.
+- The turntable's artwork, layout, and implementation are original. No third-party code, models, or artwork were copied. The eight stops come from this portfolio's project data. Rotation is user-controlled; there is no automatic playback or sound. Buttons and keyboard controls provide alternatives to dragging, reduced-motion preferences disable animated transitions, and the initial project link remains available without JavaScript.
+- `assets/curiosity.svg` is retained for cached pages from the earlier design; the current homepage no longer uses or generates it.
