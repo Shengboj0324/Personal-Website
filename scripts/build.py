@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Render the portfolio as portable, progressively enhanced static HTML."""
 import json
-import math
 from html import escape
 from pathlib import Path
 from asset_pipeline import browser_bundles
@@ -81,9 +80,10 @@ def project_turntable():
         'sailbot': 'Sailbot', 'developer-agent': 'Developer Agent',
     }
     stops = []
+    positions = [(54, 15), (79, 28), (86, 53), (70, 77),
+                 (44, 86), (20, 73), (13, 45), (27, 21)]
     for index, p in enumerate(PROJECTS):
-        angle = index * math.tau / len(PROJECTS)
-        x, y = 50 + 43 * math.sin(angle), 50 - 43 * math.cos(angle)
+        x, y = positions[index]
         stops.append(
             f'<button type="button" class="record-stop" style="left:{x:.3f}%;top:{y:.3f}%" '
             f'data-record-index="{index}" data-title="{E(titles[p["slug"]], quote=True)}" '
@@ -93,15 +93,15 @@ def project_turntable():
         )
     first = PROJECTS[0]
     return f'''<section class="project-turntable" aria-label="Explore the project collection">
-<div class="record-heading"><span class="record-prompt">A RECORD OF THE WORK</span><span>01—{len(PROJECTS):02d}</span></div>
+<div class="record-heading"><span class="record-prompt">A FIELD OF IDEAS</span><button class="water-motion" type="button" hidden>Pause motion</button></div>
 <div class="record-deck">
-<div class="record-rotor" aria-hidden="true"><span class="record-needle"></span></div>
+<img class="water-fallback" src="/assets/liquid-field.svg" width="500" height="500" alt="">
+<canvas class="water-canvas" width="500" height="500" aria-hidden="true" hidden></canvas>
 <div class="record-surface" role="slider" tabindex="0" aria-label="Choose a project" aria-valuemin="1" aria-valuemax="{len(PROJECTS)}" aria-valuenow="1" aria-valuetext="1 of {len(PROJECTS)}: {E(titles[first['slug']], quote=True)}" aria-describedby="record-help" hidden></div>
-<a class="record-label" href="/work/{first['slug']}/"><span class="record-category">{E(first['category'])}</span><strong class="record-title">{E(titles[first['slug']])}</strong><span class="record-open">Open project <span aria-hidden="true">↗</span></span></a>
 {''.join(stops)}
 </div>
-<div class="record-caption"><span class="record-count" aria-hidden="true">01 / {len(PROJECTS):02d}</span><p class="record-description">{E(first['summary'])}</p></div>
-<div class="record-controls" hidden><button type="button" data-record-step="-1" aria-label="Previous project">←</button><p id="record-help">Touch, turn, and let it glide.<span>Tap a dot · Arrow keys work, too.</span></p><button type="button" data-record-step="1" aria-label="Next project">→</button></div>
+<div class="record-caption"><div class="record-selection"><span class="record-count" aria-hidden="true">01 / {len(PROJECTS):02d}</span><span class="record-category">{E(first['category'])}</span></div><a class="record-label" href="/work/{first['slug']}/"><strong class="record-title">{E(titles[first['slug']])}</strong><span class="record-open">Explore <span aria-hidden="true">↗</span></span></a><p class="record-description">{E(first['summary'])}</p></div>
+<div class="record-controls" hidden><button type="button" data-record-step="-1" aria-label="Previous project">←</button><p id="record-help">Stir the water. Find a project.<span>Tap a marker · Or use arrow keys.</span></p><button type="button" data-record-step="1" aria-label="Next project">→</button></div>
 <p class="sr-only record-status" role="status" aria-live="polite" aria-atomic="true"></p>
 </section>'''
 

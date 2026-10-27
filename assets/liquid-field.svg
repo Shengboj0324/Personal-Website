@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none">
+  <defs>
+    <linearGradient id="water" x1="95" y1="60" x2="380" y2="440" gradientUnits="userSpaceOnUse"><stop stop-color="#e7efd7"/><stop offset=".48" stop-color="#a0cebd"/><stop offset="1" stop-color="#5f9a8c"/></linearGradient>
+    <linearGradient id="light" x1="120" y1="110" x2="360" y2="380" gradientUnits="userSpaceOnUse"><stop stop-color="#fffef2" stop-opacity=".9"/><stop offset="1" stop-color="#e8f1d7" stop-opacity="0"/></linearGradient>
+    <clipPath id="pool"><path d="M89 122C139 69 177 37 251 51C325 65 404 92 439 159C469 218 440 259 430 313C417 386 352 449 274 448C205 447 154 406 98 370C39 332 30 260 48 208C60 174 62 151 89 122Z"/></clipPath>
+  </defs>
+  <path d="M89 122C139 69 177 37 251 51C325 65 404 92 439 159C469 218 440 259 430 313C417 386 352 449 274 448C205 447 154 406 98 370C39 332 30 260 48 208C60 174 62 151 89 122Z" fill="url(#water)"/>
+  <g clip-path="url(#pool)">
+    <path d="M11 170C129 87 181 284 301 207C382 155 435 175 510 109L510 140C400 241 358 206 297 245C173 326 121 145 11 209Z" fill="url(#light)"/>
+    <path d="M-20 304C117 229 175 405 285 321C378 251 437 301 530 218" stroke="#f5f7df" stroke-opacity=".6" stroke-width="3"/>
+    <path d="M120 20C12 174 253 237 148 388C119 428 173 491 211 520" stroke="url(#light)" stroke-width="25"/>
+    <path d="M367 20C273 169 451 215 333 360C300 401 340 468 380 510" stroke="url(#light)" stroke-width="12"/>
+  </g>
+</svg>
