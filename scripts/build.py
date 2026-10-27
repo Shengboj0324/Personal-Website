@@ -98,6 +98,44 @@ def work():
     return document('Work', 'Projects in sustainability, scientific machine learning, accessibility, and software. Explore the questions, contributions, and evidence behind each one.', f'''<section class="page-intro shell"><span class="eyebrow">AN INDEX OF QUESTIONS & EXPERIMENTS</span><h1>Curiosity,<br><em>put to work.</em></h1><div class="intro-bottom"><p>Products, research, and things built with a team.<br>Each one started with something I wanted to understand.</p><span class="index-count">01 — 08</span></div></section><section class="work-section shell"><div class="filter-bar" hidden><div class="filters" role="group" aria-label="Filter projects">{''.join(f'<button type="button" data-filter="{x}" aria-pressed="{str(x=="All").lower()}">{x}</button>' for x in ['All','Product','Research','Teams'])}</div><span id="filter-count" role="status" aria-live="polite">8 projects</span></div><div class="project-grid">{cards}</div></section><section class="contact-strip shell"><p>The source is part of the story.</p><div class="profile-links">{external('GitHub',SOCIAL[0][1])}{external('Hugging Face',SOCIAL[1][1])}{external('Kaggle',SOCIAL[2][1])}</div></section>''', 'Work')
 
 
+def technical_section(p):
+    technical = p.get('technical')
+    if not technical:
+        return ''
+    modules = ''.join(
+        f'<li><span class="technical-number">{index:02d}</span>'
+        f'<h3>{E(title)}</h3><p>{E(description)}</p></li>'
+        for index, (title, description) in enumerate(technical['modules'], 1)
+    )
+    source = external(*technical['source']) if technical.get('source') else ''
+    return f'''<section class="technical-section shell" aria-labelledby="technical-heading">
+<div class="technical-heading"><span class="eyebrow">INSIDE THE ENGINEERING</span><h2 id="technical-heading">{E(technical['heading'])}</h2></div>
+<ol class="technical-grid">{modules}</ol>
+<div class="technical-footnote"><p>{E(technical['footnote'])}</p>{source}</div></section>'''
+
+
+def research_diagram(filename, alt, title, caption, height):
+    return f'''<figure class="research-diagram">
+<a class="diagram-image" href="/assets/{filename}" target="_blank" rel="noopener" aria-label="Open {E(title, quote=True)} diagram full size"><img src="/assets/{filename}" width="1040" height="{height}" loading="lazy" alt="{E(alt, quote=True)}"></a>
+<figcaption><h3>{E(title)}</h3><p>{E(caption)}</p><a class="text-link" href="/assets/{filename}" target="_blank" rel="noopener">View full-size diagram <span aria-hidden="true">↗</span></a></figcaption></figure>'''
+
+
+def sign_research_media():
+    diagrams = [
+        ('sign-architecture.svg', 'System diagram separating the runnable synthetic baseline from broader language, motion, and rendering research modules', 'The system, and its boundaries.', 'The repository’s architecture map separates the runnable synthetic core from the larger translation design. The newer continuous-motion experiments described above follow a separate training path.', 680),
+        ('sign-manifold.svg', 'Language and motion encoders project paired examples into a shared normalized embedding space, trained with a contrastive objective', 'Can language and movement meet?', 'A spatiotemporal graph network encodes joint motion. Language and motion vectors are normalized and aligned with a symmetric contrastive loss: matching pairs should be closer than mismatched ones. Retrieval tests probe that alignment.', 480),
+    ]
+    primary = ''.join(research_diagram(*diagram) for diagram in diagrams)
+    diffusion = research_diagram('sign-diffusion.svg', 'Conditional diffusion design: noise is progressively denoised into motion under language conditioning', 'A generative hypothesis.', 'This diagram documents the conditional-diffusion research design. The continuous experiments exposed a near-static failure mode; the selected continuous decoder instead uses discrete motion codes.', 470)
+    streaming = research_diagram('sign-streaming.svg', 'Streaming design separating buffer, speech recognition, planning, motion generation, and rendering stages', 'The timing is part of the interface.', 'The streaming contract distinguishes time to the first output from sustained throughput. It also specifies an append-only committed prefix so a later prediction cannot rewrite motion already shown. This is a design contract, not a measured production-latency claim.', 430)
+    return f'''<section class="research-notebook shell" aria-labelledby="notebook-heading">
+<div class="section-heading"><div><span class="eyebrow">VISUAL NOTES / FROM THE REPOSITORY</span><h2 id="notebook-heading">From words<br>to <em>movement.</em></h2></div></div>
+<figure class="rig-study"><img src="/assets/sign-hand-articulated.png" width="800" height="800" loading="lazy" alt="Original rendered hand-articulation test from the Sign-Translator avatar rig"><figcaption><span class="eyebrow">01 / THE RENDERING LAYER</span><h3>A pose is only<br>the beginning.</h3><p>A motion model eventually has to drive a body. This original hand-articulation render comes from the repository’s rig checks: a close look at the geometry and joint behavior behind an avatar.</p><p class="media-caption">Static rig test. It does not depict a translated sentence.</p></figcaption></figure>
+<div class="notebook-diagrams">{primary}</div>
+<div class="diagram-details"><details><summary><span>Further exploration</span>How conditional diffusion was designed</summary>{diffusion}</details><details><summary><span>Further exploration</span>What streaming motion requires</summary>{streaming}</details></div>
+</section>'''
+
+
 def project(p, i):
     facts=''.join(f'<div><strong>{E(value)}</strong><span>{E(label)}</span></div>' for value,label in p['facts'])
     sections=''.join(f'<section class="story-section"><span class="story-number">0{j+1}</span><div><h2>{E(heading)}</h2><p>{E(text)}</p></div></section>' for j,(heading,text) in enumerate(p['sections']))
@@ -107,10 +145,10 @@ def project(p, i):
     elif p['slug']=='college-advisor':
         media='<section class="architecture shell"><span class="eyebrow">SIMPLIFIED SYSTEM ARCHITECTURE</span><h2>Follow the evidence.</h2><ol class="pipeline"><li><span>01</span><strong>Question</strong><p>Student context and a specific information need.</p></li><li><span>02</span><strong>Retrieve</strong><p>Keyword and vector search across source collections.</p></li><li><span>03</span><strong>Validate</strong><p>Specialized handling and cite-or-abstain checks.</p></li><li><span>04</span><strong>Respond</strong><p>An answer formatted with supporting citations.</p></li></ol></section>'
     elif p['slug']=='sign-translator':
-        media='<section class="architecture shell"><span class="eyebrow">FROM THE RESEARCH REPOSITORY</span><h2>A map of the experiment.</h2><img class="architecture-image" src="/assets/sign-architecture.svg" alt="Sign-Translator research architecture showing the synthetic baseline and separate research modules" loading="lazy"><p class="media-caption">Original architecture diagram. Its implementation boundaries are explained in the linked repository. <a class="text-link" href="/assets/sign-architecture.svg" target="_blank" rel="noopener">Open full-size diagram ↗</a></p></section>'
+        media=sign_research_media()
     nxt=PROJECTS[(i+1)%len(PROJECTS)]
     links=''.join(external(n,u) for n,u in p['links'])
-    return document(p['title'],p['summary'],f'''<section class="case-header shell"><a class="back-link" href="/work/">← All work</a><div class="case-kicker"><span>{E(p['category'])} / {E(p['year'])}</span><span>PROJECT {i+1:02d}</span></div><h1>{E(p['title'])}</h1><p class="case-subtitle">{E(p['subtitle'])}</p><div class="case-meta"><div><span>ROLE</span><p>{E(p['role'])}</p></div><div><span>CONTEXT</span><p>{E(p['organization'])}</p></div><div><span>TOOLS & METHODS</span><p>{E(' · '.join(p['tools']))}</p></div></div></section><div class="case-cover shell">{visual(p,True)}</div><section class="case-intro shell"><span class="eyebrow">THE QUESTION</span><p>{E(p['intro'])}</p></section>{f'<section class="case-facts shell" aria-label="Project figures">{facts}</section>' if facts else ''}<div class="case-story shell">{sections}</div>{media}<section class="case-sources shell"><span class="eyebrow">CONTEXT & FURTHER READING</span><div><p>{E(p['note'])}</p><div class="source-links">{links}</div></div></section><a class="next-project shell" href="/work/{nxt['slug']}/"><span class="eyebrow">NEXT PROJECT</span><strong>{E(nxt['title'])}</strong><span class="next-arrow" aria-hidden="true">↗</span></a>''','Work','case-page')
+    return document(p['title'],p['summary'],f'''<section class="case-header shell"><a class="back-link" href="/work/">← All work</a><div class="case-kicker"><span>{E(p['category'])} / {E(p['year'])}</span><span>PROJECT {i+1:02d}</span></div><h1>{E(p['title'])}</h1><p class="case-subtitle">{E(p['subtitle'])}</p><div class="case-meta"><div><span>ROLE</span><p>{E(p['role'])}</p></div><div><span>CONTEXT</span><p>{E(p['organization'])}</p></div><div><span>TOOLS & METHODS</span><p>{E(' · '.join(p['tools']))}</p></div></div></section><div class="case-cover shell">{visual(p,True)}</div><section class="case-intro shell"><span class="eyebrow">THE QUESTION</span><p>{E(p['intro'])}</p></section>{f'<section class="case-facts shell" aria-label="Project figures">{facts}</section>' if facts else ''}<div class="case-story shell">{sections}</div>{technical_section(p)}{media}<section class="case-sources shell"><span class="eyebrow">CONTEXT & FURTHER READING</span><div><p>{E(p['note'])}</p><div class="source-links">{links}</div></div></section><a class="next-project shell" href="/work/{nxt['slug']}/"><span class="eyebrow">NEXT PROJECT</span><strong>{E(nxt['title'])}</strong><span class="next-arrow" aria-hidden="true">↗</span></a>''','Work','case-page')
 
 
 def about():

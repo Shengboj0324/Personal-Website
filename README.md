@@ -14,7 +14,7 @@ Open http://127.0.0.1:4173/. Use an HTTP server rather than opening HTML files d
 
 ## Edit and build
 
-- `content/projects.json`: project copy, facts, links, and ordering.
+- `content/projects.json`: project copy, facts, links, ordering, and optional `technical` sections (heading, three modules, footnote, and source link).
 - `scripts/build.py`: shared HTML components and Home, Work, About, Contact, and project-page layouts.
 - `styles.css`: design tokens, page layouts, responsive styles, and reduced-motion support.
 - `scripts/asset_pipeline.py`: bundles fonts with the stylesheet and gives CSS/JS content-hashed filenames. Every generated page references the exact matching bundle, avoiding stale CDN/browser caches.
@@ -37,7 +37,7 @@ Build and check scripts use only the Python standard library. Generated HTML is 
 
 - Home: introduction and four selected projects.
 - Work: eight projects; Product, Research, and Teams filters. Filter state is reflected in the URL.
-- Eight dedicated case studies with roles, project context, original media, and further-reading links.
+- Eight dedicated case studies with roles, project context, original media, and further-reading links. Seven technical projects include an engineering section; Sign-Translator also includes original rig imagery, four repository diagrams, and native expandable research notes.
 - About: biography, experience, tools, and recognition.
 - Contact: email, copy action, and public profiles.
 - A custom 404 page.
@@ -46,7 +46,7 @@ Pages, links, résumé download, and the native video player work without JavaSc
 
 ## Validation completed
 
-- 13 HTML pages and 194 local references passed the static checker.
+- 13 HTML pages and 205 local references passed the static checker.
 - Browser inspection of Home, Work, About, Contact, and the assay case study.
 - All 12 content routes checked in browser frames at 320, 390, and 768 CSS pixels: no page overflow.
 - Work filtering, mobile navigation, and email copying exercised through the UI.

@@ -204,6 +204,39 @@ p { font-size: 16px; line-height: 1.75; }
 .pipeline strong { font-size: 23px; font-weight: 500; letter-spacing: -.03em; }
 .pipeline p { font-size: 12px; margin-top: 15px; color: var(--muted); }
 .architecture-image { width: 100%; margin-top: 32px; }
+.technical-section { margin-block: 15px 60px; padding: 44px; background: #e9ece3; }
+.technical-heading { display: grid; grid-template-columns: .7fr 1.7fr; gap: 36px; align-items: start; }
+.technical-heading .eyebrow { margin-top: 8px; }
+.technical-heading h2 { max-width: 760px; font-size: clamp(32px, 3.6vw, 52px); }
+.technical-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; list-style: none; padding: 0; margin: 40px 0 0; }
+.technical-grid li { border-top: 1px solid #bdc7b9; padding-top: 20px; }
+.technical-number { display: block; color: var(--green); font-size: 11px; margin-bottom: 24px; }
+.technical-grid h3 { font-size: 23px; line-height: 1.2; letter-spacing: -.035em; margin-bottom: 16px; }
+.technical-grid p { font-size: 13px; line-height: 1.8; }
+.technical-footnote { margin-top: 32px; padding-top: 24px; border-top: 1px solid #bdc7b9; display: flex; gap: 24px 40px; justify-content: space-between; align-items: start; }
+.technical-footnote p { max-width: 670px; font-size: 11px; color: #505c50; }
+.technical-footnote .text-link { max-width: 290px; font-size: 11px; flex-shrink: 0; }
+.research-notebook { padding-block: 20px 65px; }
+.rig-study { display: grid; grid-template-columns: 1fr 1fr; align-items: center; background: #e7e5de; }
+.rig-study > img { width: 100%; }
+.rig-study figcaption { padding: clamp(25px, 4vw, 64px); }
+.rig-study h3 { font-size: clamp(32px, 4vw, 60px); line-height: 1.08; letter-spacing: -.05em; margin-bottom: 25px; }
+.rig-study p { font-size: 14px; max-width: 420px; }
+.rig-study .media-caption { font-size: 11px; }
+.notebook-diagrams { margin-top: 48px; }
+.research-diagram { margin-top: 32px; }
+.diagram-image { display: block; background: white; border: 1px solid var(--line); padding: 18px; }
+.diagram-image img { width: 100%; }
+.research-diagram figcaption { display: grid; grid-template-columns: .8fr 1.2fr; gap: 14px 40px; padding-block: 24px 32px; }
+.research-diagram h3 { font-size: 27px; letter-spacing: -.04em; line-height: 1.2; }
+.research-diagram figcaption p { color: var(--muted); font-size: 13px; }
+.research-diagram figcaption .text-link { grid-column: 2; justify-self: start; font-size: 11px; }
+.diagram-details details { border-top: 1px solid var(--line); }
+.diagram-details details:last-child { border-bottom: 1px solid var(--line); }
+.diagram-details summary { cursor: pointer; padding: 24px 32px 24px 0; font-size: 22px; letter-spacing: -.025em; }
+.diagram-details summary > span { display: inline-block; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 25px 0 8px; }
+.diagram-details details[open] summary { color: var(--green); }
+.diagram-details .research-diagram { margin-top: 0; }
 .case-sources { padding-block: 35px 60px; border-top: 1px solid var(--line); display: grid; grid-template-columns: .8fr 1.7fr; gap: 64px; }
 .case-sources p { font-size: 12px; color: var(--muted); }
 .source-links { display: flex; flex-wrap: wrap; gap: 16px 30px; margin-top: 25px; }
@@ -254,6 +287,13 @@ p { font-size: 16px; line-height: 1.75; }
 @keyframes orbit-in { from { transform: rotate(-18deg) scale(.92); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
 @media (min-width: 1600px) { .hero-composition { min-height: 620px; } }
 @media (max-width: 1000px) {
+  .technical-section { padding: 32px; }
+  .technical-grid { grid-template-columns: 1fr; gap: 28px; }
+  .technical-grid li { display: grid; grid-template-columns: 32px 1fr; gap: 12px 20px; }
+  .technical-number { grid-row: span 2; margin: 5px 0 0; }
+  .technical-grid h3 { margin-bottom: 0; }
+  .technical-grid p { grid-column: 2; }
+  .technical-footnote { flex-wrap: wrap; }
   .hero-composition { min-height: 450px; grid-template-columns: 1.5fr 1fr; }
   .hero-copy h1 { font-size: clamp(58px, 7.5vw, 82px); }
   .hero-copy p { max-width: 330px; }
@@ -377,6 +417,30 @@ p { font-size: 16px; line-height: 1.75; }
   .story-section p { font-size: 14px; }
   .story-number { margin-top: 7px; font-size: 9px; }
   .project-media, .architecture { padding-block: 25px 40px; }
+  .technical-section { padding: 25px; margin-block: 10px 40px; }
+  .technical-heading { grid-template-columns: 1fr; gap: 0; }
+  .technical-heading .eyebrow { margin-bottom: 16px; font-size: 8px; }
+  .technical-heading h2 { font-size: 31px; }
+  .technical-grid { grid-template-columns: 1fr; gap: 24px; margin-top: 28px; }
+  .technical-grid li { display: block; }
+  .technical-number { margin-bottom: 12px; }
+  .technical-grid h3 { font-size: 23px; margin-bottom: 12px; }
+  .technical-grid p { font-size: 13px; }
+  .technical-footnote { flex-direction: column; gap: 16px; margin-top: 25px; }
+  .technical-footnote .text-link { max-width: 100%; }
+  .research-notebook { padding-block: 10px 40px; }
+  .rig-study { grid-template-columns: 1fr; }
+  .rig-study figcaption { padding: 28px; }
+  .rig-study h3 { font-size: 38px; }
+  .rig-study .eyebrow { font-size: 8px; }
+  .rig-study p { font-size: 13px; }
+  .notebook-diagrams { margin-top: 32px; }
+  .diagram-image { padding: 7px; }
+  .research-diagram figcaption { grid-template-columns: 1fr; gap: 15px; padding-block: 20px 24px; }
+  .research-diagram h3 { font-size: 26px; }
+  .research-diagram figcaption .text-link { grid-column: 1; }
+  .diagram-details summary { font-size: 18px; padding-block: 20px; }
+  .diagram-details summary > span { display: block; margin: 0 0 8px; font-size: 8px; }
   .evidence-figure { grid-template-columns: 1fr; margin-top: 35px; padding: 25px; gap: 30px; }
   .evidence-figure > img { max-width: 290px; }
   .evidence-figure h3 { font-size: 32px; }

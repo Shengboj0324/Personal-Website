@@ -53,7 +53,29 @@
         "Supporting AI repository",
         "https://github.com/Shengboj0324/Sustainability-AI-Model"
       ]
-    ]
+    ],
+    "technical": {
+      "heading": "From a photo to a useful next step.",
+      "modules": [
+        [
+          "A shared request contract",
+          "The supporting AI stack separates the gateway, vision, retrieval, knowledge graph, and response services. Pydantic schemas give them a common language for image inputs, location, citations, warnings, and errors, so mobile requests can move through the pipeline predictably."
+        ],
+        [
+          "Retrieval with a purpose",
+          "Image analysis feeds material-related searches and reuse suggestions. The knowledge graph connects materials to product ideas and relationships, while retrieved documents provide supporting information. Similarity scores rank candidates; they are not calibrated probabilities that an idea will work."
+        ],
+        [
+          "Useful under partial failure",
+          "The orchestrator assembles results from several services and reports partial responses explicitly. A local lexical search can stand in when vector retrieval is unavailable. Missing required model checkpoints fail closed, making an unavailable capability visible instead of silently inventing an answer."
+        ]
+      ],
+      "footnote": "These details describe the supporting AI repository, which reports staging readiness. They are separate from the released app’s download figures.",
+      "source": [
+        "Read the service architecture",
+        "https://github.com/Shengboj0324/Sustainability-AI-Model/blob/main/PRODUCTION_MULTIMODAL_AI_UPGRADE_REPORT.md"
+      ]
+    }
   },
   {
     "slug": "phoenix",
@@ -100,7 +122,25 @@
       ]
     ],
     "note": "Paper: “Remote Sensing and Interpretable Machine Learning for Neighborhood-Level Urban Heat Vulnerability in Phoenix, Arizona.” Submitted and accepted by my supervising professor; unpublished. The graphic above illustrates the reported ranking overlap, not geographic boundaries.",
-    "links": []
+    "links": [],
+    "technical": {
+      "heading": "One city. Three ways to read it.",
+      "modules": [
+        [
+          "Environmental evidence",
+          "Landsat surface-temperature information and land-cover indicators describe the physical environment. The census tract is the neighborhood-scale unit of comparison, allowing environmental patterns and demographic information to be considered across the same 369 areas."
+        ],
+        [
+          "A change in the decision rule",
+          "I compared a temperature-only ranking with a multidimensional vulnerability ranking. Examining which tracts enter the top 37 makes the practical consequence visible: the definition of priority changes the places a cooling program would consider first."
+        ],
+        [
+          "Profiles that explain differences",
+          "Clustering identified three vulnerability profiles. These groupings give the analysis another layer beyond a ranked list: they help explain how neighborhoods differ and why one uniform intervention may not address every pattern of vulnerability."
+        ]
+      ],
+      "footnote": "Surface temperature, demographic vulnerability, and intervention priority answer related but different questions. The study compares those perspectives; it does not measure the effects of a completed cooling program."
+    }
   },
   {
     "slug": "assay-planner",
@@ -161,7 +201,29 @@
         "Source & research records",
         "https://github.com/Shengboj0324/ZenithSync-AI4S-Open-Innovation"
       ]
-    ]
+    ],
+    "technical": {
+      "heading": "The control well is part of the model.",
+      "modules": [
+        [
+          "Keep the covariance",
+          "Subtracting the same measured control from several treatment readings introduces shared error. With independent raw errors of variance s², the contrast-noise covariance is R = s²(I + 11ᵀ): 2s² on the diagonal and s² off it. The joint Gaussian model preserves that dependence."
+        ],
+        [
+          "Search the finite design space",
+          "The optimizer chooses a fixed-budget batch by reducing average posterior variance over target doses. Verified exchangeable wells can be grouped, allowing one representative per group-count pattern. This reduces enumeration without changing the optimum of the bounded problem."
+        ],
+        [
+          "Freeze, then evaluate",
+          "Model choices were fixed before confirmation on a separate public organoid study. Exact, greedy, and random policies share the same prediction model and measurement budget; patient-grouped analysis separates repeated assay contexts from independent patient IDs."
+        ]
+      ],
+      "footnote": "The covariance objective depends on the design and observed-well locations, not the response values. This is a fixed-model batch design; predictions update with measurements, but the selection rule is not response-adaptive.",
+      "source": [
+        "Read the mathematical and contribution audit",
+        "https://github.com/Shengboj0324/ZenithSync-AI4S-Open-Innovation/blob/main/docs/29-contribution-and-prior-art.md"
+      ]
+    }
   },
   {
     "slug": "college-advisor",
@@ -217,7 +279,29 @@
         "Kaggle model",
         "https://www.kaggle.com/models/michealjiang/college-advisor-rag"
       ]
-    ]
+    ],
+    "technical": {
+      "heading": "Retrieval does the factual work.",
+      "modules": [
+        [
+          "Two routes to the evidence",
+          "BM25 keyword retrieval captures exact names and terms, while dense retrieval finds passages with related meaning. Five ChromaDB collections organize the knowledge base. Combining these routes helps match both a specific college name and a less precisely worded question."
+        ],
+        [
+          "Check the question and the source",
+          "Source-authority weighting and specialized question handlers guide how retrieved material is used. A cite-or-abstain check keeps insufficient evidence visible rather than forcing every question into a confident answer. Student context enters through the application and API."
+        ],
+        [
+          "A smaller model, a narrower job",
+          "The published architecture uses a LoRA-adapted TinyLlama 1.1B model for response formatting. The retrieved evidence supplies factual content. Keeping those responsibilities separate makes it easier to inspect whether an answer is supported by its citations."
+        ]
+      ],
+      "footnote": "Architecture details follow the published model card. They describe the system’s design, not a guarantee that every retrieved fact is current or every answer is correct.",
+      "source": [
+        "Explore the model card",
+        "https://huggingface.co/Micheal324/CollegeAdvisor-RAG"
+      ]
+    }
   },
   {
     "slug": "sign-translator",
@@ -227,36 +311,62 @@
     "year": "2025–present",
     "role": "Independent researcher & developer",
     "organization": "Sign-Translator",
-    "summary": "Experimental models connecting language and motion through graph learning, contrastive alignment, and diffusion.",
+    "summary": "A language-to-motion research project spanning 3D reconstruction, learned motion codes, and the challenge of evaluating generated signing.",
     "intro": "Making science education more accessible led me to a difficult research question: how can language connect to coordinated movement? Sign-Translator explores that question while keeping generated motion distinct from linguistically validated American Sign Language.",
     "tools": [
-      "Graph neural networks",
+      "3D reconstruction",
+      "Graph networks",
       "Contrastive learning",
-      "Conditional diffusion",
-      "Python"
+      "Motion tokenization"
     ],
     "facts": [],
     "sections": [
       [
         "More than a sequence of hand poses",
-        "Signing involves timing, body movement, facial expression, and linguistic structure. A model that produces plausible coordinates has not necessarily produced understandable language. That distinction shapes both the software interfaces and the claims I make about the work."
+        "Signing coordinates the hands, body, face, gaze, and timing. I’m exploring how to represent those channels together, connect them to language, and carry the result into an articulated avatar. Each stage presents a different problem: recovering motion, learning its structure, and checking what a generated sequence actually communicates."
       ],
       [
-        "The experimental core",
-        "I built a synthetic-data baseline linking language and motion with graph neural networks, contrastive alignment, and conditional diffusion. Data-validation tools and reproducibility checks help test the behavior of the components without treating a passing software check as evidence of ASL fluency."
+        "From a synthetic baseline to continuous motion",
+        "The initial runnable system connects a spatiotemporal graph network, a language–motion contrastive objective, and conditional diffusion on synthetic motion. The newer branch works with continuous video-derived motion and part-wise discrete codes. Keeping those experiments distinct makes it possible to compare methods without treating a system diagram as evidence that every component is complete."
       ],
       [
-        "A research direction, with clear limits",
-        "The runnable baseline produces experimental motion representations. It is not a validated translator, and the project has not established ASL intelligibility through an independent qualified evaluation. The repository documents the gaps between the current experiment and the larger translation pipeline."
+        "When a better loss produced less movement",
+        "One continuous diffusion experiment reached a promising denoising loss while producing nearly static motion. Adding a velocity loss did not resolve the collapse. That result pushed the experiments toward discrete motion tokens and more direct checks of body, hand, and head dynamics—a reminder that the training objective and the behavior we care about can diverge."
       ]
     ],
-    "note": "Research prototype. Architecture and synthetic motion experiments do not establish authentic ASL translation or readiness for educational deployment.",
+    "note": "Active research prototype. The diagrams document different parts of the research design, and the avatar image is a rig test. Neither generated movement nor a rendering check establishes linguistically valid ASL. Independent intelligibility evaluation remains necessary.",
     "links": [
       [
         "Research repository",
         "https://github.com/Shengboj0324/Sign-Translator"
+      ],
+      [
+        "Training methods & experiment log",
+        "https://github.com/Shengboj0324/Sign-Translator/blob/main/docs/CONTINUOUS_TRAINING.md"
       ]
-    ]
+    ],
+    "technical": {
+      "heading": "Language has to survive the whole pipeline.",
+      "modules": [
+        [
+          "Put the motion on one clock",
+          "The continuous-data branch aligns front and side How2Sign video using landmark motion, then calibrates the cameras, triangulates positions, and fits joint rotations. Reprojection and rigid-bone checks constrain the reconstruction. These are video-derived estimates, with provenance retained, rather than motion-capture ground truth."
+        ],
+        [
+          "Learn a vocabulary of movement",
+          "A part-wise residual vector quantizer represents body, left hand, right hand, and face motion with discrete codes. The selected continuous-generation experiment predicts these codes from text plus spatial-locus conditioning. Separate channels preserve distinctions that a single stream of hand coordinates would miss."
+        ],
+        [
+          "Test what the score is measuring",
+          "An earlier retrieval evaluator scored motion with zeroed rotations surprisingly well: clip duration was leaking the answer. Fixed two-second windows, randomized offsets, and a duration-only control made that shortcut testable. A useful metric must respond to motion content, not just clip length."
+        ]
+      ],
+      "footnote": "The continuous training experiments extend the original synthetic baseline. Generated motion still requires independent linguistic evaluation before it can support a claim of understandable ASL.",
+      "source": [
+        "Read the continuous-training experiments",
+        "https://github.com/Shengboj0324/Sign-Translator/blob/main/docs/CONTINUOUS_TRAINING.md"
+      ]
+    }
   },
   {
     "slug": "igem",
@@ -340,10 +450,36 @@
     "note": "The illustration is conceptual. This page describes software contributions and does not report unverified competition or on-water performance.",
     "links": [
       [
-        "GitHub profile",
-        "https://github.com/Shengboj0324"
+        "Sailboat control repository",
+        "https://github.com/Shengboj0324/sailbot2526"
+      ],
+      [
+        "Physics simulator",
+        "https://github.com/Shengboj0324/PhysicsSimulator"
       ]
-    ]
+    ],
+    "technical": {
+      "heading": "A decision becomes a rudder angle.",
+      "modules": [
+        [
+          "Connect the control loop",
+          "The team’s ROS 2 architecture separates sensor input, navigation, and actuation. GPS fixes and wind direction feed the control system, while rudder and sail commands travel on dedicated topics. That separation makes the data entering a decision and the command leaving it inspectable."
+        ],
+        [
+          "Constrain the next move",
+          "My model-predictive steering work included limits on rudder movement. A controller must choose from actions the mechanism can perform over time. State estimation and wind filtering improve the information used to make those choices under changing conditions."
+        ],
+        [
+          "Study behavior before deployment",
+          "The physics simulator provides a setting for examining navigation and control changes together. It connects the software question—what command should be issued?—with the physical question of how the boat responds. On-water performance remains a separate evaluation."
+        ]
+      ],
+      "footnote": "The repository documents the team’s ROS 2 system. My contributions focus on navigation, steering, wind filtering, state estimation, and simulation.",
+      "source": [
+        "Explore the sailboat control repository",
+        "https://github.com/Shengboj0324/sailbot2526"
+      ]
+    }
   },
   {
     "slug": "developer-agent",
@@ -382,6 +518,28 @@
         "Source & implementation records",
         "https://github.com/Shengboj0324/Gemma-4-Agentic-Platform"
       ]
-    ]
+    ],
+    "technical": {
+      "heading": "Make an improvement reproducible.",
+      "modules": [
+        [
+          "Track the task’s lineage",
+          "Repository tasks carry source provenance and evaluation contracts. Checks for overlap and quarantine keep questionable material out of the training path. This makes the boundary between development data and held-out evaluation something the tooling can inspect."
+        ],
+        [
+          "Read the tests, not just the headline",
+          "The JUnit audit preserves individual test-case outcomes and rejects contradictory aggregate counts. Failures, errors, and skipped cases remain distinct. A successful process exit or an attractive summary count cannot substitute for the underlying test evidence."
+        ],
+        [
+          "Resume the same experiment",
+          "Deterministic schedules and token accounting make training inputs and update boundaries explicit. Resume checks reconstruct the remaining schedule and reject corrupted counters, helping a recovered run continue the intended experiment rather than quietly becoming a different one."
+        ]
+      ],
+      "footnote": "These are implemented evaluation and training-preparation mechanisms. The repository does not yet establish learned gains on unseen repository tasks.",
+      "source": [
+        "Read the implementation readiness record",
+        "https://github.com/Shengboj0324/Gemma-4-Agentic-Platform/blob/main/docs/39-p1-current-readiness.md"
+      ]
+    }
   }
 ]
