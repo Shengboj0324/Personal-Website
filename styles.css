@@ -59,7 +59,7 @@ p { font-size: 16px; line-height: 1.75; }
 .hero-composition { display: grid; grid-template-columns: 1.55fr 1fr; align-items: center; min-height: 515px; padding-top: 32px; gap: 0; }
 .hero-copy { position: relative; z-index: 1; padding-block: 25px 44px; }
 .hero-copy h1 { font-size: clamp(48px, 5.5vw, 88px); white-space: nowrap; }
-.hero-copy h1 em { color: var(--green); font-size: 1.12em; line-height: 1.05; }
+.hero-copy h1 em { color: var(--green); font-size: .94em; line-height: 1.15; }
 .hero-copy p { max-width: 390px; font-size: 15px; line-height: 1.75; margin: 29px 0 24px; color: var(--muted); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .project-turntable { width: 100%; max-width: 430px; justify-self: end; padding: 12px 0 24px; min-width: 0; }
