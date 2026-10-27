@@ -31,7 +31,7 @@ python3 scripts/package.py
 
 Build and check scripts use only the Python standard library. Generated HTML is committed alongside its sources so the repository can be served without a build step. After changing source content, rerun the builder.
 
-`package.py` creates a clean `dist/` containing only public files. It refuses to overwrite a pre-existing directory without its build marker. Deploy the **contents of `dist/`** at the root of a static host. Preserve directory index handling (`/work/releaf/` → `work/releaf/index.html`). `_headers` and `_redirects` retain the existing host conventions; other hosts may need equivalent configuration. This redesign does not publish or change a live deployment.
+`package.py` creates a clean `dist/` containing only public files. It refuses to overwrite a pre-existing directory without its build marker. Deploy the **contents of `dist/`** at the root of a static host. Preserve directory index handling (`/work/releaf/` → `work/releaf/index.html`). `_headers` and `_redirects` retain the existing host conventions; other hosts may need equivalent configuration. Packaging itself does not publish. The existing hosting integration deploys changes pushed to `main`.
 
 ## Pages and behavior
 
@@ -58,3 +58,11 @@ The older design/specification files and original `images/` remain as historical
 ## Production cache regression
 
 The original host cached `/styles.css` and `/app.js` for one year with `immutable`. Reusing those URLs allowed old assets to survive a new HTML deployment. Generated pages now use `/assets/portfolio.<content-hash>.css` and `.js`; the CSS includes the local font declarations directly. `scripts/check.py` rejects unversioned references, incorrect bundle bytes, and page/bundle mismatches. Keep previously generated hashed bundles available for browsers with older HTML.
+
+After the host has deployed a commit, verify the actual domain rather than relying on a local preview:
+
+```sh
+python3 scripts/check_live.py https://www.shengbojiang.me/
+```
+
+This checks every content route for the expected CSS/JS filenames and compares the deployed bundle bytes with the local build. A stale or incomplete deployment fails the check.
