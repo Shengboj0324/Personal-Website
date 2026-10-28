@@ -10,6 +10,7 @@ def browser_bundles(root: Path) -> dict[str, bytes]:
         raise ValueError('Expected exactly one local font import in styles.css')
     fonts = (root / 'assets/fonts.css').read_text(encoding='utf-8')
     fonts += (root / 'assets/arabic-fonts.css').read_text(encoding='utf-8')
+    fonts += (root / 'assets/devanagari-fonts.css').read_text(encoding='utf-8')
     css = stylesheet.replace(font_import, fonts, 1).encode('utf-8')
     javascript = (root / 'app.js').read_bytes()
     return {

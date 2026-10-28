@@ -634,3 +634,26 @@ html:lang(ar) .record-controls > button { transform: scaleX(-1); }
   html:not([lang="en"]) .paper-front strong { font-size: 21px; }
 }
 @media print { .language-picker { display: none; } }
+
+/* Korean preserves word boundaries; Hindi preserves conjuncts and vowel marks. */
+html:lang(ko) { --sans: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif; --serif: 'AppleMyungjo', 'Batang', 'Noto Serif KR', serif; }
+html:lang(hi) { --sans: 'Noto Sans Devanagari', 'DM Sans', sans-serif; --serif: 'Noto Serif Devanagari', serif; }
+.language-options a[lang="ko"] { font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; }
+.language-options a[lang="hi"] { font-family: 'Noto Sans Devanagari', sans-serif; }
+:is(html:lang(ko), html:lang(hi)) :is(h1, h2, h3, strong, em, .eyebrow, .hero-eyebrow, .card-meta, .art-annotation, .art-bottom, .case-kicker, .about-tags, .record-category) { letter-spacing: 0; line-height: 1.5; }
+:is(html:lang(ko), html:lang(hi)) :is(em, .case-subtitle) { font-style: normal; }
+html:lang(ko) :is(h1, h2, h3, p, a, strong) { word-break: keep-all; }
+:is(html:lang(ko), html:lang(hi)) p { line-height: 1.9; }
+:is(html:lang(ko), html:lang(hi)) .hero-copy h1 { font-size: clamp(36px, 4.4vw, 66px); line-height: 1.55; }
+:is(html:lang(ko), html:lang(hi)) .hero-copy h1 em { font-size: .94em; }
+html:lang(hi) .hero-copy h1 { line-height: 1.75; }
+html:lang(hi) :is(.case-subtitle, .record-title, .paper-front strong, .agent-type span) { line-height: 1.6; }
+:is(html:lang(ko), html:lang(hi)) :is(.about-hero h1, .contact-hero h1, .case-header h1) { font-size: clamp(42px, 6vw, 86px); }
+@media (max-width: 1000px) and (min-width: 701px) {
+  :is(html:lang(ko), html:lang(hi)) .hero-copy h1 { font-size: clamp(30px, 3.8vw, 42px); }
+}
+@media (max-width: 700px) {
+  :is(html:lang(ko), html:lang(hi)) .hero-copy h1 { font-size: clamp(29px, 8vw, 46px); }
+  :is(html:lang(ko), html:lang(hi)) :is(.about-hero h1, .contact-hero h1, .page-intro h1) { font-size: clamp(37px, 9.5vw, 62px); }
+  :is(html:lang(ko), html:lang(hi)) .case-header h1 { font-size: clamp(32px, 8.5vw, 54px); }
+}

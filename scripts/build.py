@@ -4,7 +4,7 @@ import json
 from html import escape
 from pathlib import Path
 from asset_pipeline import browser_bundles
-from i18n import render_editions
+from i18n import LANGUAGES, render_editions
 
 ROOT = Path(__file__).resolve().parent.parent
 BUNDLES = browser_bundles(ROOT)
@@ -201,6 +201,6 @@ def main():
     pages['/404.html'] = document('Page not found','This page could not be found. Explore Shengbo Jiang’s portfolio.', '<section class="page-intro shell"><span class="eyebrow">404 / A SMALL DETOUR</span><h1>Let’s find<br><em>our way back.</em></h1><p>This page isn’t here. The projects are a good place to start.</p><a class="round-link" href="/work/">Explore the work <span aria-hidden="true">↗</span></a></section>')
     for path, html in render_editions(pages):
         write(Path(path), html)
-    print(f'Rendered {(len(PROJECTS)+5)*8} static pages across 8 languages.')
+    print(f'Rendered {len(pages) * len(LANGUAGES)} static pages across {len(LANGUAGES)} languages.')
 
 if __name__=='__main__':main()

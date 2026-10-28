@@ -17,6 +17,8 @@ LANGUAGES = {
     'zh-Hans': ('简体中文', 'zh-hans'),
     'zh-Hant': ('繁體中文', 'zh-hant'),
     'ja': ('日本語', 'ja'),
+    'ko': ('한국어', 'ko'),
+    'hi': ('हिन्दी', 'hi'),
     'es': ('Español', 'es'),
     'fr': ('Français', 'fr'),
     'de': ('Deutsch', 'de'),
@@ -160,6 +162,7 @@ def selector(route, language, translate):
 
 def render_editions(pages):
     expected = set(collect_strings(pages))
+    page_headings = json.loads((ROOT / 'content/locales/page-headings.json').read_text())
     for language in LANGUAGES:
         catalog = None
         if language != 'en':
@@ -190,6 +193,9 @@ def render_editions(pages):
                 seo = '<meta name="robots" content="noindex">'
             result = result.replace('</head>', seo + '</head>', 1)
             if language != 'en':
+                if route in page_headings.get(language, {}):
+                    heading = page_headings[language][route]
+                    result = re.sub(r'(<h1>).*?(</h1>)', lambda match: match[1] + heading + match[2], result, count=1, flags=re.S)
                 if route == '/':
                     rich = json.loads((ROOT / 'content/locales/rich-headings.json').read_text())
                     result = re.sub(r'(<section class="home-about shell">.*?<h2>).*?(</h2>)', lambda match: match[1] + rich[language] + match[2], result, count=1, flags=re.S)
