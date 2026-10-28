@@ -7,6 +7,7 @@ from urllib.request import Request, urlopen
 
 from asset_pipeline import browser_bundles
 from check import Page, ROOT
+from i18n import LANGUAGES
 
 
 def fetch(base, path):
@@ -25,6 +26,9 @@ def main():
     bundles = browser_bundles(ROOT)
     pages = [ROOT/'index.html', ROOT/'about/index.html', ROOT/'contact/index.html', *sorted((ROOT/'work').rglob('index.html'))]
 
+    for _, prefix in LANGUAGES.values():
+        if prefix: pages.extend(sorted((ROOT / prefix).rglob('index.html')))
+
     def check_page(path):
         route = '/' + path.relative_to(ROOT).as_posix().removesuffix('index.html')
         data, mime = fetch(args.base_url, route)
@@ -32,6 +36,12 @@ def main():
             raise ValueError(f'{route}: expected HTML, received {mime}')
         page = Page(path)
         page.feed(data.decode('utf-8'))
+        local_page = Page(path)
+        local_page.feed(path.read_text())
+        if page.language != local_page.language or page.direction != local_page.direction:
+            raise ValueError(f'{route}: deployed language or direction differs from build')
+        if sorted(page.language_links) != sorted(LANGUAGES):
+            raise ValueError(f'{route}: missing deployed language selector')
         for bundle in bundles:
             if '/' + bundle not in page.refs:
                 raise ValueError(f'{route}: deployed HTML does not reference {bundle}')

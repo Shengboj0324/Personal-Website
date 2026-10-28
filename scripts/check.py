@@ -4,6 +4,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from asset_pipeline import browser_bundles
+from i18n import LANGUAGES
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -17,16 +18,25 @@ class Page(HTMLParser):
         self.title = False
         self.description = False
         self.errors = []
+        self.language = None
+        self.direction = None
+        self.messages = False
+        self.language_links = []
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        if tag == 'html':
+            self.language = a.get('lang')
+            self.direction = a.get('dir')
+        if a.get('id') == 'locale-messages': self.messages = True
+        if tag == 'a' and a.get('hreflang'): self.language_links.append(a['hreflang'])
         if tag == 'h1': self.headings += 1
         if tag == 'title': self.title = True
         if tag == 'meta' and a.get('name') == 'description': self.description = bool(a.get('content'))
         if 'id' in a:
             if a['id'] in self.ids: self.errors.append(f'Duplicate ID: {a["id"]}')
             self.ids.add(a['id'])
-        for attr in ('href', 'src'):
+        for attr in ('href', 'src', 'data-url'):
             if attr in a:
                 self.refs.append(a[attr])
                 if not a[attr] or a[attr] == '#': self.errors.append('Empty destination')
@@ -37,12 +47,23 @@ class Page(HTMLParser):
 
 def main():
     paths = [ROOT/'index.html', ROOT/'404.html', ROOT/'about/index.html', ROOT/'contact/index.html', *sorted((ROOT/'work').rglob('*.html'))]
+    for _, prefix in LANGUAGES.values():
+        if prefix: paths.extend(sorted((ROOT / prefix).rglob('*.html')))
+    if len(paths) != 13 * len(LANGUAGES):
+        raise SystemExit(f'Expected {13 * len(LANGUAGES)} pages, found {len(paths)}')
     pages = {}
     errors = []
     for path in paths:
         page = Page(path)
         page.feed(path.read_text())
         pages[path] = page
+        prefix = path.relative_to(ROOT).parts[0]
+        expected_language = next((code for code, (_, folder) in LANGUAGES.items() if folder == prefix), 'en')
+        if page.language != expected_language: page.errors.append('Language does not match its URL prefix')
+        if page.language not in LANGUAGES: page.errors.append('Missing or unsupported document language')
+        if page.direction != ('rtl' if page.language == 'ar' else 'ltr'): page.errors.append('Incorrect writing direction')
+        if not page.messages: page.errors.append('Missing localized UI messages')
+        if sorted(page.language_links) != sorted(LANGUAGES): page.errors.append('Incomplete language selector')
         if page.headings != 1: page.errors.append(f'Expected 1 h1, found {page.headings}')
         if not page.title or not page.description: page.errors.append('Missing page metadata')
         errors.extend(f'{path.relative_to(ROOT)}: {e}' for e in page.errors)

@@ -16,6 +16,8 @@ Open http://127.0.0.1:4173/. Use an HTTP server rather than opening HTML files d
 
 - `content/projects.json`: project copy, facts, links, ordering, and optional `technical` sections (heading, three modules, footnote, and source link).
 - `scripts/build.py`: shared HTML components and Home, Work, About, Contact, and project-page layouts.
+- `scripts/i18n.py`: static language editions, localized routes, same-page language links, metadata, and strict translation coverage.
+- `content/locales/`: checked-in translation catalogs and the complete localized heading with inline emphasis. English source text is the catalog key; add translations for new copy before building.
 - `styles.css`: design tokens, page layouts, responsive styles, and reduced-motion support.
 - `scripts/asset_pipeline.py`: bundles fonts with the stylesheet and gives CSS/JS content-hashed filenames. Every generated page references the exact matching bundle, avoiding stale CDN/browser caches.
 - `app.js`: the liquid project explorer, mobile navigation, work filtering, email copying, and compatibility redirects for former homepage anchors.
@@ -25,6 +27,7 @@ Open http://127.0.0.1:4173/. Use an HTTP server rather than opening HTML files d
 ```sh
 python3 scripts/build.py
 python3 scripts/check.py
+python3 scripts/test_i18n.py
 node --check app.js
 python3 scripts/package.py
 ```
@@ -50,7 +53,10 @@ Touch gestures on the surface are reserved for unrestricted turning; the surroun
 
 ## Validation completed
 
-- 13 HTML pages and 206 local references passed the static checker.
+- 104 HTML pages across eight languages and 2,544 local references passed the static checker.
+- All 96 content routes checked at 320, 390, 768, 901, 1024, and 1280 CSS pixels: 576 layout checks with no page or prose overflow.
+- Localization regression tests cover internal routes versus external/media URLs, filter identifiers, escaping, missing copy, same-page language options, and Arabic document direction.
+- Language switching preserves the current page, fragment, and active project filter; the language selector and localized navigation also work without JavaScript.
 - Browser inspection of Home, Work, About, Contact, and the assay case study.
 - All 12 content routes checked in browser frames at 320, 390, and 768 CSS pixels: no page overflow.
 - Work filtering, mobile navigation, and email copying exercised through the UI.
@@ -70,3 +76,13 @@ python3 scripts/check_live.py https://www.shengbojiang.me/
 ```
 
 This checks every content route for the expected CSS/JS filenames and compares the deployed bundle bytes with the local build. A stale or incomplete deployment fails the check.
+
+## Languages
+
+English remains at `/`. The additional editions are Simplified Chinese (`/zh-hans/`), Traditional Chinese (`/zh-hant/`), Japanese (`/ja/`), Spanish (`/es/`), French (`/fr/`), German (`/de/`), and Arabic (`/ar/`). Each has all twelve content pages and a translated 404 document. Visitors choose a language explicitly; there is no location-based redirect or external translation widget.
+
+The header selector links to the equivalent page. Internal navigation retains the chosen language; JavaScript additionally preserves query parameters and fragments when switching. Filters keep stable internal identifiers while labels and status messages are localized. Canonical and `hreflang` links describe the corresponding editions. The host's fallback 404 remains the English root document, which includes the language selector.
+
+Typography uses native Chinese/Japanese font stacks and normal upright emphasis for CJK text. Arabic uses self-hosted Noto Sans Arabic and Noto Naskh Arabic, right-to-left navigation and reading order, and isolated left-to-right media geometry and email addresses. Longer translated headings wrap naturally; cards, controls, and metadata do not rely on English text lengths. The original English headline remains unchanged.
+
+Long-form translation drafts were machine-assisted from the public English website. The headline, key interface wording, project summaries, names, and selected technical caveats were refined manually. These have not received a professional native-speaker review in every language. Original screenshots, diagrams, video, downloadable transcript, and résumé retain their source language, with explanatory labels in translated pages. No translation service is contacted during builds or visits; catalogs are local files. Build validation rejects missing text, empty translations, and changed interpolation placeholders.

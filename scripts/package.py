@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from i18n import LANGUAGES
 
 ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT / 'dist'
@@ -24,6 +25,8 @@ def main():
         shutil.copy2(ROOT/name, OUTPUT/name)
     for name in ('work', 'about', 'contact', 'assets'):
         shutil.copytree(ROOT/name, OUTPUT/name)
+    for _, prefix in LANGUAGES.values():
+        if prefix: shutil.copytree(ROOT / prefix, OUTPUT / prefix)
     size = sum(p.stat().st_size for p in OUTPUT.rglob('*') if p.is_file())
     print(f'Packaged public website: {OUTPUT} ({size / 1_000_000:.2f} MB).')
 

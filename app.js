@@ -3,14 +3,51 @@
 // Core content and navigation remain usable without JavaScript.
 document.documentElement.classList.add('js');
 
+const locale = document.documentElement.lang || 'en';
+const localePrefix = document.documentElement.dataset.localePrefix || '';
+const localeMessages = JSON.parse(document.querySelector('#locale-messages')?.textContent || '{}');
+const localNumber = new Intl.NumberFormat(locale);
+const localPlural = new Intl.PluralRules(locale);
+const projectNumber = new Intl.NumberFormat(locale, {minimumIntegerDigits: 2});
+function t(key, values = {}) {
+  return (localeMessages[key] || key).replace(/\{(\w+)\}/g, (match, name) => values[name] ?? match);
+}
+
+// Native details and links work without JavaScript; preserve page context on change.
+const languagePicker = document.querySelector('.language-picker');
+function updateLanguageLinks() {
+  for (const link of languagePicker?.querySelectorAll('a[hreflang]') || []) {
+    const url = new URL(link.href);
+    url.search = window.location.search;
+    url.hash = window.location.hash;
+    link.href = url.href;
+  }
+}
+updateLanguageLinks();
+languagePicker?.addEventListener('toggle', () => {
+  if (languagePicker.open) {
+    updateLanguageLinks();
+    setMenu(false);
+  }
+});
+document.addEventListener('click', (event) => {
+  if (languagePicker?.open && !languagePicker.contains(event.target)) languagePicker.open = false;
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && languagePicker?.open) {
+    languagePicker.open = false;
+    languagePicker.querySelector('summary').focus();
+  }
+});
+
 const menuButton = document.querySelector('.menu-toggle');
 const navigation = document.querySelector('#primary-nav');
-const mobileViewport = window.matchMedia('(max-width: 700px)');
+const mobileViewport = window.matchMedia('(max-width: 900px)');
 
 function setMenu(open, restoreFocus = false) {
   if (!menuButton || !navigation) return;
   menuButton.setAttribute('aria-expanded', String(open));
-  menuButton.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+  menuButton.setAttribute('aria-label', t(open ? 'menuClose' : 'menuOpen'));
   navigation.classList.toggle('is-open', open);
   document.body.classList.toggle('menu-open', open);
   const symbol = menuButton.querySelector('span');
@@ -62,7 +99,10 @@ if (filterBar) {
     for (const button of filterButtons) {
       button.setAttribute('aria-pressed', String(button.dataset.filter === filter));
     }
-    if (count) count.textContent = `${visibleCount} ${visibleCount === 1 ? 'project' : 'projects'}`;
+    if (count) {
+      const plural = localPlural.select(visibleCount);
+      count.textContent = t(plural === 'one' ? 'countOne' : plural === 'two' ? 'countTwo' : 'countMany', {count: localNumber.format(visibleCount)});
+    }
     if (updateURL) {
       const url = new URL(window.location.href);
       if (filter === 'All') url.searchParams.delete('category');
@@ -88,9 +128,9 @@ if (copyButton && navigator.clipboard?.writeText) {
     const status = document.querySelector('.copy-status');
     try {
       await navigator.clipboard.writeText(copyButton.dataset.copy);
-      if (status) status.textContent = 'Email address copied.';
+      if (status) status.textContent = t('copied');
     } catch {
-      if (status) status.textContent = 'Copy unavailable. Select the email address above, or click it to write.';
+      if (status) status.textContent = t('copyFailed');
     }
   });
 }
@@ -247,7 +287,7 @@ function createLiquidSurface(deck, reducedMotion, motionButton) {
   function refresh() {
     cancelAnimationFrame(frame); frame = 0;
     motionButton.disabled = reducedMotion.matches;
-    motionButton.textContent = reducedMotion.matches ? 'Reduced motion' : paused ? 'Resume motion' : 'Pause motion';
+    motionButton.textContent = t(reducedMotion.matches ? 'reduced' : paused ? 'resume' : 'pause');
     draw();
     if (running()) { last = performance.now(); frame = requestAnimationFrame(tick); }
   }
@@ -335,7 +375,7 @@ if (turntable) {
     index = next;
     const project = stops[index].dataset;
     surface.setAttribute('aria-valuenow', String(index + 1));
-    surface.setAttribute('aria-valuetext', `${index + 1} of ${stops.length}: ${project.title}`);
+    surface.setAttribute('aria-valuetext', t('position', {index: localNumber.format(index + 1), total: localNumber.format(stops.length), title: project.title}));
     for (const [i, stop] of stops.entries()) {
       stop.setAttribute('aria-pressed', String(i === index));
     }
@@ -343,8 +383,8 @@ if (turntable) {
     category.textContent = project.category;
     description.textContent = project.summary;
     label.setAttribute('href', project.url);
-    label.setAttribute('aria-label', `Open ${project.title} case study`);
-    counter.textContent = `${String(index + 1).padStart(2, '0')} / ${String(stops.length).padStart(2, '0')}`;
+    label.setAttribute('aria-label', t('openCase', {title: project.title}));
+    counter.textContent = `${projectNumber.format(index + 1)} / ${projectNumber.format(stops.length)}`;
   }
 
   function stopAnimation() {
@@ -416,13 +456,12 @@ if (turntable) {
   }
   surface.hidden = false;
   turntable.querySelector('.record-controls').hidden = false;
-  turntable.querySelector('.record-prompt').textContent = 'A FIELD OF IDEAS';
   render(0);
 
   surface.addEventListener('keydown', (event) => {
     const destinations = {
-      ArrowRight: index + 1, ArrowUp: index + 1,
-      ArrowLeft: index - 1, ArrowDown: index - 1,
+      ArrowRight: index + (locale === 'ar' ? -1 : 1), ArrowUp: index + 1,
+      ArrowLeft: index + (locale === 'ar' ? 1 : -1), ArrowDown: index - 1,
       Home: 0, End: stops.length - 1,
     };
     if (!Object.hasOwn(destinations, event.key)) return;
@@ -508,7 +547,7 @@ if (turntable) {
 }
 
 // Preserve useful inbound anchors from the former single-page portfolio.
-if (window.location.pathname === '/') {
+if (window.location.pathname === `${localePrefix}/`) {
   const legacyRoutes = {
     '#work': '/work/', '#about': '/about/', '#experience': '/about/',
     '#awards': '/about/', '#skills': '/about/', '#contact': '/contact/',
@@ -517,5 +556,5 @@ if (window.location.pathname === '/') {
     '#igem': '/work/igem/', '#sustai': '/work/releaf/',
   };
   const route = legacyRoutes[window.location.hash];
-  if (route) window.location.replace(route);
+  if (route) window.location.replace(route.startsWith('/assets/') ? route : localePrefix + route);
 }

@@ -4,6 +4,7 @@ import json
 from html import escape
 from pathlib import Path
 from asset_pipeline import browser_bundles
+from i18n import render_editions
 
 ROOT = Path(__file__).resolve().parent.parent
 BUNDLES = browser_bundles(ROOT)
@@ -195,12 +196,11 @@ def main():
     if len(slugs)!=len(set(slugs)):
         raise ValueError('Project slugs must be unique')
     (ROOT/'assets/favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#254b3d"/><text x="13" y="43" font-family="Georgia,serif" font-size="38" fill="#f4f2eb">sj.</text></svg>')
-    write(Path('index.html'),home())
-    write(Path('work/index.html'),work())
-    write(Path('about/index.html'),about())
-    write(Path('contact/index.html'),contact())
-    for i,p in enumerate(PROJECTS):write(Path('work')/p['slug']/'index.html',project(p,i))
-    write(Path('404.html'),document('Page not found','This page could not be found. Explore Shengbo Jiang’s portfolio.', '<section class="page-intro shell"><span class="eyebrow">404 / A SMALL DETOUR</span><h1>Let’s find<br><em>our way back.</em></h1><p>This page isn’t here. The projects are a good place to start.</p><a class="round-link" href="/work/">Explore the work <span aria-hidden="true">↗</span></a></section>'))
-    print(f'Rendered {len(PROJECTS)+5} static pages.')
+    pages = {'/': home(), '/work/': work(), '/about/': about(), '/contact/': contact()}
+    pages.update({f'/work/{p["slug"]}/': project(p, i) for i, p in enumerate(PROJECTS)})
+    pages['/404.html'] = document('Page not found','This page could not be found. Explore Shengbo Jiang’s portfolio.', '<section class="page-intro shell"><span class="eyebrow">404 / A SMALL DETOUR</span><h1>Let’s find<br><em>our way back.</em></h1><p>This page isn’t here. The projects are a good place to start.</p><a class="round-link" href="/work/">Explore the work <span aria-hidden="true">↗</span></a></section>')
+    for path, html in render_editions(pages):
+        write(Path(path), html)
+    print(f'Rendered {(len(PROJECTS)+5)*8} static pages across 8 languages.')
 
 if __name__=='__main__':main()
