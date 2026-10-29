@@ -154,6 +154,7 @@ function createLiquidSurface(deck, reducedMotion, motionButton) {
   let visible = true;
   let size = 500;
   let wake = [];
+  let lastCaustics = -Infinity;
   const lightCanvas = document.createElement('canvas');
   lightCanvas.width = 128; lightCanvas.height = 128;
   const lightContext = lightCanvas.getContext('2d');
@@ -243,7 +244,11 @@ function createLiquidSurface(deck, reducedMotion, motionButton) {
       c.strokeStyle = '#faffed24'; c.lineWidth = 1.3; c.stroke();
     }
     c.restore();
-    caustics();
+    // Cache the expensive light texture; touch wakes still render every frame.
+    if (now - lastCaustics >= 64) {
+      caustics();
+      lastCaustics = now;
+    }
     if (lightPixels) c.drawImage(lightCanvas, 0, 0, 500, 500);
     // Diffuse glints keep the material transparent rather than metallic.
     const glint = c.createRadialGradient(178, 150, 10, 210, 180, 210);
@@ -277,7 +282,8 @@ function createLiquidSurface(deck, reducedMotion, motionButton) {
   function tick(now) {
     frame = 0;
     if (!running()) return;
-    if (now - last >= 32) {
+    // Keep idle animation light, but draw active finger trails at display cadence.
+    if (wake.length || now - last >= 32) {
       const elapsed = Math.min(64, now - last);
       time += elapsed / 1000; energy *= Math.exp(-elapsed / 450);
       last = now; draw(now);
@@ -348,13 +354,24 @@ if (turntable) {
   let drag = null;
   let animation = 0;
   let suppressClick = false;
+  let pointerFrame = 0;
+  let pendingPointer = null;
 
   const wrap = (value) => ((value % stops.length) + stops.length) % stops.length;
   const angleDelta = (value) => ((value % 360 + 540) % 360) - 180;
 
+  // Markers follow the organic outline, so their bearings are not equal sectors.
+  const markerAngles = stops.map((stop) => Math.atan2(
+    parseFloat(stop.style.left) - 50, 50 - parseFloat(stop.style.top),
+  ) * 180 / Math.PI);
+  function nearestMarker(angle) {
+    return markerAngles.reduce((nearest, bearing, i) =>
+      Math.abs(angleDelta(bearing - angle)) < Math.abs(angleDelta(markerAngles[nearest] - angle)) ? i : nearest, 0);
+  }
+
   function amplify(angle) {
     for (const [i, stop] of stops.entries()) {
-      const distance = Math.abs(angleDelta(i * step - angle));
+      const distance = Math.abs(angleDelta(markerAngles[i] - angle));
       const proximity = Math.max(0, 1 - distance / (step * 1.35));
       const weight = (1 - Math.cos(proximity * Math.PI)) / 2;
       stop.style.setProperty('--record-scale', (1 + weight * 0.48).toFixed(3));
@@ -369,7 +386,7 @@ if (turntable) {
   function render(angle) {
     rotation = angle;
     amplify(angle);
-    const next = wrap(Math.round(angle / step));
+    const next = nearestMarker(angle);
     liquid?.turn(angle, next);
     if (next === index) return;
     index = next;
@@ -392,7 +409,7 @@ if (turntable) {
     animation = 0;
   }
 
-  function settle(target = Math.round(rotation / step) * step) {
+  function settle(target = rotation + angleDelta(markerAngles[nearestMarker(rotation)] - rotation)) {
     stopAnimation();
     const start = rotation;
     const started = performance.now();
@@ -413,32 +430,12 @@ if (turntable) {
     animation = requestAnimationFrame(tick);
   }
 
-  function coast(velocity) {
-    stopAnimation();
-    if (reducedMotion.matches || Math.abs(velocity) < 0.02) {
-      settle();
-      return;
-    }
-    let last = performance.now();
-    function tick(now) {
-      const elapsed = Math.min(32, now - last);
-      last = now;
-      // Frame-rate-independent friction; the loop ends at the nearest project.
-      const decay = Math.exp(-elapsed / 150);
-      render(rotation + velocity * 150 * (1 - decay));
-      velocity *= decay;
-      if (Math.abs(velocity) > 0.015) animation = requestAnimationFrame(tick);
-      else settle();
-    }
-    animation = requestAnimationFrame(tick);
-  }
-
   function select(next) {
-    settle(rotation + angleDelta(wrap(next) * step - rotation));
+    settle(rotation + angleDelta(markerAngles[wrap(next)] - rotation));
   }
 
   function pointerAngle(event) {
-    const bounds = surface.getBoundingClientRect();
+    const bounds = deck.getBoundingClientRect();
     const x = event.clientX - bounds.left - bounds.width / 2;
     const y = event.clientY - bounds.top - bounds.height / 2;
     // Near the center, tiny finger movements cannot define a reliable angle.
@@ -449,14 +446,14 @@ if (turntable) {
   for (const [i, stop] of stops.entries()) {
     stop.hidden = false;
     stop.addEventListener('click', () => select(i));
-    stop.addEventListener('focus', () => { if (!drag && !animation) amplify(i * step); });
+    stop.addEventListener('focus', () => { if (!drag && !animation) amplify(markerAngles[i]); });
   }
   for (const button of turntable.querySelectorAll('[data-record-step]')) {
     button.addEventListener('click', () => select(index + Number(button.dataset.recordStep)));
   }
   surface.hidden = false;
   turntable.querySelector('.record-controls').hidden = false;
-  render(0);
+  render(markerAngles[0]);
 
   surface.addEventListener('keydown', (event) => {
     const destinations = {
@@ -466,46 +463,63 @@ if (turntable) {
     };
     if (!Object.hasOwn(destinations, event.key)) return;
     event.preventDefault();
-    // Keyboard selection is immediate; reduced motion also skips all coasting.
+    // Keyboard selection is immediate; reduced motion also skips settling animation.
     stopAnimation();
-    render(rotation + angleDelta(wrap(destinations[event.key]) * step - rotation));
+    render(rotation + angleDelta(markerAngles[wrap(destinations[event.key])] - rotation));
     announce();
   });
+
+  function followPointer(event) {
+    liquid?.stir(event);
+    const angle = pointerAngle(event);
+    if (angle === null) return;
+    // Absolute bearing removes any offset from the previously selected project.
+    // Unwrap across north so a full turn never jumps by 360 degrees.
+    render(rotation + angleDelta(angle - rotation));
+  }
+
+  function flushPointer() {
+    cancelAnimationFrame(pointerFrame);
+    pointerFrame = 0;
+    const event = pendingPointer;
+    pendingPointer = null;
+    if (!event) return;
+    if (drag) followPointer(event);
+    else {
+      liquid?.stir(event);
+      if (!animation && event.pointerType === 'mouse') amplify(pointerAngle(event) ?? rotation);
+    }
+  }
 
   deck.addEventListener('pointerdown', (event) => {
     const target = event.target instanceof Element
       ? event.target.closest('.record-surface, .record-stop') : null;
     if (!target || !event.isPrimary || event.button !== 0 || drag) return;
     stopAnimation();
-    liquid?.stir(event);
+    cancelAnimationFrame(pointerFrame);
+    pendingPointer = null;
+    pointerFrame = 0;
     suppressClick = false;
     drag = {id: event.pointerId, target, startX: event.clientX, startY: event.clientY,
-      startRotation: rotation, lastAngle: pointerAngle(event), lastTime: performance.now(),
-      velocity: 0, moved: false};
+      startRotation: rotation, moved: false};
     target.setPointerCapture(event.pointerId);
+    deck.classList.add('is-dragging');
+    followPointer(event);
   });
   deck.addEventListener('pointermove', (event) => {
-    if (!drag || event.pointerId === drag.id) liquid?.stir(event);
-    const angle = pointerAngle(event);
-    if (!drag) {
-      if (!animation && event.pointerType === 'mouse') amplify(angle ?? rotation);
-      return;
-    }
-    if (event.pointerId !== drag.id) return;
-    const now = performance.now();
-    const delta = angle === null || drag.lastAngle === null ? 0 : angleDelta(angle - drag.lastAngle);
-    const elapsed = Math.max(1, now - drag.lastTime);
-    drag.velocity = drag.velocity * 0.35 + Math.max(-1.2, Math.min(1.2, delta / elapsed)) * 0.65;
-    drag.lastAngle = angle;
-    drag.lastTime = now;
-    if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 6) {
-      drag.moved = true;
-      deck.classList.add('is-dragging');
-    }
-    if (drag.moved) render(rotation + delta);
+    if (drag && event.pointerId !== drag.id) return;
+    if (drag && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 6) drag.moved = true;
+    // Apply the latest position once per display frame, without easing behind it.
+    pendingPointer = event;
+    if (!pointerFrame) pointerFrame = requestAnimationFrame(flushPointer);
   });
   deck.addEventListener('pointerleave', () => {
-    if (!drag && !animation) amplify(rotation);
+    if (!drag) {
+      cancelAnimationFrame(pointerFrame);
+      pointerFrame = 0;
+      pendingPointer = null;
+      if (!animation) amplify(rotation);
+    }
   });
   deck.addEventListener('dragstart', (event) => event.preventDefault());
   deck.addEventListener('click', (event) => {
@@ -519,17 +533,20 @@ if (turntable) {
   function finishDrag(event, cancelled = false) {
     if (!drag || event.pointerId !== drag.id) return;
     const gesture = drag;
+    // pointerup can arrive before the queued frame; keep its final position.
+    cancelAnimationFrame(pointerFrame);
+    pointerFrame = 0;
+    pendingPointer = null;
+    if (!cancelled) {
+      if (Math.hypot(event.clientX - gesture.startX, event.clientY - gesture.startY) > 6) gesture.moved = true;
+      followPointer(event);
+    }
     drag = null;
     deck.classList.remove('is-dragging');
     suppressClick = gesture.moved || cancelled;
     if (gesture.target.hasPointerCapture(event.pointerId)) gesture.target.releasePointerCapture(event.pointerId);
     if (cancelled) render(gesture.startRotation);
-    else if (gesture.moved) {
-      coast(performance.now() - gesture.lastTime < 100 ? gesture.velocity : 0);
-    } else if (gesture.target === surface) {
-      const angle = pointerAngle(event);
-      if (angle !== null) select(Math.round(angle / step));
-    }
+    else settle();
     // A stationary tap on a marker retains its normal button action.
   }
   deck.addEventListener('pointerup', (event) => finishDrag(event));
@@ -542,7 +559,7 @@ if (turntable) {
     if (!document.hidden) return;
     stopAnimation();
     if (drag) finishDrag({pointerId: drag.id}, true);
-    render(Math.round(rotation / step) * step);
+    render(markerAngles[nearestMarker(rotation)]);
   });
 }
 
