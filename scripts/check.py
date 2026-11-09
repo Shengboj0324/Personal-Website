@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check static routes, fragment targets, metadata, and local asset references."""
 from html.parser import HTMLParser
+import re
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from asset_pipeline import browser_bundles
@@ -36,7 +37,7 @@ class Page(HTMLParser):
         if 'id' in a:
             if a['id'] in self.ids: self.errors.append(f'Duplicate ID: {a["id"]}')
             self.ids.add(a['id'])
-        for attr in ('href', 'src', 'data-url'):
+        for attr in ('href', 'src', 'poster', 'data-url'):
             if attr in a:
                 self.refs.append(a[attr])
                 if not a[attr] or a[attr] == '#': self.errors.append('Empty destination')
@@ -46,11 +47,11 @@ class Page(HTMLParser):
 
 
 def main():
-    paths = [ROOT/'index.html', ROOT/'404.html', ROOT/'about/index.html', ROOT/'contact/index.html', *sorted((ROOT/'work').rglob('*.html'))]
+    paths = [ROOT/'index.html', ROOT/'404.html', ROOT/'film/index.html', ROOT/'about/index.html', ROOT/'contact/index.html', *sorted((ROOT/'work').rglob('*.html'))]
     for _, prefix in LANGUAGES.values():
         if prefix: paths.extend(sorted((ROOT / prefix).rglob('*.html')))
-    if len(paths) != 13 * len(LANGUAGES):
-        raise SystemExit(f'Expected {13 * len(LANGUAGES)} pages, found {len(paths)}')
+    if len(paths) != 14 * len(LANGUAGES):
+        raise SystemExit(f'Expected {14 * len(LANGUAGES)} pages, found {len(paths)}')
     pages = {}
     errors = []
     for path in paths:
@@ -90,7 +91,8 @@ def main():
             elif target.is_dir(): target = target/'index.html'
             target = target.resolve()
             if not target.exists(): errors.append(f'{path.relative_to(ROOT)}: missing {ref}')
-            elif parsed.fragment and target in pages and unquote(parsed.fragment) not in pages[target].ids:
+            elif (parsed.fragment and target in pages and unquote(parsed.fragment) not in pages[target].ids
+                  and not ('video-portfolio' in pages[target].ids and re.fullmatch(r't=\d+(?:\.\d+)?', parsed.fragment))):
                 errors.append(f'{path.relative_to(ROOT)}: missing fragment {ref}')
     if errors:
         raise SystemExit('\n'.join(errors))

@@ -44,6 +44,7 @@ EXTRA_TEXT = {
 }
 # Identity, programming terminology, and named products should not be translated.
 KEEP = {
+    *[name for name, _ in LANGUAGES.values()], 'YouTube',
     'Shengbo Jiang', 'Shengbo.', 'sj.', 'Releaf', 'releaf.', 'CollegeAdvisor',
     'ZenithSync Assay Planner', 'Pioneer Academics', 'Athena AI Labs',
     'Rematter Cooperation', 'Science Seed Project', 'Kehillah Sailbot',
@@ -100,6 +101,8 @@ class Localizer(HTMLParser):
             self.raw_tag = tag
         result = []
         for key, value in attrs:
+            if tag == 'track' and values.get('kind') == 'captions' and key == 'default':
+                continue
             if value is not None:
                 if tag == 'html' and key == 'lang':
                     value = self.language
@@ -112,6 +115,8 @@ class Localizer(HTMLParser):
                 ):
                     value = self.translate(value)
             result.append(key if value is None else f'{key}="{escape(value, quote=True)}"')
+        if tag == 'track' and values.get('kind') == 'captions' and values.get('srclang') == self.language:
+            result.append('default')
         if tag == 'html':
             result.append(f'dir="{"rtl" if self.language == "ar" else "ltr"}"')
             result.append(f'data-locale-prefix="{route_for("/", self.language).rstrip("/")}"')

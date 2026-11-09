@@ -24,7 +24,7 @@ def main():
     if origin.scheme not in ('http', 'https') or not origin.netloc or origin.path not in ('', '/'):
         parser.error('base_url must be an HTTP(S) origin without a path')
     bundles = browser_bundles(ROOT)
-    pages = [ROOT/'index.html', ROOT/'about/index.html', ROOT/'contact/index.html', *sorted((ROOT/'work').rglob('index.html'))]
+    pages = [ROOT/'index.html', ROOT/'film/index.html', ROOT/'about/index.html', ROOT/'contact/index.html', *sorted((ROOT/'work').rglob('index.html'))]
 
     for _, prefix in LANGUAGES.values():
         if prefix: pages.extend(sorted((ROOT / prefix).rglob('index.html')))

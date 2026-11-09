@@ -1,0 +1,109 @@
+WEBVTT
+
+1
+00:00:01.540 --> 00:00:05.020
+Bonjour à tous, je suis Michael, élève en dernière année au lycée Kehillah.
+
+2
+00:00:05.580 --> 00:00:09.500
+Ceci est mon portfolio personnel et je vais parcourir quelques projets avec vous.
+
+3
+00:00:10.320 --> 00:00:11.020
+Cela commence sur un lac.
+
+4
+00:00:11.600 --> 00:00:15.780
+Il s&#x27;agit du simulateur Sailbot de l&#x27;école fonctionnant sur un PC avec pilotage automatique.
+
+5
+00:00:16.360 --> 00:00:20.840
+En dessous, le code calcule les forces exercées sur le bateau, le déplace d&#x27;un petit pas et répète.
+
+6
+00:00:21.580 --> 00:00:23.340
+Le mouvement n&#x27;est qu&#x27;une mise à jour d&#x27;état sur une horloge.
+
+7
+00:00:24.360 --> 00:00:27.360
+Ensuite est venue une recherche menée en cours, présentée ici dans son journal brut.
+
+8
+00:00:27.360 --> 00:00:33.340
+Si on représente un graphe par une matrice et qu’on la multiplie par elle-même, chaque nombre compte les chemins entre deux points.
+
+9
+00:00:33.940 --> 00:00:36.060
+Le squelette de Sign-Translator est un graphe de ce type.
+
+10
+00:00:37.200 --> 00:00:41.660
+La transformée de Fourier simple prend près de 9 secondes sur 8 000 échantillons.
+
+11
+00:00:42.400 --> 00:00:47.100
+Lorsque vous divisez le signal en deux et effectuez une récursion, la FFT ne prend que 26 millisecondes.
+
+12
+00:00:48.060 --> 00:00:54.760
+Plus tard, ce type de spectre a révélé que la tête générée par Sign-Translator tremblait deux fois plus que celle d’une personne signant réellement.
+
+13
+00:00:55.520 --> 00:01:00.740
+Le projet suivant était purement artistique : 75 000 particules déplacées par les points de repère des mains.
+
+14
+00:01:01.500 --> 00:01:05.440
+Ces mêmes points de repère sont devenus plus tard l&#x27;un des chemins de données dans Sign-Translator.
+
+15
+00:01:06.280 --> 00:01:08.940
+Toute cette curiosité m&#x27;a conduit à Sign-Translator.
+
+16
+00:01:09.540 --> 00:01:14.080
+Les lignes issues de deux caméras se croisent à chaque articulation, ce qui donne sa position en 3D.
+
+17
+00:01:14.720 --> 00:01:20.500
+La longueur constante des os a permis de ramener l’erreur sur la distance focale de plus de 40 % à moins de 1 %.
+
+18
+00:01:20.500 --> 00:01:25.960
+Le mouvement est comprimé en codes, comme un vocabulaire, qu’un Transformer génère à partir de l’anglais.
+
+19
+00:01:27.040 --> 00:01:28.200
+Puis presque tout a échoué.
+
+20
+00:01:28.800 --> 00:01:32.060
+Les modèles générant des phrases entières ne transmettaient pas plus de sens qu’une figure immobile.
+
+21
+00:01:32.520 --> 00:01:37.860
+L’un a réussi les 95 tests de mouvement, sans pour autant parvenir à transmettre une phrase.
+
+22
+00:01:38.600 --> 00:01:42.800
+Désormais, le système génère chaque mot séparément et assemble les clips ensemble.
+
+23
+00:01:43.320 --> 00:01:44.660
+Les mots qu&#x27;il ne connaît pas disparaissent tout simplement.
+
+24
+00:01:45.660 --> 00:01:48.560
+Pour le noter, un modèle relit le mouvement en anglais.
+
+25
+00:01:49.120 --> 00:01:54.940
+L’absence de mouvement obtient 2,05, le mouvement généré 2,4, et la vraie langue des signes environ 4.
+
+26
+00:01:55.460 --> 00:01:56.940
+C&#x27;est un gain mince, mais c&#x27;est un début.
+
+27
+00:01:57.620 --> 00:01:58.140
+Merci d&#x27;avoir regardé.

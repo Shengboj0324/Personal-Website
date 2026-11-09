@@ -1,0 +1,183 @@
+{
+  "source": "Shengbo_Jiang_Portfolio_v8.mp4",
+  "duration": 119.733333,
+  "chapters": [
+    {
+      "start": 0,
+      "title": "A map of the projects"
+    },
+    {
+      "start": 10.15,
+      "title": "Sailbot simulation"
+    },
+    {
+      "start": 24,
+      "title": "Matrix connectivity"
+    },
+    {
+      "start": 37,
+      "title": "Fourier transforms and FFT"
+    },
+    {
+      "start": 55.3,
+      "title": "Interactive particles"
+    },
+    {
+      "start": 66,
+      "title": "Sign-Translator: motion and evaluation"
+    }
+  ],
+  "clips": {
+    "sailbot": {
+      "start": 10.15,
+      "end": 23.65,
+      "title": "Navigation at work.",
+      "poster": "/assets/film/sailbot-poster.webp",
+      "description": "An excerpt from my portfolio film showing the Sailbot simulator, boat controls, and a simulated route. This is a software demonstration, not footage of an autonomous boat on the water."
+    },
+    "sign-translator": {
+      "start": 66,
+      "end": 119.733333,
+      "title": "From observations to motion.",
+      "poster": "/assets/film/sign-poster.webp",
+      "description": "An excerpt from my portfolio film: hand landmarks, reconstruction, generated motion, and evaluation limitations. The rendered avatar and automatic scores demonstrate research work in progress; they do not establish sign-language intelligibility."
+    }
+  },
+  "cues": [
+    {
+      "start": 1.54,
+      "end": 5.02,
+      "text": "Hello everyone, I'm Michael, a senior at Kehillah High School."
+    },
+    {
+      "start": 5.58,
+      "end": 9.5,
+      "text": "This is my personal portfolio and I'm going to walk through some projects together with you."
+    },
+    {
+      "start": 10.32,
+      "end": 11.02,
+      "text": "It starts on a lake."
+    },
+    {
+      "start": 11.6,
+      "end": 15.78,
+      "text": "This is the school's Sailbot simulator running on a PC with the autopilot steering."
+    },
+    {
+      "start": 16.36,
+      "end": 20.84,
+      "text": "Underneath, the code works out the forces on the boat, moves it a tiny step and repeats."
+    },
+    {
+      "start": 21.58,
+      "end": 23.34,
+      "text": "Motion is just a state updating on a clock."
+    },
+    {
+      "start": 24.36,
+      "end": 27.36,
+      "text": "Next came a class investigation, shown here in its raw log."
+    },
+    {
+      "start": 27.36,
+      "end": 33.34,
+      "text": "If you write a graph as a grid and multiply it by itself, each number counts the routes between two points."
+    },
+    {
+      "start": 33.94,
+      "end": 36.06,
+      "text": "Sign-Translator's skeleton is that kind of graph."
+    },
+    {
+      "start": 37.2,
+      "end": 41.66,
+      "text": "The plain Fourier transform takes almost 9 seconds on 8,000 samples."
+    },
+    {
+      "start": 42.4,
+      "end": 47.1,
+      "text": "When you split the signal in half and recurse, the FFT takes just 26 milliseconds."
+    },
+    {
+      "start": 48.06,
+      "end": 54.76,
+      "text": "Later on, a spectrum like this revealed that Sign-Translator's generated head was shaking twice as hard as a real signer."
+    },
+    {
+      "start": 55.52,
+      "end": 60.74,
+      "text": "The next project was just for art, 75,000 particles pulled around by hand landmarks."
+    },
+    {
+      "start": 61.5,
+      "end": 65.44,
+      "text": "Those same landmarks later became one of the data paths in Sign-Translator."
+    },
+    {
+      "start": 66.28,
+      "end": 68.94,
+      "text": "All that curiosity led me to Sign-Translator."
+    },
+    {
+      "start": 69.54,
+      "end": 74.08,
+      "text": "Lines from two cameras meet at each joint, which gives its position in 3D."
+    },
+    {
+      "start": 74.72,
+      "end": 80.5,
+      "text": "Because bones don't change length, they took the focal length from over 40% wrong to within 1%."
+    },
+    {
+      "start": 80.5,
+      "end": 85.96,
+      "text": "The motion is then compressed into codes, like a vocabulary, and a transformer writes them from English."
+    },
+    {
+      "start": 87.04,
+      "end": 88.2,
+      "text": "Then nearly everything failed."
+    },
+    {
+      "start": 88.8,
+      "end": 92.06,
+      "text": "The whole sentence generators read no better than standing still."
+    },
+    {
+      "start": 92.52,
+      "end": 97.86,
+      "text": "One of them passed 95 out of 95 motion checks and still couldn't carry a sentence."
+    },
+    {
+      "start": 98.6,
+      "end": 102.8,
+      "text": "So now the system generates each word separately and stitches the clips together."
+    },
+    {
+      "start": 103.32,
+      "end": 104.66,
+      "text": "Words it doesn't know simply vanish."
+    },
+    {
+      "start": 105.66,
+      "end": 108.56,
+      "text": "To score it, a model reads the motion back into English."
+    },
+    {
+      "start": 109.12,
+      "end": 114.94,
+      "text": "Blank motion scores 2.05, the generated motion 2.4, and real signing about 4."
+    },
+    {
+      "start": 115.46,
+      "end": 116.94,
+      "text": "It's a narrow gain, but it's a start."
+    },
+    {
+      "start": 117.62,
+      "end": 118.14,
+      "text": "Thanks for watching."
+    }
+  ]
+}

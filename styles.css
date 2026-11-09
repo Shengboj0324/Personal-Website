@@ -657,3 +657,61 @@ html:lang(hi) :is(.case-subtitle, .record-title, .paper-front strong, .agent-typ
   :is(html:lang(ko), html:lang(hi)) :is(.about-hero h1, .contact-hero h1, .page-intro h1) { font-size: clamp(37px, 9.5vw, 62px); }
   :is(html:lang(ko), html:lang(hi)) .case-header h1 { font-size: clamp(32px, 8.5vw, 54px); }
 }
+
+/* Original footage gets its own quiet viewing space and ordinary native controls. */
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; }
+.hero-actions > .text-link { font-size: 12px; }
+.art-footage { display: grid; align-items: center; background: #080c13; padding: 20px; }
+.project-art.art-footage img { position: static; width: 100%; height: auto; object-fit: contain; }
+.footage-label { position: absolute; inset-inline: 20px; bottom: 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px; color: #fff; font-size: 12px; background: #080c13e6; padding: 10px 14px; border: 1px solid #ffffff30; border-radius: 3px; }
+.film-intro { padding-block: 72px 48px; display: grid; grid-template-columns: 1.3fr 1fr; column-gap: 64px; align-items: end; }
+.film-intro > .eyebrow { grid-column: 1 / -1; }
+.film-intro h1 { font-size: clamp(52px, 7vw, 104px); }
+.film-intro > p { max-width: 440px; color: var(--muted); padding-bottom: 6px; }
+.film-stage, .project-film { margin-bottom: 80px; }
+.film-player { min-width: 0; }
+.film-player video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; background: #080c13; border-radius: 5px; direction: ltr; }
+.film-player video::cue { font-family: sans-serif; background: rgb(0 0 0 / .85); color: white; }
+.film-tools { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px 30px; padding-block: 20px 14px; }
+.caption-control { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; }
+.caption-control select { max-width: 100%; min-height: 44px; border: 1px solid #a8aea2; border-radius: 4px; background: transparent; color: var(--ink); padding: 8px 12px; font: inherit; }
+.film-language-note { font-size: 12px; color: var(--muted); max-width: 80ch; }
+.film-chapters { margin-top: 38px; padding-top: 28px; border-top: 1px solid var(--line); }
+.film-chapters h2 { font: 500 16px/1.6 var(--sans); letter-spacing: 0; margin-bottom: 18px; }
+.film-chapters ol { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 24px; }
+.film-chapters a { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; border: 1px solid var(--line); padding: 16px; border-radius: 4px; font-size: 13px; line-height: 1.6; min-height: 68px; }
+.film-chapters a[aria-current], .film-chapters a:hover { border-color: var(--green); background: #dfe7d9; }
+.chapter-time, .film-transcript p > a { font-variant-numeric: tabular-nums; font-size: 12px; color: var(--muted); }
+.film-transcript { margin-top: 28px; border-block: 1px solid var(--line); }
+.film-transcript summary { cursor: pointer; padding-block: 20px; font-size: 14px; }
+.film-transcript > div { padding-block: 4px 24px; max-width: 850px; }
+.film-transcript p { display: grid; grid-template-columns: 48px 1fr; gap: 18px; margin-bottom: 18px; }
+.film-transcript p > a { padding-top: 4px; text-decoration: underline; }
+.film-error { margin-top: 20px; padding: 16px; border: 1px solid var(--line); }
+.film-connections { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-block: 70px 100px; }
+.film-connections h2 { margin-bottom: 24px; }
+.film-connections p { color: var(--muted); max-width: 48ch; }
+.film-project-links > a { display: grid; grid-template-columns: 1fr auto; gap: 18px; padding-block: 26px; border-top: 1px solid var(--line); }
+.film-project-links > a > span:first-child { grid-column: 1 / -1; font-size: 12px; color: var(--muted); }
+.film-project-links strong { font-size: 21px; font-weight: 500; line-height: 1.5; }
+.project-film .section-heading { align-items: end; gap: 28px; }
+.project-film .section-heading h2 { font-size: clamp(30px, 4vw, 52px); max-width: 19ch; }
+.project-film > .media-caption { margin-top: 24px; max-width: 90ch; }
+@media (min-width: 901px) and (max-width: 1200px) {
+  .site-header #primary-nav { gap: 18px; }
+  .site-header { gap: 16px; }
+}
+@media (max-width: 900px) {
+  .film-intro { grid-template-columns: 1fr; gap: 24px; padding-block: 45px 32px; }
+  .film-intro > .eyebrow { margin-bottom: 0; }
+  .film-intro > p { max-width: 60ch; }
+  .film-chapters ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .film-connections { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (max-width: 540px) {
+  .film-chapters ol { grid-template-columns: 1fr; }
+  .film-intro h1 { font-size: clamp(42px, 12vw, 64px); }
+  .film-transcript p { grid-template-columns: 38px 1fr; gap: 12px; font-size: 14px; }
+  .art-footage { padding: 10px; }
+  .footage-label { inset-inline: 12px; bottom: 12px; font-size: 11px; }
+}

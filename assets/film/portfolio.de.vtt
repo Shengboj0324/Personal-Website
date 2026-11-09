@@ -1,0 +1,109 @@
+WEBVTT
+
+1
+00:00:01.540 --> 00:00:05.020
+Hallo zusammen, ich bin Michael und besuche das Abschlussjahr der Kehillah High School.
+
+2
+00:00:05.580 --> 00:00:09.500
+Das ist mein persönliches Portfolio. Ich möchte einige Projekte vorstellen.
+
+3
+00:00:10.320 --> 00:00:11.020
+Es beginnt an einem See.
+
+4
+00:00:11.600 --> 00:00:15.780
+Dies ist der Sailbot-Simulator der Schule, der auf einem PC mit Autopilot-Steuerung läuft.
+
+5
+00:00:16.360 --> 00:00:20.840
+Darunter berechnet der Code die auf das Boot wirkenden Kräfte, bewegt es um einen kleinen Schritt und wiederholt den Vorgang.
+
+6
+00:00:21.580 --> 00:00:23.340
+Bewegung bedeutet, den Zustand mit jedem Zeitschritt zu aktualisieren.
+
+7
+00:00:24.360 --> 00:00:27.360
+Danach folgte eine Untersuchung im Unterricht, hier mit ihrem ursprünglichen Protokoll.
+
+8
+00:00:27.360 --> 00:00:33.340
+Stellt man einen Graphen als Matrix dar und multipliziert diese mit sich selbst, zählt jede Zahl die Wege zwischen zwei Punkten.
+
+9
+00:00:33.940 --> 00:00:36.060
+Das Grundgerüst von Sign-Translator ist ein solcher Graph.
+
+10
+00:00:37.200 --> 00:00:41.660
+Die einfache Fourier-Transformation dauert bei 8.000 Abtastwerten fast 9 Sekunden.
+
+11
+00:00:42.400 --> 00:00:47.100
+Teilt man das Signal in zwei Hälften und rechnet rekursiv, braucht die FFT nur 26 Millisekunden.
+
+12
+00:00:48.060 --> 00:00:54.760
+Später zeigte ein solches Spektrum: Der von Sign-Translator erzeugte Kopf zitterte doppelt so stark wie der einer echten gebärdenden Person.
+
+13
+00:00:55.520 --> 00:01:00.740
+Das nächste Projekt war reine Kunst: 75.000 Partikel, bewegt durch die erkannten Punkte der Hände.
+
+14
+00:01:01.500 --> 00:01:05.440
+Dieselben Orientierungspunkte wurden später zu einem der Datenpfade im Sign-Translator.
+
+15
+00:01:06.280 --> 00:01:08.940
+All diese Neugier führte mich zu Sign-Translator.
+
+16
+00:01:09.540 --> 00:01:14.080
+Linien von zwei Kameras treffen sich an jedem Gelenk und bestimmen dessen Position im dreidimensionalen Raum.
+
+17
+00:01:14.720 --> 00:01:20.500
+Die konstante Knochenlänge half, den Fehler der Brennweite von über 40 % auf unter 1 % zu senken.
+
+18
+00:01:20.500 --> 00:01:25.960
+Die Bewegung wird in Codes wie ein Vokabular komprimiert. Ein Transformer erzeugt diese Codes aus englischem Text.
+
+19
+00:01:27.040 --> 00:01:28.200
+Dann scheiterte fast alles.
+
+20
+00:01:28.800 --> 00:01:32.060
+Modelle für ganze Sätze vermittelten nicht mehr Bedeutung als eine stillstehende Figur.
+
+21
+00:01:32.520 --> 00:01:37.860
+Eines bestand alle 95 Bewegungstests und konnte trotzdem keinen Satz vermitteln.
+
+22
+00:01:38.600 --> 00:01:42.800
+Nun generiert das System jedes Wort separat und fügt die Clips zusammen.
+
+23
+00:01:43.320 --> 00:01:44.660
+Wörter, die es nicht kennt, verschwinden einfach.
+
+24
+00:01:45.660 --> 00:01:48.560
+Um es zu bewerten, liest ein Modell die Bewegung zurück ins Englische.
+
+25
+00:01:49.120 --> 00:01:54.940
+Ohne Bewegung liegt der Wert bei 2,05, für erzeugte Bewegung bei 2,4 und für echte Gebärdensprache bei etwa 4.
+
+26
+00:01:55.460 --> 00:01:56.940
+Eine kleine Verbesserung, aber ein Anfang.
+
+27
+00:01:57.620 --> 00:01:58.140
+Danke fürs Zuschauen.

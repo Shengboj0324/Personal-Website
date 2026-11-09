@@ -5,6 +5,7 @@ from html import escape
 from pathlib import Path
 from asset_pipeline import browser_bundles
 from i18n import LANGUAGES, render_editions
+from film import film_body, project_film, write_captions
 
 ROOT = Path(__file__).resolve().parent.parent
 BUNDLES = browser_bundles(ROOT)
@@ -22,6 +23,10 @@ def external(label, url, class_name='text-link'):
 
 def visual(p, detail=False):
     slug = p['slug']
+    if slug in ('sailbot', 'sign-translator'):
+        name = 'sailbot' if slug == 'sailbot' else 'sign'
+        alt = 'Sailbot navigation simulation shown in my portfolio film' if slug == 'sailbot' else 'Sign-Translator reconstruction demonstration shown in my portfolio film'
+        return f'<div class="project-art art-footage"><img src="/assets/film/{name}-poster.webp" width="1440" height="810" alt="{alt}" loading="lazy"><span class="footage-label">Watch the demonstration <span aria-hidden="true">▶</span></span></div>'
     if slug == 'releaf':
         return '<div class="project-art art-releaf"><span class="art-word" aria-hidden="true">releaf.</span><span class="art-annotation">A little change, every day.</span><div class="phone"><img src="/assets/releaf.webp" width="700" height="1443" alt="Releaf’s community screen, showing shared reuse ideas" loading="lazy"></div><span class="art-bottom">RETHINK. REUSE. RELEAF.</span></div>'
     if slug == 'phoenix':
@@ -31,12 +36,8 @@ def visual(p, detail=False):
         return '<div class="project-art art-assay"><img src="/assets/assay-cover.webp" width="560" height="280" alt="ZenithSync assay-design project illustration with treatment wells and response curves" loading="lazy"><span class="art-bottom">ZENITHSYNC / EXPERIMENTAL DESIGN</span></div>'
     if slug == 'college-advisor':
         return '<div class="project-art art-advisor"><span class="art-annotation">COLLEGEADVISOR / RAG</span><div class="citation-stack" aria-hidden="true"><div class="citation-paper paper-back">01 / Find the evidence</div><div class="citation-paper paper-front"><span class="quote-mark">“</span><strong>Good answers<br>start with<br><em>good sources.</em></strong><span class="paper-rule"></span><small>RETRIEVE → CHECK → CITE</small></div></div><span class="art-bottom">A source behind every answer.</span></div>'
-    if slug == 'sign-translator':
-        return '<div class="project-art art-sign"><span class="art-annotation">LANGUAGE ↔ MOTION</span><svg viewBox="0 0 600 370" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="2"><path d="M195 300L240 235L265 165L300 145L335 165L360 235L405 300M265 165L220 195L183 145L164 100M335 165L380 195L417 145L436 100M300 145V105M265 165L275 240H325L335 165M275 240L255 330M325 240L345 330"/><circle cx="300" cy="75" r="30"/><path d="M164 100L140 68M164 100L155 56M164 100L174 58M164 100L189 77M436 100L460 68M436 100L445 56M436 100L426 58M436 100L411 77"/></g><g fill="currentColor">'+''.join(f'<circle cx="{x}" cy="{y}" r="5"/>' for x,y in [(240,235),(265,165),(335,165),(360,235),(220,195),(380,195),(183,145),(417,145),(164,100),(436,100),(275,240),(325,240)])+'</g></svg><span class="art-bottom">A study of language, structure & movement.</span></div>'
     if slug == 'igem':
         return '<div class="project-art art-igem"><img src="/assets/igem.webp" width="1600" height="809" alt="LCG-China iGEM 2024 project banner" loading="lazy"><span class="art-bottom">WIKI & ENTREPRENEURSHIP / IGEM 2024</span></div>'
-    if slug == 'sailbot':
-        return '<div class="project-art art-sail"><span class="art-annotation">KEHILLAH SAILBOT / CONTROL & SIMULATION</span><svg viewBox="0 0 600 380" fill="none" aria-hidden="true"><g stroke="currentColor" stroke-width="1.5"><path d="M306 55V290H181L306 55ZM320 95L410 275H320V95ZM160 304H435L402 330H196Z"/><path d="M60 351Q105 328 150 351T240 351T330 351T420 351T510 351"/><path stroke-dasharray="5 8" d="M70 180C150 70 160 260 255 90"/></g></svg><span class="art-bottom">Finding a heading in changing conditions.</span></div>'
     return '<div class="project-art art-agent"><span class="art-annotation">ZENITHSYNC / DEVELOPER AGENT</span><div class="agent-type" aria-hidden="true">{<span>test.<br>learn.<br>repeat.</span>}</div><span class="art-bottom">Better experiments. Inspectable results.</span></div>'
 
 
@@ -45,7 +46,7 @@ def card(p, index):
 
 
 def header(active):
-    links = ''.join(f'<a href="{path}"{(" aria-current=\"page\"" if name == active else "")}>{name}</a>' for name,path in [('Work','/work/'),('About','/about/'),('Contact','/contact/')])
+    links = ''.join(f'<a href="{path}"{(" aria-current=\"page\"" if name == active else "")}>{name}</a>' for name,path in [('Work','/work/'),('Film','/film/'),('About','/about/'),('Contact','/contact/')])
     return f'<a class="skip-link" href="#main">Skip to content</a><header class="site-header"><a class="brand" href="/" aria-label="Shengbo Jiang, home"><span class="brand-mark" aria-hidden="true">sj.</span><span>Shengbo Jiang</span></a><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu <span aria-hidden="true">+</span></button><nav id="primary-nav" aria-label="Main navigation">{links}<a class="resume-link" href="/assets/shengbo-jiang-resume.pdf" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span></a></nav></header>'
 
 
@@ -113,7 +114,7 @@ def home():
     return document('Curiosity, put to work', 'I’m Shengbo Jiang, a student, developer, and researcher in Palo Alto. Explore my work in sustainability, scientific computing, and accessible technology.', f'''
 <section class="home-hero shell">
 <div class="hero-eyebrow"><span class="status-dot"></span> STUDENT, DEVELOPER & RESEARCHER <span class="hero-location">PALO ALTO, CALIFORNIA</span></div>
-<div class="hero-composition"><div class="hero-copy"><h1><span>Making intelligence</span><br><em>an instrument of discovery</em></h1><p>I’m Shengbo. I build software and study how it can help us understand the world—and do a little more for it.</p><a class="round-link" href="/work/">Explore my work <span aria-hidden="true">↗</span></a></div>{project_turntable()}</div>
+<div class="hero-composition"><div class="hero-copy"><h1><span>Making intelligence</span><br><em>an instrument of discovery</em></h1><p>I’m Shengbo. I build software and study how it can help us understand the world—and do a little more for it.</p><div class="hero-actions"><a class="round-link" href="/work/">Explore my work <span aria-hidden="true">↗</span></a><a class="text-link" href="/film/">Watch my portfolio film <span aria-hidden="true">▶</span></a></div></div>{project_turntable()}</div>
 <div class="hero-foot"><span>From everyday sustainability to scientific questions.</span><a href="#selected-work">A few things I’ve been working on <span aria-hidden="true">↓</span></a></div></section>
 <section class="selected-section shell" id="selected-work"><div class="section-heading"><div><span class="eyebrow">01 / SELECTED WORK</span><h2>Different questions.<br>A shared <em>curiosity.</em></h2></div><a class="text-link" href="/work/">All projects <span aria-hidden="true">↗</span></a></div><div class="project-grid home-grid">{cards}</div></section>
 <section class="home-about shell"><span class="eyebrow">02 / THE PERSON BEHIND THE PROJECTS</span><div><h2>I like the space between<br><em>“what if”</em> and <em>“it works.”</em></h2><p>I’m a student at Kehillah in Palo Alto. My projects move between environmental questions, machine learning, and the practical work of making something people can use.</p><a class="text-link" href="/about/">A little more about me <span aria-hidden="true">↗</span></a></div></section>
@@ -173,9 +174,10 @@ def project(p, i):
         media='<section class="architecture shell"><span class="eyebrow">SIMPLIFIED SYSTEM ARCHITECTURE</span><h2>Follow the evidence.</h2><ol class="pipeline"><li><span>01</span><strong>Question</strong><p>Student context and a specific information need.</p></li><li><span>02</span><strong>Retrieve</strong><p>Keyword and vector search across source collections.</p></li><li><span>03</span><strong>Validate</strong><p>Specialized handling and cite-or-abstain checks.</p></li><li><span>04</span><strong>Respond</strong><p>An answer formatted with supporting citations.</p></li></ol></section>'
     elif p['slug']=='sign-translator':
         media=sign_research_media()
+    cover = project_film(p['slug']) or f'<div class="case-cover shell">{visual(p, True)}</div>'
     nxt=PROJECTS[(i+1)%len(PROJECTS)]
     links=''.join(external(n,u) for n,u in p['links'])
-    return document(p['title'],p['summary'],f'''<section class="case-header shell"><a class="back-link" href="/work/">← All work</a><div class="case-kicker"><span>{E(p['category'])} / {E(p['year'])}</span><span>PROJECT {i+1:02d}</span></div><h1>{E(p['title'])}</h1><p class="case-subtitle">{E(p['subtitle'])}</p><div class="case-meta"><div><span>ROLE</span><p>{E(p['role'])}</p></div><div><span>CONTEXT</span><p>{E(p['organization'])}</p></div><div><span>TOOLS & METHODS</span><p>{E(' · '.join(p['tools']))}</p></div></div></section><div class="case-cover shell">{visual(p,True)}</div><section class="case-intro shell"><span class="eyebrow">THE QUESTION</span><p>{E(p['intro'])}</p></section>{f'<section class="case-facts shell" aria-label="Project figures">{facts}</section>' if facts else ''}<div class="case-story shell">{sections}</div>{technical_section(p)}{media}<section class="case-sources shell"><span class="eyebrow">CONTEXT & FURTHER READING</span><div><p>{E(p['note'])}</p><div class="source-links">{links}</div></div></section><a class="next-project shell" href="/work/{nxt['slug']}/"><span class="eyebrow">NEXT PROJECT</span><strong>{E(nxt['title'])}</strong><span class="next-arrow" aria-hidden="true">↗</span></a>''','Work','case-page')
+    return document(p['title'],p['summary'],f'''<section class="case-header shell"><a class="back-link" href="/work/">← All work</a><div class="case-kicker"><span>{E(p['category'])} / {E(p['year'])}</span><span>PROJECT {i+1:02d}</span></div><h1>{E(p['title'])}</h1><p class="case-subtitle">{E(p['subtitle'])}</p><div class="case-meta"><div><span>ROLE</span><p>{E(p['role'])}</p></div><div><span>CONTEXT</span><p>{E(p['organization'])}</p></div><div><span>TOOLS & METHODS</span><p>{E(' · '.join(p['tools']))}</p></div></div></section>{cover}<section class="case-intro shell"><span class="eyebrow">THE QUESTION</span><p>{E(p['intro'])}</p></section>{f'<section class="case-facts shell" aria-label="Project figures">{facts}</section>' if facts else ''}<div class="case-story shell">{sections}</div>{technical_section(p)}{media}<section class="case-sources shell"><span class="eyebrow">CONTEXT & FURTHER READING</span><div><p>{E(p['note'])}</p><div class="source-links">{links}</div></div></section><a class="next-project shell" href="/work/{nxt['slug']}/"><span class="eyebrow">NEXT PROJECT</span><strong>{E(nxt['title'])}</strong><span class="next-arrow" aria-hidden="true">↗</span></a>''','Work','case-page')
 
 
 def about():
@@ -196,11 +198,12 @@ def main():
     if len(slugs)!=len(set(slugs)):
         raise ValueError('Project slugs must be unique')
     (ROOT/'assets/favicon.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#254b3d"/><text x="13" y="43" font-family="Georgia,serif" font-size="38" fill="#f4f2eb">sj.</text></svg>')
-    pages = {'/': home(), '/work/': work(), '/about/': about(), '/contact/': contact()}
+    pages = {'/': home(), '/work/': work(), '/about/': about(), '/contact/': contact(), '/film/': document('Portfolio film', 'Watch Shengbo Jiang’s portfolio film with chapters, project demonstrations, and multilingual captions.', film_body(), 'Film', 'film-page')}
     pages.update({f'/work/{p["slug"]}/': project(p, i) for i, p in enumerate(PROJECTS)})
     pages['/404.html'] = document('Page not found','This page could not be found. Explore Shengbo Jiang’s portfolio.', '<section class="page-intro shell"><span class="eyebrow">404 / A SMALL DETOUR</span><h1>Let’s find<br><em>our way back.</em></h1><p>This page isn’t here. The projects are a good place to start.</p><a class="round-link" href="/work/">Explore the work <span aria-hidden="true">↗</span></a></section>')
     for path, html in render_editions(pages):
         write(Path(path), html)
+    write_captions()
     print(f'Rendered {len(pages) * len(LANGUAGES)} static pages across {len(LANGUAGES)} languages.')
 
 if __name__=='__main__':main()

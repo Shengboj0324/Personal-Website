@@ -1,0 +1,53 @@
+WEBVTT
+
+1
+00:00:00.280 --> 00:00:02.940
+All diese Neugier führte mich zu Sign-Translator.
+
+2
+00:00:03.540 --> 00:00:08.080
+Linien von zwei Kameras treffen sich an jedem Gelenk und bestimmen dessen Position im dreidimensionalen Raum.
+
+3
+00:00:08.720 --> 00:00:14.500
+Die konstante Knochenlänge half, den Fehler der Brennweite von über 40 % auf unter 1 % zu senken.
+
+4
+00:00:14.500 --> 00:00:19.960
+Die Bewegung wird in Codes wie ein Vokabular komprimiert. Ein Transformer erzeugt diese Codes aus englischem Text.
+
+5
+00:00:21.040 --> 00:00:22.200
+Dann scheiterte fast alles.
+
+6
+00:00:22.800 --> 00:00:26.060
+Modelle für ganze Sätze vermittelten nicht mehr Bedeutung als eine stillstehende Figur.
+
+7
+00:00:26.520 --> 00:00:31.860
+Eines bestand alle 95 Bewegungstests und konnte trotzdem keinen Satz vermitteln.
+
+8
+00:00:32.600 --> 00:00:36.800
+Nun generiert das System jedes Wort separat und fügt die Clips zusammen.
+
+9
+00:00:37.320 --> 00:00:38.660
+Wörter, die es nicht kennt, verschwinden einfach.
+
+10
+00:00:39.660 --> 00:00:42.560
+Um es zu bewerten, liest ein Modell die Bewegung zurück ins Englische.
+
+11
+00:00:43.120 --> 00:00:48.940
+Ohne Bewegung liegt der Wert bei 2,05, für erzeugte Bewegung bei 2,4 und für echte Gebärdensprache bei etwa 4.
+
+12
+00:00:49.460 --> 00:00:50.940
+Eine kleine Verbesserung, aber ein Anfang.
+
+13
+00:00:51.620 --> 00:00:52.140
+Danke fürs Zuschauen.

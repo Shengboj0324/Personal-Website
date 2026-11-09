@@ -1,0 +1,53 @@
+WEBVTT
+
+1
+00:00:00.280 --> 00:00:02.940
+All that curiosity led me to Sign-Translator.
+
+2
+00:00:03.540 --> 00:00:08.080
+Lines from two cameras meet at each joint, which gives its position in 3D.
+
+3
+00:00:08.720 --> 00:00:14.500
+Because bones don&#x27;t change length, they took the focal length from over 40% wrong to within 1%.
+
+4
+00:00:14.500 --> 00:00:19.960
+The motion is then compressed into codes, like a vocabulary, and a transformer writes them from English.
+
+5
+00:00:21.040 --> 00:00:22.200
+Then nearly everything failed.
+
+6
+00:00:22.800 --> 00:00:26.060
+The whole sentence generators read no better than standing still.
+
+7
+00:00:26.520 --> 00:00:31.860
+One of them passed 95 out of 95 motion checks and still couldn&#x27;t carry a sentence.
+
+8
+00:00:32.600 --> 00:00:36.800
+So now the system generates each word separately and stitches the clips together.
+
+9
+00:00:37.320 --> 00:00:38.660
+Words it doesn&#x27;t know simply vanish.
+
+10
+00:00:39.660 --> 00:00:42.560
+To score it, a model reads the motion back into English.
+
+11
+00:00:43.120 --> 00:00:48.940
+Blank motion scores 2.05, the generated motion 2.4, and real signing about 4.
+
+12
+00:00:49.460 --> 00:00:50.940
+It&#x27;s a narrow gain, but it&#x27;s a start.
+
+13
+00:00:51.620 --> 00:00:52.140
+Thanks for watching.

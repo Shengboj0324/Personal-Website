@@ -1,0 +1,17 @@
+WEBVTT
+
+1
+00:00:00.170 --> 00:00:00.870
+Es beginnt an einem See.
+
+2
+00:00:01.450 --> 00:00:05.630
+Dies ist der Sailbot-Simulator der Schule, der auf einem PC mit Autopilot-Steuerung läuft.
+
+3
+00:00:06.210 --> 00:00:10.690
+Darunter berechnet der Code die auf das Boot wirkenden Kräfte, bewegt es um einen kleinen Schritt und wiederholt den Vorgang.
+
+4
+00:00:11.430 --> 00:00:13.190
+Bewegung bedeutet, den Zustand mit jedem Zeitschritt zu aktualisieren.

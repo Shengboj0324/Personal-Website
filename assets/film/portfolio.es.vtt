@@ -1,0 +1,109 @@
+WEBVTT
+
+1
+00:00:01.540 --> 00:00:05.020
+Hola a todos, soy Michael, estudiante del último año de Kehillah High School.
+
+2
+00:00:05.580 --> 00:00:09.500
+Este es mi portafolio personal; voy a mostrarles algunos proyectos.
+
+3
+00:00:10.320 --> 00:00:11.020
+Comienza en un lago.
+
+4
+00:00:11.600 --> 00:00:15.780
+Este es el simulador de Sailbot de la escuela que se ejecuta en una PC con dirección en piloto automático.
+
+5
+00:00:16.360 --> 00:00:20.840
+Debajo, el código calcula las fuerzas que actúan sobre el barco, lo mueve un pequeño paso y lo repite.
+
+6
+00:00:21.580 --> 00:00:23.340
+El movimiento es sólo una actualización de estado en un reloj.
+
+7
+00:00:24.360 --> 00:00:27.360
+Luego vino una investigación de clase, que se muestra aquí en su registro sin editar.
+
+8
+00:00:27.360 --> 00:00:33.340
+Si representas un grafo como una matriz y la multiplicas por sí misma, cada número cuenta los caminos entre dos puntos.
+
+9
+00:00:33.940 --> 00:00:36.060
+El esqueleto de Sign-Translator es un grafo de ese tipo.
+
+10
+00:00:37.200 --> 00:00:41.660
+La transformada simple de Fourier tarda casi 9 segundos en 8.000 muestras.
+
+11
+00:00:42.400 --> 00:00:47.100
+Al dividir la señal por la mitad y aplicar recursión, la FFT tarda solo 26 milisegundos.
+
+12
+00:00:48.060 --> 00:00:54.760
+Más tarde, un espectro como este reveló que la cabeza generada por Sign-Translator temblaba el doble de fuerte que la de un signante real.
+
+13
+00:00:55.520 --> 00:01:00.740
+El siguiente proyecto era puramente artístico: 75.000 partículas movidas por los puntos de referencia de las manos.
+
+14
+00:01:01.500 --> 00:01:05.440
+Esos mismos puntos de referencia se convirtieron más tarde en una de las rutas de datos en Sign-Translator.
+
+15
+00:01:06.280 --> 00:01:08.940
+Toda esa curiosidad me llevó a Sign-Translator.
+
+16
+00:01:09.540 --> 00:01:14.080
+Las líneas de dos cámaras se encuentran en cada articulación, lo que proporciona su posición en 3D.
+
+17
+00:01:14.720 --> 00:01:20.500
+La longitud constante de los huesos permitió reducir el error de la distancia focal de más del 40% a menos del 1%.
+
+18
+00:01:20.500 --> 00:01:25.960
+El movimiento se comprime en códigos, como un vocabulario, y un Transformer los genera a partir del inglés.
+
+19
+00:01:27.040 --> 00:01:28.200
+Entonces casi todo falló.
+
+20
+00:01:28.800 --> 00:01:32.060
+Los modelos que generaban frases completas no transmitían más significado que una figura inmóvil.
+
+21
+00:01:32.520 --> 00:01:37.860
+Uno pasó las 95 pruebas de movimiento, pero seguía sin poder transmitir una frase.
+
+22
+00:01:38.600 --> 00:01:42.800
+Así que ahora el sistema genera cada palabra por separado y une los clips.
+
+23
+00:01:43.320 --> 00:01:44.660
+Las palabras que no conoce simplemente desaparecen.
+
+24
+00:01:45.660 --> 00:01:48.560
+Para calificarlo, un modelo lee el movimiento nuevamente en inglés.
+
+25
+00:01:49.120 --> 00:01:54.940
+El movimiento en blanco obtiene una puntuación de 2,05, el movimiento generado 2,4 y las señas reales alrededor de 4.
+
+26
+00:01:55.460 --> 00:01:56.940
+Es una pequeña mejora, pero es un comienzo.
+
+27
+00:01:57.620 --> 00:01:58.140
+Gracias por ver el vídeo.

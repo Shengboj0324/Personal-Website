@@ -77,3 +77,15 @@ No private services or Google Drive files were accessed for this source review. 
 
 - Korean (`/ko/`, 한국어) and Hindi (`/hi/`, हिन्दी) extend the same static translation system to ten languages. Public English copy was used for machine-assisted drafts, followed by manual refinement of headlines, navigation, dynamic messages, project summaries, and selected research caveats. Original English wording and source media remain unchanged.
 - Hindi uses locally served [Noto Sans Devanagari](https://fonts.google.com/noto/specimen/Noto+Sans+Devanagari) and [Noto Serif Devanagari](https://fonts.google.com/noto/specimen/Noto+Serif+Devanagari). Original Google Fonts files and their SIL Open Font Licenses are included in `assets/`. Korean uses native Hangul font stacks with word-aware wrapping and upright emphasis.
+
+## Personal portfolio film (added November 9, 2026)
+
+- User-supplied source: `Shengbo_Jiang_Portfolio_v8.mp4`, 119.733 seconds, 1920×1080, 30 fps. The complete film and the two excerpts retain the original narration and visuals.
+- `assets/film/shengbo-portfolio-v8.mp4`: H.264/AAC, 1080p, faststart, CRF 24 with a 1300 kb/s maximum video rate and 96 kb/s audio. Optimized from the local source with FFmpeg. No YouTube player, cookies, script, or availability dependency is required for playback.
+- `sailbot-excerpt.mp4`: 00:10.150–00:23.650, simulator and forces demonstration. This is not evidence of an on-water autonomous run.
+- `sign-translator-excerpt.mp4`: 01:06.000–01:59.733, reconstruction, motion generation, and limitations. Keep the negative results and automatic-evaluation caveat attached to this footage; the video does not establish linguistic intelligibility.
+- Posters are still frames from the supplied film, at 00:03 (overview), 00:18 (Sailbot), and 01:12 (Sign-Translator). They are actual project footage, not generated artwork.
+- English caption timing was drafted locally with Whisper `base.en` and corrected for visible project names and technical terms. The checked-in sentence-level transcript is `content/film.json`. Translations were machine-assisted and UI labels reviewed; a professional native-speaker caption review has not been performed. The film's original on-screen English text remains part of the picture.
+- `scripts/film.py` derives all 30 WebVTT tracks from that transcript and the locale catalogs, shifting excerpt timings to start at zero. Rebuilding and watching never invoke a translation service.
+- The user-supplied [YouTube channel](https://www.youtube.com/@Luckyknight324) is an optional outbound link. A particular YouTube upload could not be verified, so no guessed video ID or embed is used.
+- Hosting constraint checked against [Cloudflare Pages asset limits](https://developers.cloudflare.com/pages/platform/limits/): every delivered video is below the 25 MiB per-file ceiling.

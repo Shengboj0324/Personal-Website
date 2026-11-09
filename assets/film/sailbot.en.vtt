@@ -1,0 +1,17 @@
+WEBVTT
+
+1
+00:00:00.170 --> 00:00:00.870
+It starts on a lake.
+
+2
+00:00:01.450 --> 00:00:05.630
+This is the school&#x27;s Sailbot simulator running on a PC with the autopilot steering.
+
+3
+00:00:06.210 --> 00:00:10.690
+Underneath, the code works out the forces on the boat, moves it a tiny step and repeats.
+
+4
+00:00:11.430 --> 00:00:13.190
+Motion is just a state updating on a clock.

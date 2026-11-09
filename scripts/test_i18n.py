@@ -35,6 +35,13 @@ class LocalizationTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'missing translation'):
             self.render('<p>Untranslated sentence.</p>', {})
 
+    def test_caption_default_matches_page_language_without_changing_track_labels(self):
+        html = '<video><track kind="captions" srclang="en" label="English" default><track kind="captions" srclang="ja" label="日本語"></video>'
+        result = self.render(html, {}, 'ja')
+        self.assertIn('srclang="en" label="English">', result)
+        self.assertIn('srclang="ja" label="日本語" default>', result)
+        self.assertEqual(result.count(' default'), 1)
+
     def test_arabic_document_and_selector(self):
         result = self.render('<html lang="en"><p>Hello</p></html>', {'Hello': 'مرحبًا'}, 'ar')
         self.assertIn('lang="ar" dir="rtl" data-locale-prefix="/ar"', result)

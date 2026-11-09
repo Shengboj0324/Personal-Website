@@ -575,3 +575,78 @@ if (window.location.pathname === `${localePrefix}/`) {
   const route = legacyRoutes[window.location.hash];
   if (route) window.location.replace(route.startsWith('/assets/') ? route : localePrefix + route);
 }
+
+// Native playback remains available without JavaScript; enhance chapters and captions.
+for (const player of document.querySelectorAll('[data-film-player]')) {
+  const video = player.querySelector('video');
+  const captions = player.querySelector('[data-captions]');
+  const error = player.querySelector('.film-error');
+  const chapterLinks = [...player.querySelectorAll('.film-chapters [data-video-seek]')];
+  let pendingSeek = null;
+
+  function showCaptions(language) {
+    for (const track of video.textTracks) {
+      if (track.kind === 'captions') track.mode = track.language === language ? 'showing' : 'disabled';
+    }
+  }
+  captions.value = locale;
+  showCaptions(locale);
+  captions.closest('label').hidden = false;
+  captions.addEventListener('change', () => showCaptions(captions.value));
+  video.textTracks.addEventListener('change', () => {
+    const showing = [...video.textTracks].find(track => track.kind === 'captions' && track.mode === 'showing');
+    captions.value = showing?.language || 'off';
+  });
+
+  function applySeek() {
+    if (pendingSeek === null || video.readyState < 1) return;
+    video.currentTime = Math.min(pendingSeek, Number.isFinite(video.duration) ? Math.max(0, video.duration - 0.01) : pendingSeek);
+    pendingSeek = null;
+  }
+  function seek(seconds, play = false) {
+    if (!Number.isFinite(seconds) || seconds < 0) return;
+    pendingSeek = seconds;
+    error.hidden = true;
+    if (video.readyState >= 1) applySeek();
+    else {
+      video.preload = 'metadata';
+      video.load();
+    }
+    if (play) video.play().catch(() => { error.hidden = false; });
+  }
+  video.addEventListener('loadedmetadata', applySeek);
+  video.addEventListener('error', () => { error.hidden = false; });
+  video.addEventListener('playing', () => { error.hidden = true; });
+  video.addEventListener('play', () => {
+    for (const other of document.querySelectorAll('video')) if (other !== video) other.pause();
+  });
+  player.addEventListener('click', (event) => {
+    const link = event.target instanceof Element ? event.target.closest('a[data-video-seek]') : null;
+    if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const seconds = Number(link.dataset.videoSeek);
+    if (!Number.isFinite(seconds) || seconds < 0) return;
+    event.preventDefault();
+    seek(seconds, true);
+    if (player.dataset.filmPlayer === 'portfolio') {
+      const url = new URL(window.location.href);
+      url.hash = `t=${seconds}`;
+      window.history.replaceState(null, '', url);
+      updateLanguageLinks();
+    }
+  });
+  video.addEventListener('timeupdate', () => {
+    const active = chapterLinks.findLast(link => Number(link.dataset.videoSeek) <= video.currentTime);
+    for (const link of chapterLinks) {
+      if (link === active) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    }
+  });
+  if (player.dataset.filmPlayer === 'portfolio') {
+    const seekFromHash = () => {
+      const value = new URLSearchParams(window.location.hash.slice(1)).get('t');
+      if (value !== null && /^\d+(\.\d+)?$/.test(value)) seek(Number(value));
+    };
+    seekFromHash();
+    window.addEventListener('hashchange', seekFromHash);
+  }
+}

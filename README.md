@@ -20,6 +20,7 @@ Open http://127.0.0.1:4173/. Use an HTTP server rather than opening HTML files d
 - `content/locales/`: checked-in translation catalogs and the complete localized heading with inline emphasis. English source text is the catalog key; add translations for new copy before building.
 - `styles.css`: design tokens, page layouts, responsive styles, and reduced-motion support.
 - `scripts/asset_pipeline.py`: bundles fonts with the stylesheet and gives CSS/JS content-hashed filenames. Every generated page references the exact matching bundle, avoiding stale CDN/browser caches.
+- `content/film.json` and `scripts/film.py`: portfolio film chapter boundaries, source transcript, excerpts, native players, and reproducible WebVTT captions.
 - `app.js`: the liquid project explorer, mobile navigation, work filtering, email copying, and compatibility redirects for former homepage anchors.
 - `assets/`: self-hosted fonts, optimized images, résumé, original project video, and transcript.
 - `SOURCES.md`: source provenance and editorial decisions.
@@ -29,7 +30,8 @@ python3 scripts/build.py
 python3 scripts/check.py
 python3 scripts/test_i18n.py
 node --check app.js
-node --test scripts/test_turntable.cjs
+node --test scripts/test_turntable.cjs scripts/test_film.cjs
+python3 scripts/check_film.py
 python3 scripts/package.py
 ```
 
@@ -38,6 +40,8 @@ Build and check scripts use only the Python standard library. Generated HTML is 
 `package.py` creates a clean `dist/` containing only public files. It refuses to overwrite a pre-existing directory without its build marker. Deploy the **contents of `dist/`** at the root of a static host. Preserve directory index handling (`/work/releaf/` → `work/releaf/index.html`). `_headers` and `_redirects` retain the existing host conventions; other hosts may need equivalent configuration. Packaging itself does not publish. The existing hosting integration deploys changes pushed to `main`.
 
 ## Pages and behavior
+
+- Film: a dedicated `/film/` page with the complete two-minute portfolio video, six chapter links, a readable transcript, downloadable video, and captions in every site language. The homepage and primary navigation link to it. Sailbot and Sign-Translator pages feature actual excerpts and stills from the film. All three players use native controls, `playsinline`, and `preload="none"`; there is no autoplay or YouTube playback dependency. Choosing a chapter starts playback; opening a shared chapter URL seeks without autoplay. Captions default to the page language and can be changed independently.
 
 - Home: introduction, an interactive liquid field containing eight project markers, and four selected projects. Drag around the water, select a marker, use previous/next, or focus the surface and use arrow keys (Home/End select the first/last project). The title link beneath the water opens the selected case study.
 - Work: eight projects; Product, Research, and Teams filters. Filter state is reflected in the URL.
@@ -54,7 +58,7 @@ Touch gestures on the surface are reserved for unrestricted turning; the surroun
 
 ## Validation completed
 
-- 130 HTML pages across ten languages and 3,440 local references passed the static checker.
+- 140 HTML pages across ten languages and 4,780 local references passed the static checker.
 - All 120 content routes checked at 320, 390, 768, 901, 1024, and 1280 CSS pixels: 720 layout checks with no page or prose overflow.
 - Localization regression tests cover internal routes versus external/media URLs, filter identifiers, escaping, missing copy, same-page language options, and Arabic document direction.
 - Language switching preserves the current page, fragment, and active project filter; the language selector and localized navigation also work without JavaScript.
@@ -89,3 +93,5 @@ Typography uses native Chinese/Japanese/Korean font stacks and normal upright em
 Long-form translation drafts were machine-assisted from the public English website. The headline, key interface wording, project summaries, names, and selected technical caveats were refined manually. These have not received a professional native-speaker review in every language. Original screenshots, diagrams, video, downloadable transcript, and résumé retain their source language, with explanatory labels in translated pages. No translation service is contacted during builds or visits; catalogs are local files. Build validation rejects missing text, empty translations, and changed interpolation placeholders.
 
 Touch tracking regression checks cover opposite-side contact, clockwise and counterclockwise sweeps, angle wrapping, the center dead zone, rapid input, release, cancellation, secondary pointers, and keyboard selection. These are event-handler tests; the October 29 touch fix could not be visually checked because local browser use was disabled in Work settings.
+
+November 9 film addition: optimized local H.264/AAC media and caption timing are validated by `scripts/check_film.py`; chapter seeking, caption selection, no-autoplay behavior, and native link fallbacks are covered by `scripts/test_film.cjs`. English captions began as local speech recognition, with terminology corrections; translations are machine-assisted. Browser preview attempts timed out during this update, so actual browser playback and a fresh layout audit were not verified.

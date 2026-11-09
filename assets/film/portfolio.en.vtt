@@ -1,0 +1,109 @@
+WEBVTT
+
+1
+00:00:01.540 --> 00:00:05.020
+Hello everyone, I&#x27;m Michael, a senior at Kehillah High School.
+
+2
+00:00:05.580 --> 00:00:09.500
+This is my personal portfolio and I&#x27;m going to walk through some projects together with you.
+
+3
+00:00:10.320 --> 00:00:11.020
+It starts on a lake.
+
+4
+00:00:11.600 --> 00:00:15.780
+This is the school&#x27;s Sailbot simulator running on a PC with the autopilot steering.
+
+5
+00:00:16.360 --> 00:00:20.840
+Underneath, the code works out the forces on the boat, moves it a tiny step and repeats.
+
+6
+00:00:21.580 --> 00:00:23.340
+Motion is just a state updating on a clock.
+
+7
+00:00:24.360 --> 00:00:27.360
+Next came a class investigation, shown here in its raw log.
+
+8
+00:00:27.360 --> 00:00:33.340
+If you write a graph as a grid and multiply it by itself, each number counts the routes between two points.
+
+9
+00:00:33.940 --> 00:00:36.060
+Sign-Translator&#x27;s skeleton is that kind of graph.
+
+10
+00:00:37.200 --> 00:00:41.660
+The plain Fourier transform takes almost 9 seconds on 8,000 samples.
+
+11
+00:00:42.400 --> 00:00:47.100
+When you split the signal in half and recurse, the FFT takes just 26 milliseconds.
+
+12
+00:00:48.060 --> 00:00:54.760
+Later on, a spectrum like this revealed that Sign-Translator&#x27;s generated head was shaking twice as hard as a real signer.
+
+13
+00:00:55.520 --> 00:01:00.740
+The next project was just for art, 75,000 particles pulled around by hand landmarks.
+
+14
+00:01:01.500 --> 00:01:05.440
+Those same landmarks later became one of the data paths in Sign-Translator.
+
+15
+00:01:06.280 --> 00:01:08.940
+All that curiosity led me to Sign-Translator.
+
+16
+00:01:09.540 --> 00:01:14.080
+Lines from two cameras meet at each joint, which gives its position in 3D.
+
+17
+00:01:14.720 --> 00:01:20.500
+Because bones don&#x27;t change length, they took the focal length from over 40% wrong to within 1%.
+
+18
+00:01:20.500 --> 00:01:25.960
+The motion is then compressed into codes, like a vocabulary, and a transformer writes them from English.
+
+19
+00:01:27.040 --> 00:01:28.200
+Then nearly everything failed.
+
+20
+00:01:28.800 --> 00:01:32.060
+The whole sentence generators read no better than standing still.
+
+21
+00:01:32.520 --> 00:01:37.860
+One of them passed 95 out of 95 motion checks and still couldn&#x27;t carry a sentence.
+
+22
+00:01:38.600 --> 00:01:42.800
+So now the system generates each word separately and stitches the clips together.
+
+23
+00:01:43.320 --> 00:01:44.660
+Words it doesn&#x27;t know simply vanish.
+
+24
+00:01:45.660 --> 00:01:48.560
+To score it, a model reads the motion back into English.
+
+25
+00:01:49.120 --> 00:01:54.940
+Blank motion scores 2.05, the generated motion 2.4, and real signing about 4.
+
+26
+00:01:55.460 --> 00:01:56.940
+It&#x27;s a narrow gain, but it&#x27;s a start.
+
+27
+00:01:57.620 --> 00:01:58.140
+Thanks for watching.

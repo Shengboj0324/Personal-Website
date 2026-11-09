@@ -1,0 +1,53 @@
+WEBVTT
+
+1
+00:00:00.280 --> 00:00:02.940
+Toda esa curiosidad me llevó a Sign-Translator.
+
+2
+00:00:03.540 --> 00:00:08.080
+Las líneas de dos cámaras se encuentran en cada articulación, lo que proporciona su posición en 3D.
+
+3
+00:00:08.720 --> 00:00:14.500
+La longitud constante de los huesos permitió reducir el error de la distancia focal de más del 40% a menos del 1%.
+
+4
+00:00:14.500 --> 00:00:19.960
+El movimiento se comprime en códigos, como un vocabulario, y un Transformer los genera a partir del inglés.
+
+5
+00:00:21.040 --> 00:00:22.200
+Entonces casi todo falló.
+
+6
+00:00:22.800 --> 00:00:26.060
+Los modelos que generaban frases completas no transmitían más significado que una figura inmóvil.
+
+7
+00:00:26.520 --> 00:00:31.860
+Uno pasó las 95 pruebas de movimiento, pero seguía sin poder transmitir una frase.
+
+8
+00:00:32.600 --> 00:00:36.800
+Así que ahora el sistema genera cada palabra por separado y une los clips.
+
+9
+00:00:37.320 --> 00:00:38.660
+Las palabras que no conoce simplemente desaparecen.
+
+10
+00:00:39.660 --> 00:00:42.560
+Para calificarlo, un modelo lee el movimiento nuevamente en inglés.
+
+11
+00:00:43.120 --> 00:00:48.940
+El movimiento en blanco obtiene una puntuación de 2,05, el movimiento generado 2,4 y las señas reales alrededor de 4.
+
+12
+00:00:49.460 --> 00:00:50.940
+Es una pequeña mejora, pero es un comienzo.
+
+13
+00:00:51.620 --> 00:00:52.140
+Gracias por ver el vídeo.

@@ -1,0 +1,17 @@
+WEBVTT
+
+1
+00:00:00.170 --> 00:00:00.870
+Cela commence sur un lac.
+
+2
+00:00:01.450 --> 00:00:05.630
+Il s&#x27;agit du simulateur Sailbot de l&#x27;école fonctionnant sur un PC avec pilotage automatique.
+
+3
+00:00:06.210 --> 00:00:10.690
+En dessous, le code calcule les forces exercées sur le bateau, le déplace d&#x27;un petit pas et répète.
+
+4
+00:00:11.430 --> 00:00:13.190
+Le mouvement n&#x27;est qu&#x27;une mise à jour d&#x27;état sur une horloge.
