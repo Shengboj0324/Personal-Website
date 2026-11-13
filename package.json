@@ -6,7 +6,7 @@
     "world": "esbuild src/world/main.js --bundle --format=esm --minify --target=es2020 --outfile=world.js --legal-comments=none"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0",
+    "esbuild": "0.25.0",
     "three": "^0.170.0"
   }
 }
