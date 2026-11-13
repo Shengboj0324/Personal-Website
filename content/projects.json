@@ -650,7 +650,7 @@
     "role": "Wiki & entrepreneurship team lead",
     "organization": "LCG-China · iGEM 2024",
     "summary": "Website development and entrepreneurship work for an iGEM Gold Medal synthetic biology team.",
-    "intro": "A scientific project needs a clear explanation of what it does, how it works, and where it might be useful. For LCG-China’s 2024 project on modifying bacterial cellulose, I led the wiki and entrepreneurship work that connected our team’s research with that wider story.",
+    "intro": "A scientific project needs a clear explanation of what it does, how it works, and where it might be useful. LCG-China was a team of high-school students from several countries working on a way to give bacterial cellulose new functions. I led the group that built the team’s wiki, and the entrepreneurship work that asked where the material could go next.",
     "tools": [
       "Web development",
       "Scientific communication",
@@ -663,59 +663,91 @@
         "iGEM 2024 team medal"
       ],
       [
+        "3",
+        "modules in the team’s cellulose system"
+      ],
+      [
+        "16",
+        "pages in the team wiki"
+      ],
+      [
         "ExploreAid",
-        "proposed bandage business plan"
+        "proposed bandage product line"
       ]
     ],
     "sections": [
       [
-        "The project behind the pages",
-        "The team’s 2024 entry was titled “Modular Bacterial Cellulose Modification Machine in Use and AI Safety Framework in Synthetic Biology.” Bacterial cellulose is a material grown by microbes; the team worked on a modular way to modify it, and paired the laboratory work with a framework for using AI tools safely in synthetic biology."
+        "It started with milk tea",
+        "The team’s wiki tells the origin plainly: a classmate asked what the coconut jelly in milk tea is made of. The answer is bacterial cellulose, a material grown by microbes that is purer than cellulose from plants, holds water well, is mechanically strong and breaks down naturally. That question became the 2024 project, “Modular Bacterial Cellulose Modification Machine in Use and AI Safety Framework in Synthetic Biology.”"
+      ],
+      [
+        "A material that needed help",
+        "Plain bacterial cellulose has limits, and proteins are an obvious way to add functions to it. The difficulty is that most useful proteins do not attach to cellulose, so a designer has to trade the property they want against whether it will stick. The team set out to remove that trade-off, building on a system first proposed by Imperial College’s iGEM team in 2014."
+      ],
+      [
+        "Three parts that click together",
+        "The design separates the problem into three modules. The first is the cellulose itself. The second is a scaffold: a protein fibre that holds firmly to cellulose and carries a small tag. The third is the protein you actually want, fused to the partner that locks onto that tag. Because the two halves of the lock are standard, a different protein can be swapped in without redesigning the rest, and each module can be improved on its own."
+      ],
+      [
+        "What the team showed",
+        "As a proof of concept the team used two colour proteins, one green and one blue, because a successful attachment is then visible to the eye. Pieces of cellulose treated with the scaffold present kept a clearly deeper colour than pieces treated without it. Separately, the team studied how to grow the cellulose more efficiently, comparing nitrogen sources and container shapes; a wider tray turned over 20% of the sugar into cellulose, against about 11.5% for a smaller one."
       ],
       [
         "Giving the research a structure",
-        "I directed the team’s website presentation, organizing scientific and business material into accessible explanations of the project, methods, and findings. The wiki gave different parts of the work a shared structure so readers could follow the reasoning as well as the results."
+        "The team page lists my role as student leader of the wiki coding task force: I was responsible for developing the site and dividing the work among the people building it. The finished wiki has sixteen pages, from the project description, engineering cycles, experiments and results to human practices, safety, entrepreneurship and attributions. Its job was to let a judge who had never met us follow the reasoning as well as the results."
       ],
       [
         "Thinking beyond the laboratory",
-        "I led development of the ExploreAid business plan for a proposed bacterial-cellulose bandage. The work considered customer needs, competing products, market positioning, production costs, and commercialization risks."
+        "I led development of the ExploreAid business plan. It proposes a start-up, Vanguard Biology, whose first product is a fully bio-based adhesive bandage for people who spend time outdoors. The plan explains why a bandage was chosen over other uses, using a weighted scoring model, and then works through demand, product, marketing, strategy, visual identity, production, risks and financing."
+      ],
+      [
+        "A guideline for using AI",
+        "The second half of the project’s title is about tools rather than materials. After finding that existing rules for AI in synthetic biology were incomplete, the team drafted a first version of a guideline for the iGEM community. It covers four areas (data standards, ethical standards, legal compliance, and responsibility and accountability) plus a standard way to cite AI tools. The wiki also publishes the team’s own AI conversations as a record."
       ],
       [
         "A team achievement",
         "LCG-China earned an iGEM Gold Medal in 2024. My contribution focused on wiki development, entrepreneurship, and communicating the team’s scientific work to a wider audience. The laboratory and modelling work belongs to my teammates."
       ]
     ],
-    "note": "ExploreAid was a proposed product and business plan; the team medal does not imply clinical validation or commercial release.",
+    "note": "Project details follow the team’s public wiki, whose content is licensed CC BY 4.0. ExploreAid was a proposed product and business plan; the team medal does not imply clinical validation or commercial release.",
     "links": [
       [
         "Team wiki",
         "https://2024.igem.wiki/lcg-china/"
+      ],
+      [
+        "Entrepreneurship page",
+        "https://2024.igem.wiki/lcg-china/entrepreneurship"
+      ],
+      [
+        "Team and roles",
+        "https://2024.igem.wiki/lcg-china/team"
       ]
     ],
     "tour": "Where the route begins: a synthetic-biology team with real results and a judging panel that would meet them through a website. My job was to make the science easy to follow.",
     "bridge": "The same year, the question moved from explaining a project to building one people would use every day.",
     "island": "A lab on one side, its story on the other.",
     "limits": [
+      "The demonstration used colour proteins. The antimicrobial proteins the bandage would need are named on the wiki as future work, not as a result.",
       "ExploreAid was a proposed product and business plan. It was not manufactured, tested clinically or sold.",
-      "My role was communication and entrepreneurship. I did not lead the laboratory or computational work.",
-      "A team medal reflects the whole team’s project against iGEM’s criteria, not an individual result."
+      "My role was the wiki and entrepreneurship. I did not lead the laboratory or modelling work, and a team medal is a team result."
     ],
     "hotspots": [
       [
         "Bacterial cellulose",
-        "The team’s material: a sheet of cellulose grown by bacteria, which the project set out to modify."
+        "The team’s material: a sheet of cellulose grown by microbes, the same substance as the coconut jelly in milk tea."
       ],
       [
         "Modular by design",
-        "Interchangeable genetic parts, drawn here as segments of one ring, are the idea behind the project’s “modular” title."
+        "Parts that plug together, drawn here as segments of one ring. The real system has three modules: the cellulose, a scaffold that holds onto it, and the protein you want to attach."
       ],
       [
         "The wiki",
-        "My main job: the project website that judges and the public read, organised so the reasoning is as easy to follow as the results."
+        "My main job: sixteen pages that judges and the public read, organised so the reasoning is as easy to follow as the results."
       ],
       [
         "ExploreAid",
-        "A business plan for a proposed bacterial-cellulose bandage: customers, competitors, costs and risks. A proposal, not a product."
+        "A business plan for a proposed bio-based bandage for outdoor use: demand, product, marketing, production, risks and financing. A proposal, not a product."
       ]
     ],
     "connections": [
@@ -726,8 +758,34 @@
       [
         "assay-planner",
         "Laboratory biology returns two years later, as a question about which wells to measure."
+      ],
+      [
+        "college-advisor",
+        "The team’s rule that AI tools must be cited is an early version of an idea that comes back later: show your sources."
       ]
-    ]
+    ],
+    "technical": {
+      "heading": "A material you can add functions to.",
+      "modules": [
+        [
+          "The base",
+          "Bacterial cellulose is the foundation. It is produced by microbes as a sheet, and the team’s production work looked at how the choice of nutrients and the shape of the container change how much sugar ends up as material."
+        ],
+        [
+          "The scaffold",
+          "A fibre-forming protein that binds strongly to cellulose is fused to a short tag. Once the fibre is on the cellulose, the tag is displayed across its surface as a standard attachment point."
+        ],
+        [
+          "The cargo",
+          "Any protein of interest is fused to the tag’s partner, which locks onto it. The team gave this part a standard interface so that a new protein can be dropped in with one routine assembly step, without redesigning the scaffold."
+        ]
+      ],
+      "footnote": "This is a summary of the team’s published design, written by the person whose job was to explain it. The laboratory work is my teammates’; the wiki’s engineering and results pages are the authoritative account.",
+      "source": [
+        "Read the team’s engineering page",
+        "https://2024.igem.wiki/lcg-china/engineering"
+      ]
+    }
   },
   {
     "slug": "sailbot",

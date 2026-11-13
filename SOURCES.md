@@ -109,7 +109,7 @@ Reviewed on November 12, 2026. The eight project repositories and the supplied r
 - Assay Planner: the public repository's technical report, confirmation results and prior-art audit. The greedy-baseline figure (0.66%) is shown beside the headline (32.82%) wherever the headline appears.
 - CollegeAdvisor: the public Hugging Face model card and the owner's project files. The earlier description of "keyword and vector retrieval" is corrected: the implemented path is dense retrieval with authority weighting, and keyword retrieval appears in the design documents only. Internal thresholds and counts are deliberately left out.
 - Sign-Translator: the public repository's README and training notes as of November 2, 2026. The page now reflects the project's own conclusions: end-to-end sentence generation did not separate from blank motion, word-by-word composition is the current path, the milestone score was missed on a fresh read, and no Deaf rater has seen the output.
-- iGEM: the résumé, the team banner (project title) and the public wiki. Local project files were not available for reading, so no laboratory detail beyond the title is stated.
+- iGEM: the team's public wiki (https://2024.igem.wiki/lcg-china/, read on November 12, 2026: home, description, engineering, results, entrepreneurship, AI safety policy, human practices, team and awards pages; content licensed CC BY 4.0) and the résumé. The design is described at the level of the wiki's own summaries; laboratory procedures are not reproduced. The team page lists the role as “Student leader: Wiki coding task-force”; the entrepreneurship lead is from the résumé. The proof of concept used colour proteins, and the page says so rather than implying the bandage's antimicrobial function was shown.
 - Sailbot: the two public repositories. The simulator work is described as engineering hardening, not new physics. Controller constants are described as assumed, and no on-water result is reported. A later test run in the repository that passed 7 of 40 cases is acknowledged.
 - Developer Agent: the public repository's README and readiness records. No competition submission or placement is claimed, and the page states that no training has run at scale.
 
@@ -118,7 +118,6 @@ Reviewed on November 12, 2026. The eight project repositories and the supplied r
 - CollegeAdvisor dates: the résumé says September 2025 to March 2026. The offer letter covers September to December 2025 and commits run into January 2026. The résumé wording is kept.
 - CollegeAdvisor confidentiality: the internship paperwork includes a confidentiality term. The page stays at the level of the public model card.
 - Sign-Translator dates: the résumé says 2025–present; the public repository's history starts in July 2026 after an earlier prototype. The résumé wording is kept.
-- iGEM: with access to the team's files, the island captions could name the organism and parts.
 
 ### Verification record for the redesign
 
