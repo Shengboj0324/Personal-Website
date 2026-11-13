@@ -8,12 +8,13 @@
     "role": "Cofounder & software engineer",
     "organization": "Rematter Cooperation",
     "summary": "An iOS app that brings reuse ideas, carbon tracking, and a sustainability community into everyday life.",
-    "intro": "Sustainability becomes more approachable when the next step is concrete. I helped build Releaf around the things people already have, the habits they want to change, and a community to share those experiments with.",
+    "intro": "Sustainability becomes more approachable when the next step is concrete. I helped build Releaf around the things people already have, the habits they want to change, and a community to share those experiments with. Under the friendly surface, the app is an exercise in putting machine learning where it is useful and keeping it honest about what it knows.",
     "tools": [
       "SwiftUI",
+      "Core ML",
       "Django",
-      "Image analysis",
-      "Information retrieval"
+      "Graph neural networks",
+      "Calibrated classifiers"
     ],
     "facts": [
       [
@@ -21,8 +22,12 @@
         "app downloads"
       ],
       [
-        "$2,000",
-        "project funding raised"
+        "30",
+        "kinds of item recognised on the phone"
+      ],
+      [
+        "11",
+        "growth levels for “My Tree”"
       ],
       [
         "Top two",
@@ -32,15 +37,23 @@
     "sections": [
       [
         "From information to a daily habit",
-        "Releaf brings together ways to reuse everyday materials, estimates of carbon emissions, and a dedicated online community. The aim is to give environmental information a useful place in a person’s routine: an idea to try, an action to record, or something to share."
+        "Releaf brings together ways to reuse everyday materials, an estimate of the carbon a person’s day produced, and a community for sharing what worked. The aim is to give environmental information a useful place in a routine: an idea to try, an action to record, or something to show someone else. Progress is drawn as a tree that grows through eleven levels, and rewards are counted in water drops."
       ],
       [
-        "The system behind the experience",
-        "My work included Django backend features for user accounts, Waterdrop rewards, achievements, and notifications. I also developed supporting AI services for image analysis and retrieving sustainability information. These pieces connect the visible app experience to the accounts, content, and feedback that keep it working."
+        "A classifier that lives on the phone",
+        "The app’s current code recognises waste with an EVA-02 Large vision model converted to Core ML. One image passes through three output heads at once: 30 item classes, 15 materials and 4 bins. Running on the device means a photo does not have to leave the phone to be useful, and a prediction below a set confidence is flagged rather than presented as certain. If the on-device model is unavailable, the app can fall back to the same classifier on the server."
+      ],
+      [
+        "A small graph instead of a large model",
+        "A name is not yet advice. Releaf ships a knowledge graph of 43 nodes (30 items, 8 materials and 5 destinations) joined by 118 edges, with embeddings learned by a graph attention network. Disposal guidance is a lookup along the graph’s edges; “similar items” is a cosine similarity between embeddings. Moving search onto this graph removed the app’s dependence on an external language-model service for that feature."
+      ],
+      [
+        "Carbon tracking that separates guessing from arithmetic",
+        "The carbon tracker is opt-in. Location and motion readings are summarised on the phone into 15-second windows, and only those summaries are uploaded. A calibrated classifier infers the travel mode and reports “unknown” when its confidence is low. A separate, auditable step then multiplies distance by published emission factors. The classifier was trained on a physics-based mobility simulator, so its near-perfect simulated accuracy is not a claim about real phones."
       ],
       [
         "Building with a team",
-        "As a cofounder of Rematter Cooperation, I worked across software and the broader project. We raised $2,000 in funding and earned a top-two team placement in the 2025 China High School Social Innovation Competition and Incubation Camp. Releaf reached more than 5,000 downloads."
+        "As a cofounder of Rematter Cooperation, I worked across the SwiftUI app, the Django backend for accounts, rewards, achievements and notifications, and the supporting AI services. We raised $2,000 in funding and earned a top-two team placement in the 2025 China High School Social Innovation Competition and Incubation Camp. Releaf reached more than 5,000 downloads."
       ]
     ],
     "note": "Download and funding figures are reported in my résumé. Carbon estimates are informational; they are not direct measurements of environmental impact.",
@@ -58,24 +71,64 @@
       "heading": "From a photo to a useful next step.",
       "modules": [
         [
-          "A shared request contract",
-          "The supporting AI stack separates the gateway, vision, retrieval, knowledge graph, and response services. Pydantic schemas give them a common language for image inputs, location, citations, warnings, and errors, so mobile requests can move through the pipeline predictably."
+          "One image, three questions",
+          "The EVA-02 Large classifier takes a 448 × 448 image and answers three questions from a shared representation: what the item is, what it is made of, and which bin it belongs in. Accuracy on held-out images ranged from about 90% to 94% depending on the evaluation set, with food waste and glass bottles the weakest classes. The model was exported to Core ML at 16-bit precision for the phone."
         ],
         [
-          "Retrieval with a purpose",
-          "Image analysis feeds material-related searches and reuse suggestions. The knowledge graph connects materials to product ideas and relationships, while retrieved documents provide supporting information. Similarity scores rank candidates; they are not calibrated probabilities that an idea will work."
+          "Guidance by graph lookup",
+          "A graph attention network (GATv2) learns a 64-dimensional embedding for each of the 43 nodes. The app ships the graph as plain data, so turning a prediction into guidance is a neighbour lookup and a similarity search that work offline. Similarity scores rank candidates; they are not calibrated probabilities that a reuse idea will work."
         ],
         [
           "Useful under partial failure",
-          "The orchestrator assembles results from several services and reports partial responses explicitly. A local lexical search can stand in when vector retrieval is unavailable. Missing required model checkpoints fail closed, making an unavailable capability visible instead of silently inventing an answer."
+          "The supporting services split the work between a gateway, vision, retrieval, a knowledge graph and a response step. The orchestrator marks a response as partial when a service is missing, and a fallback path keeps a simpler answer available. An unavailable capability is reported instead of being papered over."
         ]
       ],
-      "footnote": "These details describe the supporting AI repository, which reports staging readiness. They are separate from the released app’s download figures.",
+      "footnote": "These details describe the app’s current code and its supporting AI repository, which reports staging readiness. They are separate from the released app’s download figures, and not every feature described here is confirmed as released.",
       "source": [
-        "Read the service architecture",
-        "https://github.com/Shengboj0324/Sustainability-AI-Model/blob/main/PRODUCTION_MULTIMODAL_AI_UPGRADE_REPORT.md"
+        "Explore the supporting AI repository",
+        "https://github.com/Shengboj0324/Sustainability-AI-Model"
       ]
-    }
+    },
+    "tour": "An iOS app that makes the next sustainable step concrete. Point the phone at an object and it names the item, the material and where it should go, without sending the photo anywhere.",
+    "bridge": "A phone that sorts waste on its own raises the next problem: what should software do when it is not sure of the answer?",
+    "island": "A phone, a tree and five places for things to go.",
+    "limits": [
+      "Download, funding and competition figures come from my résumé. They are not usage or retention figures.",
+      "Carbon numbers are estimates from distance and published emission factors. They are not measurements of a person’s real footprint.",
+      "The travel-mode classifier has only been evaluated on simulated trips. Its accuracy on real devices is not yet known."
+    ],
+    "hotspots": [
+      [
+        "The app",
+        "The screen is a real screenshot of Releaf’s community feed, where people share reuse ideas."
+      ],
+      [
+        "Thirty items, five destinations",
+        "An on-device classifier recognises 30 kinds of item. A small knowledge graph links each one to a material and to one of five destinations: recycle, compost, landfill, special handling or donate."
+      ],
+      [
+        "A graph the phone can search",
+        "Items, materials and destinations stored as a graph that works without a connection. The sculpture is simplified; the real graph has 43 nodes and 118 edges."
+      ],
+      [
+        "My Tree",
+        "Progress is drawn as a tree with eleven growth levels, and rewards are counted in water drops."
+      ]
+    ],
+    "connections": [
+      [
+        "college-advisor",
+        "The same pairing of a SwiftUI app with Python services, and the same rule: say “unknown” rather than guess."
+      ],
+      [
+        "sailbot",
+        "Both train and test against a physics simulator before trusting the real world."
+      ],
+      [
+        "igem",
+        "ExploreAid was a first attempt at turning a project into something people might use. Releaf is the one that shipped."
+      ]
+    ]
   },
   {
     "slug": "phoenix",
@@ -85,22 +138,27 @@
     "year": "2026",
     "role": "Student researcher",
     "organization": "Pioneer Academics · June–September 2026",
-    "summary": "Remote sensing and interpretable machine learning to study urban heat vulnerability across Phoenix.",
-    "intro": "A surface-temperature map tells us where a city is hot. It does not, by itself, tell us which neighborhoods are most vulnerable. My research brought environmental and demographic information together to examine that difference.",
+    "summary": "Remote sensing and interpretable clustering to study urban heat vulnerability across Phoenix.",
+    "intro": "A surface-temperature map tells us where a city is hot. It does not, by itself, tell us which neighborhoods are most vulnerable. My research brought satellite, land-cover and census information together for 369 Phoenix census tracts to examine that difference, and to ask how much a cooling program’s priorities change when the definition of “priority” does.",
     "tools": [
-      "Landsat imagery",
-      "Census data",
-      "Clustering",
-      "Interpretable ML"
+      "Landsat 8/9",
+      "NLCD land cover",
+      "Census ACS",
+      "k-means clustering",
+      "Spatial statistics"
     ],
     "facts": [
       [
         "369",
-        "Phoenix census tracts"
+        "Phoenix census tracts analysed"
       ],
       [
         "17 / 37",
-        "top-priority tracts shared by both rankings"
+        "top-decile tracts shared by both rankings"
+      ],
+      [
+        "0.749",
+        "rank correlation between the two rankings"
       ],
       [
         "3",
@@ -110,37 +168,85 @@
     "sections": [
       [
         "A different way to ask the question",
-        "I studied 369 Phoenix census tracts using Landsat imagery, land-cover indicators, and census demographics. Rather than treating temperature as the whole problem, I compared temperature-only priorities with a multidimensional view of neighborhood vulnerability."
+        "I studied 369 Phoenix census tracts. Rather than treating temperature as the whole problem, I compared two ways of choosing where to act first: a ranking by surface temperature alone, and a ranking by a score that also counts how built-up a tract is, how many people live there, and how sensitive they are to heat."
+      ],
+      [
+        "Building one picture from eleven",
+        "Surface temperature comes from Landsat 8 and 9 Collection 2 Level-2 scenes. Eleven scenes from June to August 2024 passed quality screening; cloud, shadow and saturated pixels were masked, and the per-pixel median of what remained gave a summer composite of temperature and vegetation. The 2024 National Land Cover Database supplied paved surface and tree canopy, and the American Community Survey supplied age, poverty and housing figures with their margins of error."
+      ],
+      [
+        "A score that keeps its parts visible",
+        "The priority score is the plain average of four percentile ranks: heat, built burden (paved surface and lack of vegetation), exposure (population density) and sensitivity (people over 65, children under five, and poverty). Equal weights are a value choice, not a fitted model, and the paper says so. Keeping the four parts separate means anyone can see why a tract ranks where it does."
       ],
       [
         "When the rankings diverge",
-        "Only 17 of the 37 highest-priority tracts appeared in both rankings. That difference matters: a decision based only on surface heat can identify a substantially different set of neighborhoods from a decision that also considers their wider vulnerability."
+        "Across all tracts the two rankings agree fairly well, with a rank correlation of 0.749. At the top, where decisions get made, they do not: only 17 of the 37 hottest tracts are also among the 37 highest-priority tracts. Moving from one ranking to the other shifted the median tract by 42 places, and the largest moves were about 250 places in each direction."
       ],
       [
-        "Making the patterns interpretable",
-        "Clustering identified three vulnerability profiles, providing a way to discuss why neighborhoods differ and how cooling interventions might respond. The work connects remote sensing with the practical question of where—and on what basis—a city should focus its attention."
+        "Three kinds of neighborhood",
+        "Clustering the tracts on seven standardised features gave three readable profiles: 206 tracts with compounded heat and socioeconomic burden; 45 low-density tracts that are far from cooling centres; and 118 greener, slightly cooler tracts with the oldest residents. The grouping stayed stable when the census inputs were perturbed within their margins of error 50 times, which is the check that lets the profiles be discussed at all."
       ]
     ],
-    "note": "Paper: “Remote Sensing and Interpretable Machine Learning for Neighborhood-Level Urban Heat Vulnerability in Phoenix, Arizona.” Submitted and accepted by my supervising professor; unpublished. The graphic above illustrates the reported ranking overlap, not geographic boundaries.",
+    "note": "Paper: “Remote Sensing and Interpretable Machine Learning for Neighborhood-Level Urban Heat Vulnerability in Phoenix, Arizona.” Submitted and accepted by my supervising professor; unpublished. “Interpretable” refers to the readable cluster profiles and the transparent score.",
     "links": [],
     "technical": {
       "heading": "One city. Three ways to read it.",
       "modules": [
         [
-          "Environmental evidence",
-          "Landsat surface-temperature information and land-cover indicators describe the physical environment. The census tract is the neighborhood-scale unit of comparison, allowing environmental patterns and demographic information to be considered across the same 369 areas."
+          "From radiance to a tract",
+          "Landsat thermal values are converted to kelvin with the product’s published scale and offset, masked with its pixel-quality bands, and combined as a per-pixel median over the summer. Each raster is then summarised inside tract boundaries in a common map projection. Of 373 tracts assembled, 369 passed the coverage and quality checks."
         ],
         [
           "A change in the decision rule",
-          "I compared a temperature-only ranking with a multidimensional vulnerability ranking. Examining which tracts enter the top 37 makes the practical consequence visible: the definition of priority changes the places a cooling program would consider first."
+          "A temperature-only ranking and the four-part priority ranking are compared at the top decile and top quintile. Overlap is reported as counts and as a Jaccard index (0.298 at the top decile), so the result is about which places a program would visit first, not about an average difference."
         ],
         [
-          "Profiles that explain differences",
-          "Clustering identified three vulnerability profiles. These groupings give the analysis another layer beyond a ranked list: they help explain how neighborhoods differ and why one uniform intervention may not address every pattern of vulnerability."
+          "Profiles that survive perturbation",
+          "k-means with three clusters was chosen after comparing three to six clusters against Ward linkage. Stability was measured by re-clustering after perturbing census variables within their margins of error: the median adjusted Rand index was 0.797 for k-means against 0.580 for Ward. Both scores are spatially clustered (Moran’s I of about 0.5), so neighboring tracts are not independent samples."
         ]
       ],
-      "footnote": "Surface temperature, demographic vulnerability, and intervention priority answer related but different questions. The study compares those perspectives; it does not measure the effects of a completed cooling program."
-    }
+      "footnote": "Surface temperature, demographic vulnerability and intervention priority answer related but different questions. The study compares those perspectives; it does not measure the effects of a completed cooling program."
+    },
+    "tour": "A satellite can tell you where a city is hot. This study asks who lives there. Rank Phoenix’s neighborhoods by heat alone, then by heat plus vulnerability, and the two lists disagree at the top.",
+    "bridge": "If one map can mislead, the next question is practical: with a limited budget, where should the next measurement go?",
+    "island": "A desert city, seen from orbit and from the street.",
+    "limits": [
+      "Satellite surface temperature is not air temperature, night-time heat or indoor heat.",
+      "The equal weights in the priority score are a stated value choice. Different weights would move tracts.",
+      "The study does not link any ranking to health outcomes, and distance to a cooling centre is straight-line, not travel time."
+    ],
+    "hotspots": [
+      [
+        "Landsat",
+        "Eleven summer-2024 scenes from Landsat 8 and 9 were combined into one surface-temperature picture of the city."
+      ],
+      [
+        "369 tracts",
+        "Each tile stands for a census tract. Heights and colours here are an illustration, not the study’s data."
+      ],
+      [
+        "17 of 37",
+        "Cyan posts mark the 37 hottest tiles and coral pins the 37 highest-priority ones. Only 17 tiles carry both."
+      ],
+      [
+        "Where relief goes",
+        "Cooling centres are the kind of decision a ranking informs. Distance to them was tested as a separate scenario."
+      ]
+    ],
+    "connections": [
+      [
+        "assay-planner",
+        "Both use uncertainty to decide where scarce attention should go: census margins of error here, model variance there."
+      ],
+      [
+        "sailbot",
+        "Cleaning a wind signal and masking cloudy pixels are the same chore: fix the measurement before deciding."
+      ],
+      [
+        "releaf",
+        "Releaf works on the everyday side of the same environmental questions."
+      ]
+    ]
   },
   {
     "slug": "assay-planner",
@@ -151,42 +257,55 @@
     "role": "Developer & researcher",
     "organization": "AI4S Open Innovation: AI for Life Science",
     "summary": "A Gaussian-process tool for choosing informative treatment and control measurements in organoid experiments.",
-    "intro": "Every measurement uses part of an experiment’s budget. I built a planner that considers what is already known, where uncertainty remains, and how a shared control affects several treatment measurements at once.",
+    "intro": "Every measurement uses part of an experiment’s budget. Given one control and the lowest and highest doses already measured, which few wells should a lab buy next to pin down a drug’s dose-response curve? I built a planner that considers what is already known, where uncertainty remains, and how a shared control affects several treatment measurements at once.",
     "tools": [
       "Python",
       "Gaussian processes",
-      "Experimental design",
+      "Optimal experimental design",
+      "Bootstrap inference",
       "Local browser UI"
     ],
     "facts": [
       [
         "6,496",
-        "paired assay contexts"
+        "paired drug contexts in the confirmation"
       ],
       [
-        "100",
-        "source patient IDs"
+        "148",
+        "organoid samples from 100 patients"
       ],
       [
         "32.82%",
-        "lower MSE vs. random selection"
+        "lower error than random selection"
+      ],
+      [
+        "0.66%",
+        "lower error than the greedy baseline"
       ]
     ],
     "sections": [
       [
         "The shared-control problem",
-        "A treatment response often depends on a measured control. When several responses share that reference, their errors are related. The planner retains this dependence instead of treating the control as perfectly known, and considers purchasing additional control measurements alongside treatment wells."
+        "A treatment response is read against a measured control. When several responses share that reference, their errors are related: if the control reads high, every contrast reads low together. The planner keeps this dependence instead of treating the control as perfectly known, and it can choose to buy another control well when that helps more than another treatment well."
       ],
       [
-        "Choosing a batch",
-        "A Gaussian process models response contrasts and their uncertainty. A finite-pool optimizer then selects a batch of wells to reduce average model uncertainty across the planned doses. I connected this method to a local browser interface, a command-line workflow, and traceable processing of public data."
+        "A curve that starts at zero",
+        "The response is modelled as a Gaussian process over log dose, with a kernel adjusted so that the drug effect at zero dose is exactly zero. A control therefore carries no drug effect but still carries information, through the shared noise. Hyperparameters were chosen once by leave-one-organoid-out validation on a development dataset, where all 28 folds picked the same setting, and then frozen."
       ],
       [
-        "Testing the claim",
-        "The frozen retrospective confirmation covered 6,496 paired assay contexts representing 100 patient IDs. Exact selection reduced mean squared prediction error by 32.82% versus random selection under the same model. Against the stronger greedy baseline, the improvement was 0.66%—an important limit on the size of the advantage."
+        "Choosing a batch exactly",
+        "For a fixed budget, the planner searches every possible set of wells and keeps the one that leaves the least average uncertainty across the planned doses. Wells that are interchangeable are grouped, so one representative stands for many equivalent sets: 13,408 representatives covered 2,113,536 subsets in the confirmation. A small counter-example in the tests shows why this matters: the best single well is not always part of the best pair."
+      ],
+      [
+        "Testing the claim on data it had not seen",
+        "The protocol was frozen and timestamped before the confirmation dataset’s responses were opened. That dataset has two parallel plates per context: wells are chosen from one and judged against the other. Across 6,496 contexts from 148 organoid samples and 100 patients, exact selection lowered mean squared error by 32.82% against random selection under the same model. Against the stronger greedy baseline the improvement was 0.66%, which is the honest size of the advantage of exact search."
+      ],
+      [
+        "What stayed in the record",
+        "On the development dataset the same comparison was inconclusive: every bootstrap interval included zero. An earlier liver-chip pilot gave no positive result either. Both remain in the repository beside the confirmation, along with a crashed first evaluator run that was preserved and amended for serialisation only."
       ]
     ],
-    "note": "These are retrospective research results. Prospective laboratory savings, clinical benefit, and transfer to perfused organ-on-a-chip experiments have not been demonstrated.",
+    "note": "These are retrospective research results. Prospective laboratory savings, clinical benefit, and transfer to perfused organ-on-a-chip experiments have not been demonstrated. Development data: Farin et al.; confirmation data: Kryeziu et al.; both public.",
     "video": "ANvcAZ7oyuE",
     "links": [
       [
@@ -207,23 +326,63 @@
       "modules": [
         [
           "Keep the covariance",
-          "Subtracting the same measured control from several treatment readings introduces shared error. With independent raw errors of variance s², the contrast-noise covariance is R = s²(I + 11ᵀ): 2s² on the diagonal and s² off it. The joint Gaussian model preserves that dependence."
+          "Subtracting the same measured control from several treatment readings introduces shared error. With independent raw errors of variance s², the contrast-noise covariance is R = s²(I + 11ᵀ): 2s² on the diagonal and s² off it. The joint Gaussian model preserves that dependence; its error was 11.36% lower than an ablation that ignores it."
         ],
         [
           "Search the finite design space",
-          "The optimizer chooses a fixed-budget batch by reducing average posterior variance over target doses. Verified exchangeable wells can be grouped, allowing one representative per group-count pattern. This reduces enumeration without changing the optimum of the bounded problem."
+          "The optimizer chooses a fixed-budget batch by minimising the equally weighted posterior variance at the designed doses, C − C[:,A] C[A,A]⁻¹ C[A,:]. Verified exchangeable wells are grouped so one representative per count pattern is evaluated. This reduces enumeration without changing the optimum of the bounded problem, and it is checked against brute force in the tests."
         ],
         [
           "Freeze, then evaluate",
-          "Model choices were fixed before confirmation on a separate public organoid study. Exact, greedy, and random policies share the same prediction model and measurement budget; patient-grouped analysis separates repeated assay contexts from independent patient IDs."
+          "Model choices were fixed before confirmation on a separate public organoid study. Exact, greedy and random policies share the same prediction model and measurement budget. Inference resamples whole patients after averaging contexts within samples and samples within patients, so repeated contexts are not counted as independent evidence."
         ]
       ],
-      "footnote": "The covariance objective depends on the design and observed-well locations, not the response values. This is a fixed-model batch design; predictions update with measurements, but the selection rule is not response-adaptive.",
+      "footnote": "The covariance objective depends on the design and observed-well locations, not the response values. This is a fixed-model batch design; predictions update with measurements, but the selection rule is not response-adaptive. The endpoint is the error of the raw log treatment-minus-control signal, not viability.",
       "source": [
         "Read the mathematical and contribution audit",
         "https://github.com/Shengboj0324/ZenithSync-AI4S-Open-Innovation/blob/main/docs/29-contribution-and-prior-art.md"
       ]
-    }
+    },
+    "tour": "Each well in a drug-response experiment costs the same, and there are never enough. This planner chooses the next few so that the response curve becomes as certain as possible.",
+    "bridge": "Freeze the rules, keep the strongest baseline, then look at the result. The last island turns that habit into machinery.",
+    "island": "Two plates, one curve, and three wells worth buying.",
+    "limits": [
+      "These are retrospective results on public data. Savings in a real laboratory have not been demonstrated.",
+      "The nominal 90% intervals covered 98.05% of held-back readings, so they are conservative rather than well calibrated.",
+      "No clinical benefit, peer review or competition placement is claimed. I was the only team member and the only reviewer."
+    ],
+    "hotspots": [
+      [
+        "Three wells to buy",
+        "With a budget of three, the demo plan picks one more control well and two treatment doses."
+      ],
+      [
+        "One control, many readings",
+        "Every treatment reading is compared with the same control, so their errors are linked. The model keeps that link."
+      ],
+      [
+        "Where the curve is unsure",
+        "The band is wide where nothing has been measured. The planner buys the wells that narrow it most."
+      ],
+      [
+        "A plate held back",
+        "Wells are chosen from one plate and judged against a parallel plate the planner never saw."
+      ]
+    ],
+    "connections": [
+      [
+        "developer-agent",
+        "Both freeze the protocol before looking, and both keep the unflattering results."
+      ],
+      [
+        "phoenix",
+        "Uncertainty as a guide to where limited resources should go."
+      ],
+      [
+        "igem",
+        "Life science returns, this time as a statistics problem rather than a wet-lab one."
+      ]
+    ]
   },
   {
     "slug": "college-advisor",
@@ -234,12 +393,12 @@
     "role": "Software developer intern",
     "organization": "Athena AI Labs · September 2025–March 2026",
     "summary": "A college-advising application built around retrieval, citations, and knowing when information is insufficient.",
-    "intro": "Admissions, financial aid, and transfer pathways all depend on specific information. At Athena AI Labs, I worked on an application that retrieves supporting material before constructing an answer, with checks for questions the available sources cannot support.",
+    "intro": "Admissions, financial aid, and transfer pathways all depend on specific information. At Athena AI Labs, I worked on an application that retrieves supporting material before constructing an answer, with checks for questions the available sources cannot support. The design goal was modest and strict: an answer should either show where it came from or decline.",
     "tools": [
       "SwiftUI",
-      "Python API",
+      "FastAPI",
       "ChromaDB",
-      "Hybrid retrieval"
+      "Retrieval-augmented generation"
     ],
     "facts": [
       [
@@ -261,12 +420,20 @@
         "I developed a SwiftUI interface, a Python API, and retrieval-augmented generation workflows for college-advising questions. Student-profile integration supported personalized recommendations, while document ingestion organized the information the system could consult."
       ],
       [
+        "Five collections, kept apart",
+        "The knowledge base is organised as five collections: financial-aid policies, major admission requirements, Common Data Set figures, transfer articulation agreements, and worked answers with their citations. Keeping them separate lets a question about transfer credit search different material from a question about aid, and lets a result say which kind of source it came from."
+      ],
+      [
         "Retrieval before generation",
-        "The published architecture combines keyword and vector retrieval, source-authority weighting, specialized question handling, and a cite-or-abstain check. Its language model formats the response; retrieved evidence supplies the factual basis. The distinction helps make the answer’s support inspectable."
+        "A question is first matched against those collections by meaning, and results from official .edu and .gov sources are weighted above other material. The published design documents also describe keyword retrieval; the path I describe here is the dense one. The language model’s job is to phrase the answer. The retrieved evidence supplies the facts."
+      ],
+      [
+        "Cite, calculate, or abstain",
+        "Some questions should not be answered from text at all. Aid and cost figures are computed by a deterministic calculator rather than generated. Questions that ask for legal judgement, predictions or personal preference are caught before retrieval. And when the best evidence is weak, the system abstains and explains why. On the project’s own stress set, most cases were resolved by declining to answer."
       ],
       [
         "Making the work inspectable",
-        "I published CollegeAdvisor-RAG on Hugging Face with architecture notes and usage instructions. A model listing is also available on Kaggle. The portfolio focuses on the implemented retrieval and citation design; benchmark claims in a model card should not be read as a guarantee for every admissions question."
+        "I published CollegeAdvisor-RAG on Hugging Face with architecture notes and usage instructions. A model listing is also available on Kaggle. The portfolio focuses on the retrieval and citation design; benchmark claims in a model card should not be read as a guarantee for every admissions question."
       ]
     ],
     "note": "The diagram is a simplified presentation of the published architecture. The Hugging Face release is a documented model artifact, not a hosted advisory service.",
@@ -284,24 +451,64 @@
       "heading": "Retrieval does the factual work.",
       "modules": [
         [
-          "Two routes to the evidence",
-          "BM25 keyword retrieval captures exact names and terms, while dense retrieval finds passages with related meaning. Five ChromaDB collections organize the knowledge base. Combining these routes helps match both a specific college name and a less precisely worded question."
+          "Search by meaning, rank by authority",
+          "Each record is embedded and stored in one of five ChromaDB collections. A question retrieves candidates from every collection, and candidates that cite authoritative domains are boosted before the top results are kept. A minimum score keeps weak matches out of the answer."
         ],
         [
           "Check the question and the source",
-          "Source-authority weighting and specialized question handlers guide how retrieved material is used. A cite-or-abstain check keeps insufficient evidence visible rather than forcing every question into a confident answer. Student context enters through the application and API."
+          "Specialised handlers route questions about aid, transfer and admissions to the right material. A cite-or-abstain check keeps insufficient evidence visible rather than forcing every question into a confident answer. Student context enters through the application and API."
         ],
         [
           "A smaller model, a narrower job",
           "The published architecture uses a LoRA-adapted TinyLlama 1.1B model for response formatting. The retrieved evidence supplies factual content. Keeping those responsibilities separate makes it easier to inspect whether an answer is supported by its citations."
         ]
       ],
-      "footnote": "Architecture details follow the published model card. They describe the system’s design, not a guarantee that every retrieved fact is current or every answer is correct.",
+      "footnote": "Architecture details follow the published model card and my own work on the project. They describe the system’s design, not a guarantee that every retrieved fact is current or every answer is correct.",
       "source": [
         "Explore the model card",
         "https://huggingface.co/Micheal324/CollegeAdvisor-RAG"
       ]
-    }
+    },
+    "tour": "College advice is full of confident answers with nothing behind them. This assistant works the other way round: find the source first, and if the evidence is thin, say so and stop.",
+    "bridge": "From answers that must cite a source to a boat that must act on a noisy wind reading: the next island is about deciding under uncertainty in real time.",
+    "island": "A library with a gate on the way out.",
+    "limits": [
+      "The evaluations were written by the project itself. There is no independent benchmark or real-user accuracy figure.",
+      "A citation shows where an answer came from. It does not prove the source is current.",
+      "The Hugging Face release is a documented model artifact, not a hosted advisory service."
+    ],
+    "hotspots": [
+      [
+        "Five collections",
+        "Aid policies, major requirements, Common Data Set figures, transfer agreements and worked cited answers, each kept as its own searchable collection."
+      ],
+      [
+        "Cite or abstain",
+        "An answer passes only with its sources attached. If the evidence is thin, the card is set aside and the system says why."
+      ],
+      [
+        "Not all sources weigh the same",
+        "Official .edu and .gov pages count for more than other material when results are ranked."
+      ],
+      [
+        "Arithmetic stays arithmetic",
+        "Aid and cost figures come from a deterministic calculator rather than from the language model."
+      ]
+    ],
+    "connections": [
+      [
+        "developer-agent",
+        "Both treat “the grader said yes” as something to inspect, not something to trust."
+      ],
+      [
+        "releaf",
+        "The same shape of product: a SwiftUI app in front of Python services."
+      ],
+      [
+        "sign-translator",
+        "Both build in the ability to abstain when the evidence does not support an answer."
+      ]
+    ]
   },
   {
     "slug": "sign-translator",
@@ -312,29 +519,55 @@
     "role": "Independent researcher & developer",
     "organization": "Sign-Translator",
     "summary": "A language-to-motion research project spanning 3D reconstruction, learned motion codes, and the challenge of evaluating generated signing.",
-    "intro": "Making science education more accessible led me to a difficult research question: how can language connect to coordinated movement? Sign-Translator explores that question while keeping generated motion distinct from linguistically validated American Sign Language.",
+    "intro": "Making science education more accessible led me to a difficult research question: how can language connect to coordinated movement? Sign-Translator explores that question from studio video to a rendered avatar, while keeping generated motion distinct from linguistically validated American Sign Language. No Deaf signer has yet judged its output, and the project says so wherever a result appears.",
     "tools": [
+      "PyTorch",
       "3D reconstruction",
-      "Graph networks",
-      "Contrastive learning",
-      "Motion tokenization"
+      "Residual vector quantisation",
+      "Autoregressive transformers",
+      "Blender"
     ],
-    "facts": [],
+    "facts": [
+      [
+        "32",
+        "motion codes per frame"
+      ],
+      [
+        "24",
+        "frames per second"
+      ],
+      [
+        "2.40 / 4.03",
+        "generated vs. real signing on the project’s back-translation score"
+      ],
+      [
+        "0",
+        "Deaf raters so far, by the project’s own count"
+      ]
+    ],
     "sections": [
       [
         "More than a sequence of hand poses",
-        "Signing coordinates the hands, body, face, gaze, and timing. I’m exploring how to represent those channels together, connect them to language, and carry the result into an articulated avatar. Each stage presents a different problem: recovering motion, learning its structure, and checking what a generated sequence actually communicates."
+        "Signing coordinates the hands, body, face, gaze, and timing. The project represents all of them on one clock: eleven channels at 24 frames per second, covering body and hand rotations, head motion, 52 face coefficients, gaze, blink and contact. Each value carries a mark for whether it was actually observed, so missing data stays visible instead of being silently filled in."
       ],
       [
-        "From a synthetic baseline to continuous motion",
-        "The initial runnable system connects a spatiotemporal graph network, a language–motion contrastive objective, and conditional diffusion on synthetic motion. The newer branch works with continuous video-derived motion and part-wise discrete codes. Keeping those experiments distinct makes it possible to compare methods without treating a system diagram as evidence that every component is complete."
+        "Two cameras, one skeleton",
+        "The motion comes from studio video filmed from the front and the side. A pose estimator finds keypoints in each view; the views are synchronised by the motion of the wrists and elbows, the cameras are calibrated from the footage itself, and matching points are triangulated into 3D. One finding from this stage: with both cameras fixed on the signer, focal length cannot be recovered from the geometry alone. Adding a rigid-bone-length term to the calibration brought the focal error from 40–47% to within 1%."
       ],
       [
-        "When a better loss produced less movement",
-        "One continuous diffusion experiment reached a promising denoising loss while producing nearly static motion. Adding a velocity loss did not resolve the collapse. That result pushed the experiments toward discrete motion tokens and more direct checks of body, hand, and head dynamics—a reminder that the training objective and the behavior we care about can diverge."
+        "A vocabulary of movement",
+        "A residual vector quantiser turns each frame into 32 discrete codes: four body parts (body, left hand, right hand, face) refined through eight stages each. Splitting by part preserves distinctions that a single stream of coordinates would blur, and moving from one codebook to the residual design cut reconstruction error from about 19° and 11 cm to about 8° and 2 cm."
+      ],
+      [
+        "What did not work, and what replaced it",
+        "The first plan was to generate a whole sentence of motion from text in one pass. On the project’s instruments, no end-to-end generator separated from blank motion. The current path is composition: generate each word separately, sample it sixteen times, keep the sample a recogniser reads best, and join the words with predicted timing. The output follows English word order, which is not ASL grammar, and the project states this plainly."
+      ],
+      [
+        "Reading the gauge",
+        "Generated motion is scored by translating it back to English and comparing with the source sentence, always beside controls: real signing, blank motion, shuffled order and the wrong sentence. On a fresh set of sentences read exactly once, composition scored 2.40, real signing 4.03 and blank motion 2.05. The milestone was 2.55. It was missed, and the result was published without a retry."
       ]
     ],
-    "note": "Active research prototype. The diagrams document different parts of the research design, and the avatar image is a rig test. Neither generated movement nor a rendering check establishes linguistically valid ASL. Independent intelligibility evaluation remains necessary.",
+    "note": "Active research prototype. The diagrams below document earlier parts of the research design, and the hand image is a rig test. Neither generated movement nor a rendering check establishes linguistically valid ASL. Independent intelligibility evaluation remains necessary. Studio video: How2Sign (CC BY-NC 4.0).",
     "links": [
       [
         "Research repository",
@@ -350,23 +583,63 @@
       "modules": [
         [
           "Put the motion on one clock",
-          "The continuous-data branch aligns front and side How2Sign video using landmark motion, then calibrates the cameras, triangulates positions, and fits joint rotations. Reprojection and rigid-bone checks constrain the reconstruction. These are video-derived estimates, with provenance retained, rather than motion-capture ground truth."
+          "Front and side How2Sign video are aligned using landmark motion, then the cameras are calibrated, positions triangulated and joint rotations fitted. Reprojection and rigid-bone checks constrain the reconstruction. These are video-derived estimates, with provenance retained, rather than motion-capture ground truth."
         ],
         [
-          "Learn a vocabulary of movement",
-          "A part-wise residual vector quantizer represents body, left hand, right hand, and face motion with discrete codes. The selected continuous-generation experiment predicts these codes from text plus spatial-locus conditioning. Separate channels preserve distinctions that a single stream of hand coordinates would miss."
+          "Predict codes, not coordinates",
+          "An autoregressive transformer predicts the residual codes from text: a causal temporal model over frames, a byte-level text encoder, and a smaller depth model over the eight stages. Early free-running samples were recognised far less often than one-step predictions suggested; trimming, history dropout and masked losses closed most of that gap for isolated words."
         ],
         [
           "Test what the score is measuring",
-          "An earlier retrieval evaluator scored motion with zeroed rotations surprisingly well: clip duration was leaking the answer. Fixed two-second windows, randomized offsets, and a duration-only control made that shortcut testable. A useful metric must respond to motion content, not just clip length."
+          "An earlier retrieval evaluator scored motion with zeroed rotations surprisingly well: clip duration was leaking the answer. Fixed two-second windows, randomized offsets, and a duration-only control made that shortcut testable. The same suspicion is applied to every later instrument before it is allowed to grade the generator."
         ]
       ],
-      "footnote": "The continuous training experiments extend the original synthetic baseline. Generated motion still requires independent linguistic evaluation before it can support a claim of understandable ASL.",
+      "footnote": "The release bar was fixed before any human rating: Deaf raters must understand generated sentences at least 70% of the time and within ten points of real signing. That study has been designed but not run. Until it is, nothing here supports a claim of understandable ASL.",
       "source": [
         "Read the continuous-training experiments",
         "https://github.com/Shengboj0324/Sign-Translator/blob/main/docs/CONTINUOUS_TRAINING.md"
       ]
-    }
+    },
+    "tour": "Signing uses the hands, face, body and timing together. This project reconstructs that motion in 3D, learns a vocabulary for it, generates it from text, and then asks the hard question: how would you know if it were any good?",
+    "bridge": "Measuring generated motion honestly sharpens a wider question: what does any single measurement leave out?",
+    "island": "A capture studio and the instruments that keep it honest.",
+    "limits": [
+      "No Deaf signer has evaluated the generated motion. Automatic scores are a proxy, not comprehension.",
+      "The output follows English word order and does not model ASL grammar.",
+      "Model weights are not released, and the system is not a deployed translator."
+    ],
+    "hotspots": [
+      [
+        "Two views, one skeleton",
+        "A front and a side camera film the same signer. Matching points in both views are triangulated into 3D."
+      ],
+      [
+        "Thirty finger joints",
+        "Each hand has fifteen. The avatar has to reproduce every one of them, along with the arms, head and face."
+      ],
+      [
+        "Motion as codes",
+        "Each frame becomes 32 small codes: four body parts by eight refinement stages, 24 times a second."
+      ],
+      [
+        "An honest gauge",
+        "Every score for generated signing is read beside two references: real signing and blank motion."
+      ]
+    ],
+    "connections": [
+      [
+        "sailbot",
+        "Both drive a physical body within its limits: one rudder there, thirty finger joints here."
+      ],
+      [
+        "developer-agent",
+        "The same suspicion of graders: check the instrument before it scores anything."
+      ],
+      [
+        "college-advisor",
+        "Both would rather abstain than produce a confident answer the evidence does not support."
+      ]
+    ]
   },
   {
     "slug": "igem",
@@ -377,7 +650,7 @@
     "role": "Wiki & entrepreneurship team lead",
     "organization": "LCG-China · iGEM 2024",
     "summary": "Website development and entrepreneurship work for an iGEM Gold Medal synthetic biology team.",
-    "intro": "A scientific project needs a clear explanation of what it does, how it works, and where it might be useful. For LCG-China, I led the wiki and entrepreneurship work that connected our team’s research with that wider story.",
+    "intro": "A scientific project needs a clear explanation of what it does, how it works, and where it might be useful. For LCG-China’s 2024 project on modifying bacterial cellulose, I led the wiki and entrepreneurship work that connected our team’s research with that wider story.",
     "tools": [
       "Web development",
       "Scientific communication",
@@ -396,6 +669,10 @@
     ],
     "sections": [
       [
+        "The project behind the pages",
+        "The team’s 2024 entry was titled “Modular Bacterial Cellulose Modification Machine in Use and AI Safety Framework in Synthetic Biology.” Bacterial cellulose is a material grown by microbes; the team worked on a modular way to modify it, and paired the laboratory work with a framework for using AI tools safely in synthetic biology."
+      ],
+      [
         "Giving the research a structure",
         "I directed the team’s website presentation, organizing scientific and business material into accessible explanations of the project, methods, and findings. The wiki gave different parts of the work a shared structure so readers could follow the reasoning as well as the results."
       ],
@@ -405,7 +682,7 @@
       ],
       [
         "A team achievement",
-        "LCG-China earned an iGEM Gold Medal in 2024. My contribution focused on wiki development, entrepreneurship, and communicating the team’s scientific work to a wider audience."
+        "LCG-China earned an iGEM Gold Medal in 2024. My contribution focused on wiki development, entrepreneurship, and communicating the team’s scientific work to a wider audience. The laboratory and modelling work belongs to my teammates."
       ]
     ],
     "note": "ExploreAid was a proposed product and business plan; the team medal does not imply clinical validation or commercial release.",
@@ -413,6 +690,42 @@
       [
         "Team wiki",
         "https://2024.igem.wiki/lcg-china/"
+      ]
+    ],
+    "tour": "Where the route begins: a synthetic-biology team with real results and a judging panel that would meet them through a website. My job was to make the science easy to follow.",
+    "bridge": "The same year, the question moved from explaining a project to building one people would use every day.",
+    "island": "A lab on one side, its story on the other.",
+    "limits": [
+      "ExploreAid was a proposed product and business plan. It was not manufactured, tested clinically or sold.",
+      "My role was communication and entrepreneurship. I did not lead the laboratory or computational work.",
+      "A team medal reflects the whole team’s project against iGEM’s criteria, not an individual result."
+    ],
+    "hotspots": [
+      [
+        "Bacterial cellulose",
+        "The team’s material: a sheet of cellulose grown by bacteria, which the project set out to modify."
+      ],
+      [
+        "Modular by design",
+        "Interchangeable genetic parts, drawn here as segments of one ring, are the idea behind the project’s “modular” title."
+      ],
+      [
+        "The wiki",
+        "My main job: the project website that judges and the public read, organised so the reasoning is as easy to follow as the results."
+      ],
+      [
+        "ExploreAid",
+        "A business plan for a proposed bacterial-cellulose bandage: customers, competitors, costs and risks. A proposal, not a product."
+      ]
+    ],
+    "connections": [
+      [
+        "releaf",
+        "The business-plan thinking from ExploreAid carried into cofounding a venture the same year."
+      ],
+      [
+        "assay-planner",
+        "Laboratory biology returns two years later, as a question about which wells to measure."
       ]
     ]
   },
@@ -425,29 +738,51 @@
     "role": "Software contributor",
     "organization": "Kehillah Sailbot",
     "summary": "Control and simulation improvements for an autonomous sailboat navigating changing conditions.",
-    "intro": "An autonomous boat has to turn imperfect information into a physical decision. My contributions to Kehillah Sailbot focused on navigation, steering, wind filtering, state estimation, and the simulator used to study the boat’s behavior.",
+    "intro": "An autonomous boat has to turn imperfect information into a physical decision. My contributions to Kehillah Sailbot focused on navigation, steering, wind filtering, state estimation, and the simulator used to study the boat’s behavior. The little boat that carries you between the islands on this site’s front page is modelled on the team’s simulated trimaran.",
     "tools": [
-      "Control systems",
-      "Physics simulation",
+      "ROS 2",
       "State estimation",
-      "Model-predictive steering"
+      "Model-predictive control",
+      "Physics simulation",
+      "Embedded C++"
     ],
-    "facts": [],
+    "facts": [
+      [
+        "49.3°",
+        "best upwind angle in the team’s polar table"
+      ],
+      [
+        "±21°",
+        "rudder travel the controller must respect"
+      ],
+      [
+        "10",
+        "quantities tracked by the state estimator"
+      ]
+    ],
     "sections": [
       [
         "Closing the loop",
-        "A navigation decision is only useful if the boat can follow it. I contributed to the software that connects estimated conditions with steering behavior, including filtering wind information and improving the state estimates used by the controller."
+        "The team’s system runs on ROS 2: sensors publish GPS fixes, wind direction and inertial readings; a navigation node decides; rudder and sail commands leave on their own topics. I contributed to the software between those ends: smoothing the wind reading and flagging gusts, estimating the boat’s state, and turning a desired heading into commands."
+      ],
+      [
+        "Where to point, given the wind",
+        "A sailboat cannot sail straight into the wind. The team’s planner reads a polar table of boat speed against wind angle and uses its best angles (49.3° off the wind going upwind, 124.4° going downwind) to decide when a course needs a tack and where the turn should happen. The baseline sail trim is a simple proportional rule, and the boat on this site’s front page uses the same one."
       ],
       [
         "Respecting physical constraints",
-        "My work included model-predictive steering with constraints on rudder movement. Explicit movement limits let the controller reason about actions the mechanism can perform, rather than assuming it can instantly reach any desired position."
+        "My model-predictive steering work predicts the boat’s heading a few steps ahead with a first-order yaw model and chooses rudder moves that keep the heading error, the turn rate and the rudder effort small. The rudder’s ±21° travel and its maximum rate are hard constraints, and heel beyond 25° is penalised. The model’s constants are assumed defaults, not values calibrated on the water."
+      ],
+      [
+        "Estimating what cannot be measured directly",
+        "A square-root unscented Kalman filter tracks ten quantities, including position, heading, speeds, heel and both actuator angles, from GPS, compass and inertial measurements. A separate sail optimiser uses lift and drag relations, including a post-stall model, to suggest trim and to ease the sail as heel builds."
       ],
       [
         "Learning in simulation",
-        "I also contributed to the physics simulator and control improvements for evaluating boat behavior. Simulation provides a way to examine how changes in navigation and steering affect the system before drawing conclusions about performance on the water."
+        "The team’s physics simulator models a 15 kg trimaran on a small lake, with lift and drag on the sail and hulls taken from published coefficient tables. My work there was engineering hardening: input validation, error handling, logging and typed constants, so that a wrong configuration fails loudly instead of producing a plausible-looking run. Nothing in this page is an on-water result."
       ]
     ],
-    "note": "The illustration is conceptual. This page describes software contributions and does not report unverified competition or on-water performance.",
+    "note": "The island is an illustration. This page describes software contributions and does not report unverified competition or on-water performance.",
     "links": [
       [
         "Sailboat control repository",
@@ -467,19 +802,59 @@
         ],
         [
           "Constrain the next move",
-          "My model-predictive steering work included limits on rudder movement. A controller must choose from actions the mechanism can perform over time. State estimation and wind filtering improve the information used to make those choices under changing conditions."
+          "The steering controller minimises a cost over a ten-step horizon: heading error, yaw rate and change in rudder angle, with a terminal heading term. It is solved under a rudder limit of ±21° and a slew limit of 15° per second, so the plan only contains moves the servo can make. If the optimiser fails, the proportional controller remains as the fallback."
         ],
         [
           "Study behavior before deployment",
-          "The physics simulator provides a setting for examining navigation and control changes together. It connects the software question—what command should be issued?—with the physical question of how the boat responds. On-water performance remains a separate evaluation."
+          "The simulator integrates forces of the form ½·C·ρ·v²·A on each foil with several sub-steps per time step. It connects the software question (what command should be issued?) with the physical question of how the boat responds. Parameters in the controller and the simulator do not yet agree with each other, and reconciling them is open work."
         ]
       ],
-      "footnote": "The repository documents the team’s ROS 2 system. My contributions focus on navigation, steering, wind filtering, state estimation, and simulation.",
+      "footnote": "The repository documents the team’s ROS 2 system; the event framework, tack planner and baseline controller are the team’s. My contributions focus on navigation, steering, wind filtering, state estimation, and simulation. A later automated test run in the repository passed only a minority of its cases because of import errors, which is recorded rather than hidden.",
       "source": [
         "Explore the sailboat control repository",
         "https://github.com/Shengboj0324/sailbot2526"
       ]
-    }
+    },
+    "tour": "A boat cannot argue with the wind. This team’s autonomous sailboat reads a wind vane, a GPS and an inertial sensor, and has to turn those readings into a rudder angle it can physically reach.",
+    "bridge": "Steering one rudder is a control problem. Driving thirty finger joints from a sentence is the same kind of problem, multiplied.",
+    "island": "A lakeside test station, with the wind as the main character.",
+    "limits": [
+      "No competition or on-water performance is reported here. The work is simulated or desk-tested.",
+      "Improvement figures in the repository’s planning documents are projections, not measurements.",
+      "The controller’s boat model uses assumed constants and has not been calibrated against the real boat."
+    ],
+    "hotspots": [
+      [
+        "Wind first",
+        "A wind vane, a GPS and an inertial sensor are the boat’s senses. Filtering the wind reading was one of my jobs."
+      ],
+      [
+        "The polar diagram",
+        "How fast the boat can sail at each angle to the wind. It sets the tacking angles: 49.3° upwind and 124.4° downwind in the team’s table."
+      ],
+      [
+        "Simulate, then sail",
+        "Changes are tried in the team’s physics simulator, which models a 15 kg trimaran on a small lake, before anyone trusts them on the water."
+      ],
+      [
+        "Holding station",
+        "Four buoys mark the box the boat must stay inside for the station-keeping event."
+      ]
+    ],
+    "connections": [
+      [
+        "sign-translator",
+        "Control of a body with limits: a rudder’s travel here, the joints of two hands there."
+      ],
+      [
+        "developer-agent",
+        "Simulate and qualify before spending real resources, and write down what the tests actually said."
+      ],
+      [
+        "phoenix",
+        "Both begin by cleaning a noisy environmental signal before deciding anything."
+      ]
+    ]
   },
   {
     "slug": "developer-agent",
@@ -487,29 +862,55 @@
     "subtitle": "Making software experiments easier to trust.",
     "category": "Research",
     "year": "2026",
-    "role": "Developer",
+    "role": "Project lead & researcher",
     "organization": "ZenithSync Developer Agent",
     "summary": "Repository-task evaluation and training-data tools for studying a coding agent’s behavior.",
-    "intro": "Before asking whether a coding agent improved, it helps to know exactly what it was tested on. This project focuses on the infrastructure behind that question: task provenance, evaluation isolation, deterministic training schedules, and recoverable runs.",
+    "intro": "Before asking whether a coding agent improved, it helps to know exactly what it was tested on. This project builds the infrastructure behind that question for a repository-repair agent based on Gemma 4: task provenance, evaluation isolation, deterministic training schedules, and recoverable runs. Its working rule is that no claim should rest on an unverified step.",
     "tools": [
       "Python",
-      "Evaluation tooling",
-      "Training-data validation",
-      "Reproducibility"
+      "Gemma 4",
+      "LoRA fine-tuning",
+      "Docker sandboxes",
+      "Evaluation tooling"
     ],
-    "facts": [],
-    "sections": [
+    "facts": [
       [
-        "Knowing where each task came from",
-        "I developed source tracking and training-data preparation tools for repository tasks, alongside checks for overlap between development and evaluation data. These checks help prevent an apparent improvement from coming from exposure to the evaluation material."
+        "9",
+        "tools the agent is allowed to use"
       ],
       [
-        "Making runs comparable",
-        "Deterministic schedules, token accounting, and recovery checks make the conditions of a run explicit. Test-result validation adds another boundary: the evaluation needs to check the intended behavior and preserve enough information to inspect failures."
+        "4",
+        "gates before a training example is admitted"
+      ],
+      [
+        "2,966",
+        "public tasks screened and frozen into splits"
+      ],
+      [
+        "51",
+        "tasks in the first admitted training set"
+      ]
+    ],
+    "sections": [
+      [
+        "The job being tested",
+        "The agent is given a real open-source repository and a reported issue. It may use exactly nine tools, covering running commands, reading and editing files, checking status, navigating code structure and submitting a patch. Whether the patch is correct is decided by tests it never sees."
+      ],
+      [
+        "A sealed room and two kinds of test",
+        "Each task runs in a container with the network switched off. A valid task must fail before the fix and pass after it: the tests that were failing must now pass, and the tests that were passing must still pass. Parsers for five test frameworks read the per-case results and reject summaries whose totals contradict their own cases."
+      ],
+      [
+        "Knowing where each task came from",
+        "From 32,079 candidate rows, 4,818 were eligible and 2,966 were selected and frozen into training, development and confirmation splits, separated by repository and by owner so the same project cannot appear on both sides. Licence files were checked at each task’s pinned commit, which caught four repositories carrying copyleft text under a permissive label."
+      ],
+      [
+        "Four gates and two checkers",
+        "Training examples begin in quarantine. They are admitted only through four gates: rights and attribution, split isolation, runtime qualification, and task alignment. A separate audit module then recomputes every quantity without sharing code with the loader, so the two must agree independently. The first admitted set holds 51 tasks."
       ],
       [
         "Separating infrastructure from performance",
-        "The project was developed around the Gemma developer-agent competition. The public repository documents implementation and readiness limits. Evaluation tooling and successful software tests do not, by themselves, demonstrate learned gains on unseen repository tasks."
+        "The model is a 4-bit Gemma 4 with a small LoRA adapter. So far it has taken one update on a tiny fixture; the first real training step ran out of memory, was diagnosed, and was fixed in code that has not yet been re-measured on a GPU. No sustained training has run, so the project does not claim that the agent has learned anything yet."
       ]
     ],
     "note": "Research tooling in development. The project does not yet establish learned performance gains on unseen repository tasks.",
@@ -528,18 +929,58 @@
         ],
         [
           "Read the tests, not just the headline",
-          "The JUnit audit preserves individual test-case outcomes and rejects contradictory aggregate counts. Failures, errors, and skipped cases remain distinct. A successful process exit or an attractive summary count cannot substitute for the underlying test evidence."
+          "The test audit preserves individual case outcomes and rejects contradictory aggregate counts. Failures, errors, and skipped cases remain distinct. A successful process exit or an attractive summary count cannot substitute for the underlying test evidence."
         ],
         [
-          "Resume the same experiment",
-          "Deterministic schedules and token accounting make training inputs and update boundaries explicit. Resume checks reconstruct the remaining schedule and reject corrupted counters, helping a recovered run continue the intended experiment rather than quietly becoming a different one."
+          "Translate actions, replay results",
+          "Teacher trajectories from another agent framework are converted to the nine-tool format under a fixed set of rules. Tool results are deliberately not translated: they must come from replaying the action, because rewriting them would fabricate runtime output. One untranslatable call rejects the whole trajectory."
         ]
       ],
-      "footnote": "These are implemented evaluation and training-preparation mechanisms. The repository does not yet establish learned gains on unseen repository tasks.",
+      "footnote": "These are implemented evaluation and training-preparation mechanisms. The repository does not yet establish learned gains on unseen repository tasks, and this page makes no claim about a competition result.",
       "source": [
         "Read the implementation readiness record",
         "https://github.com/Shengboj0324/Gemma-4-Agentic-Platform/blob/main/docs/39-p1-current-readiness.md"
       ]
-    }
+    },
+    "tour": "Before asking whether a coding agent got better, ask what it was tested on. This is a workshop for that question: sealed test rooms, hidden tests, and four gates every training example must pass.",
+    "bridge": "Eight islands behind us. Time to climb for a view of the whole route.",
+    "island": "A test line, a quarantine pen and a wall of nine tools.",
+    "limits": [
+      "No model has been trained at scale. There is no measured improvement to report.",
+      "All 51 admitted tasks are development-exposed, so they cannot be used as a held-out test.",
+      "Licence checks record what each repository says at a pinned commit. They are observations, not legal clearance."
+    ],
+    "hotspots": [
+      [
+        "A sealed room",
+        "Each task runs in a container with the network switched off, so nothing from outside can leak in."
+      ],
+      [
+        "Two kinds of test",
+        "Tests that failed must now pass, and tests that passed must still pass."
+      ],
+      [
+        "Four gates",
+        "Training examples start in quarantine and are admitted only after four separate checks."
+      ],
+      [
+        "Nine tools",
+        "The agent may use exactly nine tools, the set the competition provides."
+      ]
+    ],
+    "connections": [
+      [
+        "assay-planner",
+        "Shares its project name, ZenithSync, and its habits: freeze the protocol, keep the negative results."
+      ],
+      [
+        "sign-translator",
+        "Instrument skepticism in both: a verifier is audited before it is believed."
+      ],
+      [
+        "college-advisor",
+        "Each receipt states what it does not establish, the same idea as cite-or-abstain."
+      ]
+    ]
   }
 ]

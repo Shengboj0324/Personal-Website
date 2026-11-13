@@ -1,0 +1,12 @@
+{
+  "name": "shengbo-portfolio-world",
+  "private": true,
+  "description": "Build tooling for the 3D voyage bundle. The site itself is static; run `npm run world` only after editing src/world.",
+  "scripts": {
+    "world": "esbuild src/world/main.js --bundle --format=esm --minify --target=es2020 --outfile=world.js --legal-comments=none"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "three": "^0.170.0"
+  }
+}

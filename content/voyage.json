@@ -1,0 +1,45 @@
+{
+  "order": [
+    "igem",
+    "releaf",
+    "college-advisor",
+    "sailbot",
+    "sign-translator",
+    "phoenix",
+    "assay-planner",
+    "developer-agent"
+  ],
+  "spacing": 40,
+  "weave": [
+    0,
+    -13,
+    8,
+    -11,
+    11,
+    -9,
+    10,
+    -12,
+    6
+  ],
+  "radius": {
+    "harbor": 4.6,
+    "igem": 5.05,
+    "releaf": 5.1,
+    "college-advisor": 5.3,
+    "sailbot": 5.4,
+    "sign-translator": 5.0,
+    "phoenix": 5.5,
+    "assay-planner": 5.4,
+    "developer-agent": 5.3
+  },
+  "mooring": {},
+  "intro": {
+    "lede": "I’m Shengbo. I build software and study how it can help us understand the world—and do a little more for it. Eight projects are waiting as eight small islands. Scroll, and the boat will take you to each.",
+    "aside": "Every island was modelled and lit by hand for this site. The boat is the trimaran from one of the projects.",
+    "bridge": "Casting off. First heading: 2024, and a biology team that needed its science explained."
+  },
+  "chart": {
+    "heading": "Eight islands,<br><em>one habit.</em>",
+    "lede": "Seen from above, the route is one idea repeated: build the thing, then check whether it does what you say it does. Choose any island to go back, or read the projects as a list."
+  }
+}

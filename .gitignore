@@ -3,3 +3,6 @@ __pycache__/
 .qa/
 dist/
 output/
+studio/out/
+node_modules/
+.claude/

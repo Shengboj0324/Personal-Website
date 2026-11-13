@@ -89,3 +89,48 @@ No private services or Google Drive files were accessed for this source review. 
 - `scripts/film.py` derives all 30 WebVTT tracks from that transcript and the locale catalogs, shifting excerpt timings to start at zero. Rebuilding and watching never invoke a translation service.
 - The user-supplied [YouTube channel](https://www.youtube.com/@Luckyknight324) is an optional outbound link. A particular YouTube upload could not be verified, so no guessed video ID or embed is used.
 - Hosting constraint checked against [Cloudflare Pages asset limits](https://developers.cloudflare.com/pages/platform/limits/): every delivered video is below the 25 MiB per-file ceiling.
+
+## November 2026 redesign: 3D voyage and expanded case studies
+
+Reviewed on November 12, 2026. The eight project repositories and the supplied research files were read without being modified; nothing was pushed to them.
+
+### 3D artwork
+
+- All island models, the harbor and the boat are original work for this site, built by script in Blender 5.3 (`studio/`), lit with Cycles and baked. No third-party models, textures or kits were used. The only image inside the 3D world is the existing Releaf screenshot (`assets/releaf.webp`) on the phone.
+- Reference sites supplied by the owner (bruno-simon.com, jesse-zhou.com, henryheffernan.com, sooahs-room-folio.com, aimees-papercraft-world.com) informed the approach: one crafted, baked-light world used as navigation. No code, models, textures, audio or layouts were copied from them.
+- three.js r170 (MIT) is bundled into `world.js`; its Draco decoder (Apache-2.0) is served from `assets/world/draco/`.
+- The islands are illustrations of ideas. Counts taken from the projects are exact (for example 369 map tiles, 37 and 17 markers, 9 tools, 4 gates, 51 crates, 5 bookcases, 32 code blocks, 24 film frames, 8 doses by 3 replicates). Heights, colours and positions of data-like elements are made up and are labelled as illustrations on each page. The Phoenix tile map does not show real tract geometry or values.
+- The boat follows the trimaran described in the Sailbot simulator configuration (one main hull, two outriggers, one soft mainsail). Its colours are invented; the repositories do not document them.
+
+### Sources for the expanded writing
+
+- Releaf: the app source and model metadata (item, material and bin heads; knowledge graph of 43 nodes and 118 edges; opt-in carbon sensing with 15-second windows), the Django backend's carbon report, and the public supporting-AI repository. Accuracy is given as a range because the repository's own evaluations differ (about 90% to 94%). The repository's comparison against other models and its throughput figure are not used: they were not measured.
+- Phoenix: the final paper and its methods-and-results notes. The paper's text gives a Jaccard index of 0.423 for the top decile; its own tables give 0.298 there and 0.423 for the top quintile, and the site uses 0.298. Random-forest and SHAP analyses described in the paper's methods have no reported results and are not mentioned. The project's explanatory video uses illustrative numbers and is not a source.
+- Assay Planner: the public repository's technical report, confirmation results and prior-art audit. The greedy-baseline figure (0.66%) is shown beside the headline (32.82%) wherever the headline appears.
+- CollegeAdvisor: the public Hugging Face model card and the owner's project files. The earlier description of "keyword and vector retrieval" is corrected: the implemented path is dense retrieval with authority weighting, and keyword retrieval appears in the design documents only. Internal thresholds and counts are deliberately left out.
+- Sign-Translator: the public repository's README and training notes as of November 2, 2026. The page now reflects the project's own conclusions: end-to-end sentence generation did not separate from blank motion, word-by-word composition is the current path, the milestone score was missed on a fresh read, and no Deaf rater has seen the output.
+- iGEM: the résumé, the team banner (project title) and the public wiki. Local project files were not available for reading, so no laboratory detail beyond the title is stated.
+- Sailbot: the two public repositories. The simulator work is described as engineering hardening, not new physics. Controller constants are described as assumed, and no on-water result is reported. A later test run in the repository that passed 7 of 40 cases is acknowledged.
+- Developer Agent: the public repository's README and readiness records. No competition submission or placement is claimed, and the page states that no training has run at scale.
+
+### Open points for the owner
+
+- CollegeAdvisor dates: the résumé says September 2025 to March 2026. The offer letter covers September to December 2025 and commits run into January 2026. The résumé wording is kept.
+- CollegeAdvisor confidentiality: the internship paperwork includes a confidentiality term. The page stays at the level of the public model card.
+- Sign-Translator dates: the résumé says 2025–present; the public repository's history starts in July 2026 after an earlier prototype. The résumé wording is kept.
+- iGEM: with access to the team's files, the island captions could name the organism and parts.
+
+### Verification record for the redesign
+
+Checked on November 12, 2026:
+
+- `scripts/build.py` (strict, no missing translations), `scripts/check.py` (140 pages; links, fragments, headings, metadata, alt text, hashed bundles, and every 3D asset named in a page), `scripts/test_i18n.py`, `node --test scripts/test_film.cjs` and `scripts/check_film.py` all pass.
+- Every island was inspected as Cycles renders from five angles while it was built, and again as a baked model in the browser.
+- In the app's built-in Chromium browser, at 1440 × 900, about 800 wide, and 375 × 812: the voyage at the harbor, at island stops, mid-passage and on the chart; the illustrated fallback (`?static`); the Work, About, Contact and Film pages; the Phoenix and Releaf case studies including the island viewer and a point-of-interest selection; the Arabic home page (right-to-left framing) and a Japanese case study; the full-screen mobile menu. No console errors from the site's own code.
+
+Not checked:
+
+- Frame rate. The browser pane pauses animation when it is not in front, so 3D frames were advanced with the `?debug` clock rather than watched running. Draw calls stayed between about 25 and 110 and triangles between about 65,000 and 590,000 per frame.
+- Safari, Firefox and physical phones. The low-power path (1024-pixel atlases, no depth pass) was exercised only through viewport emulation.
+- The sea-sound toggle, the reduced-motion opt-in, and video playback.
+- The translations have had no native-speaker review. They were spot-read in Chinese, Japanese, Spanish and Arabic.

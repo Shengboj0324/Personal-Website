@@ -4,6 +4,7 @@ Catalogs contain public editorial text only. Building or visiting the site never
 contacts a translation service. URLs, code, filters, and product names stay stable.
 """
 import json
+import os
 import re
 from html import escape
 from html.parser import HTMLParser
@@ -32,11 +33,6 @@ MESSAGES = {
     'countMany': '{count} projects',
     'copied': 'Email address copied.',
     'copyFailed': 'Copy unavailable. Select the email address above, or click it to write.',
-    'pause': 'Pause motion',
-    'resume': 'Resume motion',
-    'reduced': 'Reduced motion',
-    'position': '{index} of {total}: {title}',
-    'openCase': 'Open {title} case study',
 }
 EXTRA_TEXT = {
     'Choose language', 'Language', 'Original project media is shown in its source language.',
@@ -52,7 +48,9 @@ KEEP = {
     'Python, Swift, Java, JavaScript, TypeScript, SQL',
     'SwiftUI, Django, FastAPI, React / Next.js, PostgreSQL, Git, Docker',
 }
-TRANSLATED_ATTRIBUTES = {'alt', 'aria-label', 'aria-valuetext', 'data-title', 'data-summary'}
+# Development only: PORTFOLIO_ALLOW_MISSING=1 builds with untranslated text left in English.
+ALLOW_MISSING = bool(os.environ.get('PORTFOLIO_ALLOW_MISSING'))
+TRANSLATED_ATTRIBUTES = {'alt', 'aria-label'}
 
 
 def translatable(value):
@@ -86,6 +84,8 @@ class Localizer(HTMLParser):
         if self.catalog is None:
             return value
         if stripped not in self.catalog:
+            if ALLOW_MISSING:
+                return value
             raise ValueError(f'{self.language}: missing translation: {stripped}')
         return value.replace(stripped, self.catalog[stripped], 1)
 
@@ -173,7 +173,10 @@ def render_editions(pages):
         if language != 'en':
             catalog = json.loads((ROOT / 'content/locales' / f'{language}.json').read_text())
             missing = expected - catalog.keys()
-            if missing:
+            if missing and ALLOW_MISSING:
+                print(f'{language}: {len(missing)} strings not yet translated (development build)')
+                catalog = {**{text: text for text in missing}, **catalog}
+            elif missing:
                 raise ValueError(f'{language}: {len(missing)} missing translations: {sorted(missing)[:3]}')
             for source in expected:
                 translated = catalog[source]

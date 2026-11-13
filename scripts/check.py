@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Check static routes, fragment targets, metadata, and local asset references."""
 from html.parser import HTMLParser
+import json
 import re
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
-from asset_pipeline import browser_bundles
+from asset_pipeline import browser_bundles, is_optional
 from i18n import LANGUAGES
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -23,6 +24,8 @@ class Page(HTMLParser):
         self.direction = None
         self.messages = False
         self.language_links = []
+        self.world_data = None
+        self.world = []
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -30,6 +33,7 @@ class Page(HTMLParser):
             self.language = a.get('lang')
             self.direction = a.get('dir')
         if a.get('id') == 'locale-messages': self.messages = True
+        if tag == 'script' and ('data-voyage-data' in a or 'data-island-data' in a): self.world_data = ''
         if tag == 'a' and a.get('hreflang'): self.language_links.append(a['hreflang'])
         if tag == 'h1': self.headings += 1
         if tag == 'title': self.title = True
@@ -44,6 +48,20 @@ class Page(HTMLParser):
         if tag == 'img' and 'alt' not in a: self.errors.append('Image missing alt attribute')
         if tag == 'a' and a.get('target') == '_blank' and 'noopener' not in a.get('rel', '').split():
             self.errors.append('External tab link missing noopener')
+
+
+    def handle_data(self, data):
+        if self.world_data is not None: self.world_data += data
+
+    def handle_endtag(self, tag):
+        if tag == 'script' and self.world_data is not None:
+            # 3D assets are named inside JSON, so collect them for the reference check too.
+            payload = json.loads(self.world_data)
+            assets = list(payload.get('assets', {}).values()) or [payload]
+            for item in assets:
+                self.world.extend(item[key] for key in ('glb', 'tex', 'tex1k') if key in item)
+            if 'boat' in payload: self.world.append(payload['boat'])
+            self.world_data = None
 
 
 def main():
@@ -75,14 +93,23 @@ def main():
             errors.append(f'{name}: missing or stale browser bundle; rerun scripts/build.py')
     for path, page in pages.items():
         for name in bundles:
+            if is_optional(name):
+                stale = [ref for ref in page.refs if '/assets/world.' in ref and ref != '/' + name]
+                if stale: errors.append(f'{path.relative_to(ROOT)}: stale 3D bundle {stale[0]}')
+                continue
             if '/' + name not in page.refs:
                 errors.append(f'{path.relative_to(ROOT)}: does not reference current bundle {name}')
         for ref in page.refs:
-            if urlsplit(ref).path in ('/styles.css', '/app.js'):
+            if urlsplit(ref).path in ('/styles.css', '/app.js', '/world.js'):
                 errors.append(f'{path.relative_to(ROOT)}: unversioned deployment asset {ref}')
     references = 0
+    world_pages = sum(1 for page in pages.values() if page.world)
+    if world_pages != 9 * len(LANGUAGES):
+        errors.append(f'Expected {9 * len(LANGUAGES)} pages with a 3D scene, found {world_pages}')
     for path, page in pages.items():
-        for ref in page.refs:
+        for ref in page.world:
+            if '?v=' not in ref: errors.append(f'{path.relative_to(ROOT)}: unversioned 3D asset {ref}')
+        for ref in page.refs + page.world:
             parsed = urlsplit(ref)
             if parsed.scheme or parsed.netloc: continue
             references += 1
